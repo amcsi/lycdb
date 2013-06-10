@@ -1,0 +1,248 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+margin: 0;
+padding: 0;
+border: 0;
+outline: 0;
+font-size: 100%;
+vertical-align: baseline;
+background: transparent;
+}
+:focus {
+outline: 0;
+}
+.hidden {
+    display:none;
+}
+.active {
+    display:block;
+}
+ins {
+text-decoration: none;
+}
+del {
+text-decoration: line-through;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table { border-collapse: collapse; border-spacing: 0; }
+body {
+    width:780px;
+    line-height: 1;
+    background-color:grey;
+    font-family:tahoma;
+    font-size:12px;
+}
+.left { float:left; }
+.right { float:right; }
+a { color:blue; text-decoration:none; }
+a:hover { background-color:blue; color:red; text-decoration:none; }
+#header { 
+    height:100px;  
+    background-image:url('img/logo780.gif');
+}
+#footer {
+    background-color:rgb(255,224,128);
+}
+#footer .browser { font-weight:bold; }
+#footer .resolution { font-weight:bold; }
+#nav { background-color:rgb(255,223,151); height:28px; padding:1px; }
+#nav ul { list-style: none; }
+#nav ul li { float:left; list-style-type:none; margin-right:1px; }
+.nav li a, .nav li div { display:block; padding:8px 7px; }
+.nav li a { background-color:rgb(255,240,144); font-family:arial; }
+.nav li a:hover { background-color:blue; }
+#user { float:right; text-align:right; background-color:green; }
+#content {
+    min-height:50px;
+    padding:10px;
+    clear:both;
+    background-color:rgb(255,224,128);
+}
+#content table.news { background-color:#AA0000; position:relative; top:20px; }
+table.news td { background-color:white; }
+td.news_nick { text-align:center; width:100px; }
+#content .news {
+    margin-left:auto;
+    margin-right:auto;
+    width:100%;
+    overflow:auto;
+    background-color:#fff;
+    margin-bottom:10px
+}
+#content div.news div {
+    height:100%;
+    float:left;
+    width:90%;
+}
+#content div.news div.date, #content div.news div.nick {
+}
+#content div.news div.nick, #content div.news div.avatar{
+    width:10%;
+}
+.date {
+    font-weight:bold;
+    color:#555;
+}
+div.news div.text p {
+    margin-top:10px;
+}
+fieldset ul {
+    list-style:none;
+}
+fieldset ul li {
+    vertical-align:middle;
+}
+fieldset ul li label.form_title {
+    width:100px;
+    float:left;
+    margin-top:7px;
+}
+fieldset ul li * { margin-top:3px; margin-bottom:3px; }
+fieldset ul li label {
+    
+}
+fieldset ul li label.inner_label { margin-right:5px; }
+fieldset {
+    display:block;
+    border:1px solid red;
+    padding:5px;
+    width:178px;
+    
+}
+fieldset.card_search {
+    width:620px;
+}
+fieldset input[type=text], fieldset input[type=password],
+fieldset input[type=submit] {
+    width:70px;
+    border:1px solid rgb(255,94,0);
+}
+fieldset input[type=submit] {
+    width:74px;
+    background-color: rgb(255,217,0);
+}
+fieldset input[type=checkbox] {
+}
+
+fieldset legend {
+    font-size:80%;
+}
+input[type=text].card_text {
+    width:300px;
+}
+input[type=text].card_name {
+    width:200px;
+}
+table.card_results thead.card_result_columns {
+    
+}
+table.card_results {
+    margin-top:10px;
+    margin-bottom:200px;
+}
+table.card_results thead.card_result_columns th,
+table.card_results td, table.card_results th {
+    padding:5px 2px;
+    margin:0px 10px;
+    border:1px solid rgb(255,224,128);
+    vertical-align:middle;
+}
+table.card_results tbody tr.character td,
+div.character {
+    background-color:rgb(200,163,197);
+}
+table.card_results tbody tr.event td,
+div.event {
+    background-color:rgb(255,160,128);
+}
+tr.card_result_columns th {
+    color: white;
+    background-color:orange;
+}
+thead.card_result_columns {
+    padding:1px;
+}
+th.card_id, col.card_id { width:60px; }
+th.card_name, col.card_name { width:200px; }
+th.card_cost, col.card_cost { width:120px; max-width:120px; }
+th.card_ex, col.card_ex,
+th.card_ap, col.card_ap,
+th.card_dp, col.card_dp,
+th.card_sp, col.card_sp { width:15px; }
+th.card_spots, col.card_spots { width:30px; }
+th.card_sets, col.card_sets { width:100px; }
+th.card_element, col.card_element { width:100px; max-width:100px; }
+
+thead.card_result_columns th.card_cost img { margin:0px; padding:0px; }
+
+div.register_error { font-size:50%; color:red; }
+span.nick { display:inline; margin:0px; padding:0px; font-weight:bold; }
+
+span.target {
+    color:red;
+}
+p.ability_name {
+    font-weight:bold;
+}
+.card_js {
+    background-color:white;
+    border: 1px solid black;
+    height:200px;
+    width:500px;
+    position:absolute;
+    left:0px;
+    right:0px;
+}
+strong.ex {
+    font-size:100%;
+}
+span.ex {
+    font-size:100%;
+}
+.card_js_image {
+    float:left;
+}
+.card_js_details {
+    text-align:middle;
+}
+.card_js_details .card_js_spots,
+.card_js_details .card_js_ap_dp_sp {
+}
+.card_js_details .card_js_detail_left {
+    width:40%;
+    float:left;
+}
+.card_js_details .card_js_detail_full {
+    width:70%;
+    float:left;
+}
+.card_name_jap {
+    font-style:italic;
+}
+.card_js_details div {
+    padding:2px 0px;
+    font-size:80%;
+}
+span.jap {
+    font-size:12px;
+}
+div.ap, div.dp, div.sp { padding:2px 6px; font-size:140%; font-weight:bold; }
+div.ap { background-color:rgb(255,112,112); }
+div.dp { background-color:rgb(128,128,255); }
+div.sp { background-color:rgb(255,240,128); }
+div.card_spot_row { padding:0px; margin:0px; height:10px; width:30px; }
+div.card_spot_row img { padding:0px; margin:0px; height:10px; width:10px; float:left; }
+div.card_js_spots {
+    float:left;
+    clear:right;
+}
+p.ability_name {
+    margin-bottom:2px;
+}

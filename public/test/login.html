@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+  <link rel="stylesheet" type="text/css" href="../style.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title></title>
+  </head>
+  <body>
+    
+    <div id='header'>
+        
+    </div>
+    <div id='nav'>
+        <ul class="nav left">
+            <li><a href='index.php?p=1'>About</a></li>
+            <li><a href='index.php'>News</a></li>
+            <li><a href='index.php?p=2'>Card search</a></li>
+            <li><a href='http://forums.akiba-ch.com/viewforum.php?f=4'>Akihabara Forums</a></li>
+        </ul>
+        <ul class="nav right">
+            <li><div><span>not logged in</span></div></li>
+            <li><a href='index.php?p=3'>Login/Register</a></li>
+        </ul>
+    </div>
+    
+    <div id='content'>
+        <form method='post' action='#'>
+            <fieldset>
+                <legend>Login</legend>
+                        <div class='register_error'>Bad username or password.</div>
+                <ul>
+                    <li>
+                        <label for='login_username' class="form_title">Username</label>
+                        <input type='text' id='login_username' name='username'>
+                    </li>
+                    <li>
+                        <label for='login_password' class="form_title">Password</label>
+                        <input type='password' id='login_password' name='password'>
+                    </li>
+                    <li>
+                        <label for='login_remember' class="form_title">Remember me</label>
+                        <input type='checkbox' id='login_remember' name='remember'
+                        value='1'>
+                    </li>
+                    <li>
+                        <label for='login_submit' class="form_title"></label>
+                        <input type='submit' id='login_submit' name='login' value='Log in'>
+                    </li>
+                    <li>
+                        <a href='index.php?p=4'>I forgot my password</a>
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Register</legend>
+                <ul>
+                    <li>
+                        <label for='register_username' class="form_title">Username</label>
+                        <input type='text' id='register_username' name='username'>
+                        <div class='register_error'>Sorry, username already taken.</div>
+                    </li>
+                    <li>
+                        <label for='register_password' class="form_title">Password</label>
+                        <input type='password' id='register_password' name='password'>
+                        <div class='register_error'>Password must have at least 4 characters.</div>
+                    </li>
+                    <li>
+                        <label for='register_password2' class="form_title">Password again</label>
+                        <input type='password' id='register_password2' name='password2'>
+                        <div class='register_error'>The two passwords don't match.</div>
+                    </li>
+                    <li>
+                        <label for='register_email' class="form_title">E-mail</label>
+                        <input type='text' id='register_username' name='username'>
+                        <div class='register_error'>Invalid e-mail address.</div>
+                    </li>
+                    <li>
+                        <label for='register_submit' class="form_title"></label>
+                        <input type='submit' id='register_submit' name='register' 
+                        value='Register'>
+                    </li>
+                </ul>
+            </fieldset>
+        </form>
+    </div>
+    <div id='footer'>
+    </div>
+    
+  </body>
+</html>

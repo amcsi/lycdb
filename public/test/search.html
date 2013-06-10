@@ -1,0 +1,376 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+  <link rel="stylesheet" type="text/css" href="../style.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title></title>
+  <script type='text/javascript' src='../jquery-1.3.2.js'></script>
+  <script type='text/javascript' src='../js.js'></script>
+  </head>
+  <body>
+    
+    <div id='header'>
+        
+    </div>
+    <div id='nav'>
+        <ul class="nav left">
+            <li><a href='index.php?p=1'>About</a></li>
+            <li><a href='index.php'>News</a></li>
+            <li><a href='index.php?p=2'>Card search</a></li>
+            <li><a href='http://forums.akiba-ch.com/viewforum.php?f=4'>Akihabara Forums</a></li>
+        </ul>
+        <ul class="nav right">
+            <li><div><span>Welcome, <span class='nick'>amcsi</span>!</span></div></li>
+            <li><a href='index.php?p=5'>Settings</a></li>
+            <li><a href='index.php'>Logout</a></li>
+        </ul>
+    </div>
+    
+    <div id='content'>
+        <input type='button' value='Show/hide basic search' onclick="show_hide('basic_search_form');">
+        <form id='basic_search_form' method='get' action='#'>
+            <fieldset class="card_search">
+                <legend>Basic search</legend>
+                <ul>
+                    <li>
+                        <label for='basic_search_name' class="form_title">Card name</label>
+                        <input class="card_name" id='basic_search_name' type='text' name='name' value=''>
+                    </li>
+                    <li>
+                        <label for='basic_search_card_type' class="form_title">Card type</label>
+                        <select id='basic_search_card_type' name='card_type'>
+                            <option value='-2' selected="selected">-</option>
+                            <option value='-1'>non-character</option>
+                            <option value='0'>Character</option>
+                            <option value='1'>Area</option>
+                            <option value='2'>Item</option>
+                            <option value='3'>Event</option>
+                            
+                        </select>
+                    </li>
+                    <li>
+                        <label for='basic_search_name' class="form_title">Cost</label>
+                        <select id='basic_search_cost_type' name='cost_type'>
+                            <option value="0" selected="selected">-</option>
+                            <option value="1">payable by:</option>
+                            <option value="2">is exactly:</option>
+                        </select>
+                        <label for="basic_search_cost_snow"><img alt='snow' src="../img/snow.gif"></label>
+                        <select id='basic_search_cost_snow' name='cost_snow'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_moon"><img alt='moon' src="../img/moon.gif"></label>
+                        <select id='basic_search_cost_moon' name='cost_moon'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_lightning"><img alt='lightning' src="../img/lightning.gif"></label>
+                        <select id='basic_search_cost_lightning' name='cost_lightning'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_flower"><img alt='flower' src="../img/flower.gif"></label>
+                        <select id='basic_search_cost_flower' name='cost_flower'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_sun"><img alt='sun' src="../img/sun.gif"></label>
+                        <select id='basic_search_cost_sun' name='cost_sun'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_star"><img alt='star' src="../img/star.gif"></label>
+                        <select id='basic_search_cost_star' name='cost_star'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label for='basic_search_name' class="form_title">Ex</label>
+                        <select id="basic_search_ex_operator" name="ex_operator">
+                            <option value="1" selected="selected">≥</option>
+                            <option value="0">=</option>
+                            <option value="-1">≤</option>
+                        </select>
+                        <select id="basic_search_ex" name="ex">
+                            <option value="0">0</option>
+                            <option value="0">1</option>
+                            <option value="0">2</option>
+                            <option value="0">3</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label class="form_title">Element</label>
+                        <select id='basic_search_element_type' name='element_type'>
+                            <option value='0'>-</option>
+                            <option value='1'>has:</option>
+                            <option value='2'>is:</option>
+                        </select>
+                        <label for="basic_search_element_snow"><img alt='snow' src="../img/snow.gif"></label><input type="checkbox" id="basic_search_element_snow" name="element_snow">
+                        <label for="basic_search_element_moon"><img alt='moon' src="../img/moon.gif"></label><input type="checkbox" id="basic_search_element_moon" name="element_moon">
+                        <label for="basic_search_element_lightning"><img alt='lightning' src="../img/lightning.gif"></label><input type="checkbox" id="basic_search_element_lightning" name="element_lightning">
+                        <label for="basic_search_element_flower"><img alt='flower' src="../img/flower.gif"></label><input type="checkbox" id="basic_search_element_flower" name="element_flower">
+                        <label for="basic_search_element_sun"><img alt='sun' src="../img/sun.gif"></label><input type="checkbox" id="basic_search_element_sun" name="element_sun">
+                    </li>
+                    <li>
+                        <label for='basic_search_text' class="form_title">Text contains</label>
+                        <input class="card_text" id='basic_search_text' type='text' name='text' value=''>
+                    </li>
+                </ul>
+            </fieldset>
+        </form>
+        <table class="card_results">
+            <thead>
+                <colgroup class="card_result_columns">
+                    <col class="card_id">
+                    <col class="card_name">
+                    <col class="card_sets">
+                    <col class="card_cost">
+                    <col class="card_ex">
+                    <col class="card_element">
+                    <col class="card_spots">
+                    <col class="card_ap">
+                    <col class="card_dp">
+                    <col class="card_sp">
+                </colgroup>
+                <tr class="card_result_columns">
+                    <th class="card_id" id="card_result_title_0" onclick="reorder_table('card_result', 0)">Card ID</th>
+                    <th class="card_name" id="card_result_title_1" onclick="reorder_table('card_result', 1)">Name</th>
+                    <th class="card_sets" id="card_result_title_9" onclick="reorder_table('card_result', 2)">Card sets</th>
+                    <th class="card_cost" id="card_result_title_2" onclick="reorder_table('card_result', 3)">Cost</th>
+                    <th class="card_ex" id="card_result_title_3" onclick="reorder_table('card_result', 4)">Ex</th>
+                    <th class="card_element" id="card_result_title_4" onclick="reorder_table('card_result', 5)">Element</th>
+                    <th class="card_spots" id="card_result_title_5" onclick="reorder_table('card_result', 6)">FL</th>
+                    <th class="card_ap" id="card_result_title_6" onclick="reorder_table('card_result', 7)">AP</th>
+                    <th class="card_dp" id="card_result_title_7" onclick="reorder_table('card_result', 8)">DP</th>
+                    <th class="card_sp" id="card_result_title_8" onclick="reorder_table('card_result', 9)">SP</th>
+                </tr>
+            </thead>
+            
+            
+            <tbody>
+                <tr id="card_result_0" class="character">
+                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">CH-0409</td>
+                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">Tohno Akiha</td>
+                    <td>Type-Moon 1.0</td>
+                    <td><img alt='lightning' src="../img/lightning.gif"><img alt='lightning' src="../img/lightning.gif"><img alt='star' src="../img/star.gif"><img alt='star' src="../img/star.gif"></td>
+                    <td>2</td>
+                    <td><img alt='lightning' src="../img/lightning.gif"></td>
+                    <td>
+                        <div class="card_spot_row">
+                            <img src="../img/spot-on.gif" alt="1"><img src="../img/spot-on.gif" alt="1"><img src="../img/spot-on.gif" alt="1">
+                        </div>
+                        <div class="card_spot_row">
+                            <img src="../img/spot-on.gif" alt="1"><img src="../img/spot-off.gif" alt="0"><img src="../img/spot-on.gif" alt="1">
+                        </div>
+                    </td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>1</td>
+                </tr>
+                <tr id="card_result_1" class="event">
+                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">EV-0207</td>
+                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">Big Mistake</td>
+                    <td>Type-Moon 2.0</td>
+                    <td style="width:120px;">
+                        <img alt='snow' src="../img/snow.gif"><img alt='snow' src="../img/snow.gif"><img alt='moon' src="../img/moon.gif"><img alt='moon' src="../img/moon.gif"><img alt='lightning' src="../img/lightning.gif"><img alt='lightning' src="../img/lightning.gif"><img alt='flower' src="../img/flower.gif"><img alt='flower' src="../img/flower.gif"><img alt='sun' src="../img/sun.gif"><img alt='sun' src="../img/sun.gif">
+                    </td>
+                    <td>0</td>
+                    <td>
+                        <img alt='snow' src="../img/snow.gif"><img alt='moon' src="../img/moon.gif"><img alt='lightning' src="../img/lightning.gif"><img alt='flower' src="../img/flower.gif"><img alt='sun' src="../img/sun.gif">
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id='footer'>
+        <div class="optimized">This website is optimized for the following browsers: <span class="browser">Opera 10+</span>, <span class="browser">FireFox 3.5+</span>, <span class="browser">Internet Explorer 7+</span>; and the resolution <span class="resolution">800x600</span>
+        </div>
+        <div>
+            <span class="coding"><span class="property">Coding:</span> <a href="mailto:amcsi@mailbox.hu">amcsi</a></span><br>
+            <span class="design"><span class="property">Design:</span> <a href="mailto:amcsi@mailbox.hu">amcsi</a></span>
+        </div>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    <div id='hidden'>
+        <div class="hidden card_js character" id="card_js_0">
+            <div class="card_js_image">
+                <img alt="CH-0409 Tohno Akiha" src="../img/cards/middle/tm01/CH-0409-m.jpg">
+            </div>
+            <div class="card_js_details">
+                <div class="card_js_id card_js_detail_left">
+                    <span>CH-0409</span>
+                </div>
+                <div class="card_js_sets">
+                    <span>Type-Moon 1.0</span>
+                </div>
+                <div class="card_js_name">
+                    <span class="card_name card_js_detail_left">Tohno Akiha</span>
+                </div>
+                <div class="card_js_name_jap">
+                    <span class="card_name jap">遠野秋葉</span>
+                </div>
+                <div class="card_js_ex card_js_detail_left">
+                    <span>
+                        <strong>Ex:</strong> 2
+                        <img alt='lightning' src="../img/lightning.gif">
+                    </span>
+                </div>
+                <div class="card_js_cost">
+                    <span>
+                        <img alt='lightning' src="../img/lightning.gif"><img alt='lightning' src="../img/lightning.gif"><img alt='star' src="../img/star.gif"><img alt='star' src="../img/star.gif"> 
+                    </span>
+                </div>
+                <div class="card_js_ap_dp_sp card_js_detail_left">
+                    <div class='left ap'>3</div>
+                    <div class='left dp'>2</div>
+                    <div class='left sp'>1</div>
+                </div>
+                <div class="card_js_spots">
+                    <div class="card_spot_row">
+                        <img src="../img/spot-on.gif" alt="1">
+                        <img src="../img/spot-on.gif" alt="1">
+                        <img src="../img/spot-on.gif" alt="1">
+                    </div>
+                    <div class="card_spot_row">
+                        <img src="../img/spot-on.gif" alt="1">
+                        <img src="../img/spot-off.gif" alt="0">
+                        <img src="../img/spot-on.gif" alt="1">
+                    </div>
+                </div>
+                <div class="card_js_text card_js_detail_full">
+                    <p class="ability_name">
+                        <span>
+                            Plunder:
+                            <img src="../img/0.gif" alt="0">
+                        </span>
+                    </p>
+                    <p class="card_text">
+                        <span>
+                            <span class="target">This character</span> will gain all the basic abilities of an <span class="target">opponent character in the same column as this character</span>. You can not gain a basic ability that this character has already gained. (Can be only used once every turn)
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hidden card_js event" id="card_js_1">
+            <div class="card_js_image">
+                <img alt="CH-0409 Tohno Akiha" src="../img/cards/middle/tm02/EV-0207-m.jpg">
+            </div>
+            <div class="card_js_details">
+                <div class="card_js_id card_js_detail_left">
+                    <span>EV-0207</span>
+                </div>
+                <div class="card_js_sets">
+                    <span>Type-Moon 2.0</span>
+                </div>
+                <div class="card_js_name">
+                    <span class="card_name card_js_detail_left">Big Mistake</span>
+                </div>
+                <div class="card_js_name_jap">
+                    <span class="card_name jap">大失敗</span>
+                </div>
+                <div class="card_js_ex card_js_detail_left">
+                    <span>
+                        <strong class="ex">Ex</strong> <span class="ex">0</span>
+                        <img alt='snow' src="../img/snow.gif"><img alt='moon' src="../img/moon.gif"><img alt='lightning' src="../img/lightning.gif"><img alt='flower' src="../img/flower.gif"><img alt='sun' src="../img/sun.gif">
+                    </span>
+                </div>
+                <div class="card_js_cost">
+                    <span>
+                        <img alt='snow' src="../img/snow.gif"><img alt='snow' src="../img/snow.gif"><img alt='moon' src="../img/moon.gif"><img alt='moon' src="../img/moon.gif"><img alt='lightning' src="../img/lightning.gif"><img alt='lightning' src="../img/lightning.gif"><img alt='flower' src="../img/flower.gif"><img alt='flower' src="../img/flower.gif"><img alt='sun' src="../img/sun.gif"><img alt='sun' src="../img/sun.gif">
+                    </span>
+                </div>
+                <div class="card_js_text card_js_detail_full">
+                    <p class="card_text">
+                        <span>
+                            Discard all cards in <span class="target">your opponent's hand</span>. For every card discarded, discard 3 cards from your deck.
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

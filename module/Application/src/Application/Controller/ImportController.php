@@ -15,7 +15,12 @@ use Zend\View\Model\ViewModel;
 class ImportController extends AbstractActionController
 {
     public function indexAction() {
-        echo 'import page';
+        return $this->omoshiroiImport();
+    }
+
+    public function omoshiroiImport() {
+        $importer = new \Lycee\OmoshiroiImporter;
+        $importer->importByHtmlFile('data/omoshiroi-lycee-search.html');
         return false;
     }
 }

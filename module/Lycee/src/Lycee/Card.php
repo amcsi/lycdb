@@ -1,4 +1,7 @@
 <?php
+namespace Lycee;
+use Lycee\Lycee;
+
 abstract class Card extends Lycee {
 
     protected $cid; // card ID

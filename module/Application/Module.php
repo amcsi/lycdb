@@ -56,6 +56,10 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+		$response = $e->getResponse();
+		$response->getHeaders()->addHeaders(array (
+			'Content-Type' => 'text/html; charset=utf-8'
+		));
     }
 
     public function getConfig()

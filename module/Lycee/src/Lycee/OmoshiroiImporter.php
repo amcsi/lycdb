@@ -31,20 +31,15 @@ class OmoshiroiImporter {
                 }
                 else {
                     $bgColor = $td->getAttribute('bgcolor');
-                    if (!in_array($bgColor, $badBgColors)) {
-                        $pair[] = $tr;
-                        if ($lastBgColor == $bgColor) {
-                            if (count($pair) < 2) {
-                                $text = sprintf("Couldn't make tr pairs.\nLine no.: %d\nContents: %s\n",
-                                    $tr->getLineNo(), $tr->ownerDocument->saveXML($tr)
-                                );
-                            }
-                            $cardList[] = $this->cardBy2TrsInAbilityView($pair[0], $pair[1], $firstTdBgColor);
-                            $pair = array ();
-                        }
-                        else {
-                            $firstTdBgColor = $bgColor;
-                        }
+                    $cardType = $this->getCardTypeByBgColor($bgColor);
+                    if ($cardType) {
+                        $lastCardType = $cardType;
+                    }
+                    if (is_int($cardType)) {
+                        $firstRow = $tr;
+                    }
+                    else if ($secondRowBgColor == $bgColor) {
+                        $cardList[] = $this->cardBy2TrsInAbilityView($firstRow, $tr, $lastCardType);
                     }
                     break;
                 }
@@ -53,23 +48,27 @@ class OmoshiroiImporter {
 
     }
 
-    public function cardBy2TrsInAbilityView(\DomElement $tr1, \DomElement $tr2, $firstBgColor) {
+    public function getCardTypeByBgColor($bgColor) {
         static $map = array (
             '#ccccff' => Card::CHAR,
             '#ffcccc' => Card::EVENT,
             '#eeee99' => Card::ITEM,
             '#99ee99' => Card::AREA,
         );
-        if (Card::CHAR == $map[$firstBgColor]) {
+        return isset($map[$bgColor]) ? $map[$bgColor] : null;
+    }
+
+    public function cardBy2TrsInAbilityView(\DomElement $tr1, \DomElement $tr2, $cardType) {
+        if (Card::CHAR == $cardType) {
             $card = new Char();
         }
-        else if (Card::EVENT == $map[$firstBgColor]) {
+        else if (Card::EVENT == $cardType) {
             $card = new Event();
         }
-        else if (Card::ITEM == $map[$firstBgColor]) {
+        else if (Card::ITEM == $cardType) {
             $card = new Item();
         }
-        else if (Card::AREA == $map[$firstBgColor]) {
+        else if (Card::AREA == $cardType) {
             $card = new Area();
         }
         else {

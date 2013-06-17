@@ -1,4 +1,6 @@
 <?php
+namespace Lycee;
+
 class Char extends Card {
     
     protected $isMale;

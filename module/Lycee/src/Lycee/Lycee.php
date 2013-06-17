@@ -1,4 +1,6 @@
 <?php
+namespace Lycee;
+
 abstract class Lycee {
     const STAR = 5;
     const SUN = 4;

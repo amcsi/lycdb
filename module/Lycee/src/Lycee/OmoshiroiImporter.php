@@ -20,6 +20,7 @@ class OmoshiroiImporter {
         $lastBgColor = '#eef3ff';
         $pair = array ();
         $cardList = array ();
+        $firstTdBgColor = null;
         foreach ($table->childNodes as $tr) {
             if (!$tr instanceof \DomElement) {
                 continue;
@@ -38,8 +39,11 @@ class OmoshiroiImporter {
                                     $tr->getLineNo(), $tr->ownerDocument->saveXML($tr)
                                 );
                             }
-                            $cardList[] = $this->cardBy2TrsInAbilityView($pair[0], $pair[1]);
+                            $cardList[] = $this->cardBy2TrsInAbilityView($pair[0], $pair[1], $firstTdBgColor);
                             $pair = array ();
+                        }
+                        else {
+                            $firstTdBgColor = $bgColor;
                         }
                     }
                     break;
@@ -49,7 +53,28 @@ class OmoshiroiImporter {
 
     }
 
-    public function cardBy2TrsInAbilityView(\DomElement $tr1, \DomElement $tr2) {
-        var_dump($tr1, $tr2);
+    public function cardBy2TrsInAbilityView(\DomElement $tr1, \DomElement $tr2, $firstBgColor) {
+        static $map = array (
+            '#ccccff' => Card::CHAR,
+            '#ffcccc' => Card::EVENT,
+            '#eeee99' => Card::ITEM,
+            '#99ee99' => Card::AREA,
+        );
+        if (Card::CHAR == $map[$firstBgColor]) {
+            $card = new Char();
+        }
+        else if (Card::EVENT == $map[$firstBgColor]) {
+            $card = new Event();
+        }
+        else if (Card::ITEM == $map[$firstBgColor]) {
+            $card = new Item();
+        }
+        else if (Card::AREA == $map[$firstBgColor]) {
+            $card = new Area();
+        }
+        else {
+            trigger_error("Invalid bgColor: $firstBgColor");;
+        }
+        var_dump($card);
     }
 }

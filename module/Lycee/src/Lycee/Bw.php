@@ -1,4 +1,6 @@
 <?php
+namespace Lycee;
+
 class Bw {
     
     // returns a number of bits turned on starting from the right side, continuously for the value of $size; 
@@ -24,7 +26,7 @@ class Bw {
     
     // returns the wanted bits, shifted all the way to the right
     public static function getBits($subject, $position, $size = 1) {
-        return (self::selectBits($position, $size) & $subject) >> $position);
+        return (self::selectBits($position, $size) & $subject) >> $position;
     }
 }
 ?>

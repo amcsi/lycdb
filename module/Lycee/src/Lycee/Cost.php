@@ -1,11 +1,14 @@
 <?php
+namespace Lycee;
+
 class Cost extends Lycee {
 
-    protected $costElement;
+    protected $cost = 0;
     protected $isTap;
     protected $isAuto;
-    protected $texts;
-    
+    public $text;
+
+    public $costSizes = 4;
     
     public function isAuto() {
         return $this->isAuto;
@@ -16,11 +19,9 @@ class Cost extends Lycee {
     }
     
     public function getCostElement($element) {
-        $amount = $this->getBits($this->cost, costSizes * $element, costSizes);
+        $amount = $this->getBits($this->cost, $this->costSizes * $element, $this->costSizes);
         return $amount;
     }
-    
-    
     
     public function insertCostElement($amount,$element) {
         try {
@@ -32,10 +33,58 @@ class Cost extends Lycee {
     
     
         
-        $integer = Bw::changeBits($this->cost,$element * costSizes,costSizes,$amount);
+        $integer = Bw::changeBits($this->cost, $element * $this->costSizes, $this->costSizes, $amount);
         $this->cost = $integer;
     }
+
+    public function getOmoshiroiMap() {
+        static $ret = array (
+            '<img src="elements/0c.gif" />' => 'free',
+            '<img src="elements/tp.gif" />' => 'tap',
+            '<img src="elements/ew.gif" />' => Lycee::SNOW,
+            '<img src="elements/em.gif" />' => Lycee::MOON,
+            '<img src="elements/ef.gif" />' => Lycee::FLOWER,
+            '<img src="elements/ek.gif" />' => Lycee::LIGHTNING,
+            '<img src="elements/es.gif" />' => Lycee::SUN,
+            '<img src="elements/er.gif" />' => Lycee::STAR,
+        );
+        return $ret;
+    }
     
+    /**
+     * Creates a cost object by an HTML snippet from omoshiroi.info
+     * 
+     * @param string $html 
+     * @static
+     * @access public
+     * @return self
+     */
+    public function fillByOmoshiroiHtml($html) {
+        $map = $this->getOmoshiroiMap();
+        $auto = true;
+        foreach ($map as $img => $val) {
+            $count = substr_count($html, $img);
+            if ($count) {
+                $auto = false;
+                if ('free' == $val) {
+                    // the cost is free
+                    return;
+                }
+                else if (is_int($val)) {
+                    $this->insertCostElement($count, $val);
+                }
+                else if ('tap' == $val) {
+                    $this->isTap = true;
+                }
+            }
+            $html = str_replace($img, '', $html);
+        }
+        $this->isAuto = true;
+        $trimmed = trim(strip_tags($html));
+        if ($trimmed) {
+            $this->text = $trimmed;
+        }
+    }
     
 }
 ?>

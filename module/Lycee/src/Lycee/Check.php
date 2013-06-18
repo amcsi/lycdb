@@ -1,4 +1,6 @@
 <?php
+namespace Lycee;
+
 class Check extends Config {
 
     public static function isIntBetween($subject, $min, $max) {
@@ -12,7 +14,7 @@ class Check extends Config {
     }
     
     public static function isValidExValue($x) {
-        return ($x < 0 or $x > MAX_EX_VALUE) ? false : true;
+        return ($x < 0 or $x > Config::MAX_EX_VALUE) ? false : true;
     }
     
     public static function isValidExElement($x) {
@@ -20,11 +22,11 @@ class Check extends Config {
     }
     
     public static function isValidElementCost($x) {
-        return ($x < 0 or $x > MAX_ELEMENT_COST) ? false : true;
+        return ($x < 0 or $x > Config::MAX_ELEMENT_COST) ? false : true;
     }
     
     public static function isValidStat($x) {
-        return ($x < 0 or $x > MAX_STAT_VALUE) ? false : true;
+        return ($x < 0 or $x > Config::MAX_STAT_VALUE) ? false : true;
     }
     
     public static function isValidSpot($x) {
@@ -32,7 +34,7 @@ class Check extends Config {
     }
     
     public static function isValidBasicAbility($x) {
-        return ($x < MIN_BASIC_ABILITY or $x > MAX_BASIC_ABILITY) ? false : true;
+        return ($x < Config::MIN_BASIC_ABILITY or $x > Config::MAX_BASIC_ABILITY) ? false : true;
     }
 }
 ?>

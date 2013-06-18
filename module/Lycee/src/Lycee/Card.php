@@ -1,12 +1,15 @@
 <?php
 namespace Lycee;
+use \BadMethodCallException;
 
 abstract class Card extends Lycee {
 
-    protected $cid; // card ID
+    public $cid; // card ID
+    public $rarity;
+    public $nameJap;
+    public $nameEng;
+
     protected $set;
-    protected $nameJap;
-    protected $nameEng;
     protected $costElement;
     protected $exValue;
     protected $exElementFlags;
@@ -20,8 +23,8 @@ abstract class Card extends Lycee {
     
     const MAX_EX_VALUE = 3;
     
-    const LANG_JAP = 1;
-    const LANG_ENG = 2;
+    const LANG_JP = 0;
+    const LANG_EN = 1;
     
     public function __call($name, $args) {
         if (substr($name, 0, 3) == 'get') {

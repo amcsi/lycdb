@@ -3,15 +3,15 @@ namespace Lycee;
 
 class Char extends Card {
     
-    protected $isMale;
-    protected $isFemale;
+    protected $isMale = false;
+    protected $isFemale = false;
     protected $ap;
     protected $dp;
     protected $sp;
     protected $spotFlags;
     protected $basicAbilities = array(); // Key represents the type. Holds an onject or TRUE as a value
-    protected $abilityNames;
-    protected $abilityCostObj;
+    public $abilityNames = array ();
+    public $abilityCostObj;
     
     // negative basic abilities do not have costs
     const DASH          = -2;
@@ -23,7 +23,7 @@ class Char extends Card {
     const ESCAPE        = 4;
     const SIDE_ATTACK   = 5;
     const TAX_TRASH     = 6;
-    const TAX_WAKE_UP   = 7;
+    const TAX_WAKEUP    = 7;
     const SUPPORTER     = 8;
     const TOUCH         = 9;
     const ATTACKER      = 10;
@@ -44,19 +44,11 @@ class Char extends Card {
     const DR_FLAG = 32;
     
     function setIsMale($bool) {
-        if (!isset($bool)) {
-            return false;
-        }
-        $this->isMale = $bool;
-        return true;
+        $this->isMale = (bool) $bool;
     }
     
     function setIsFemale($bool) {
-        if (!isset($bool)) {
-            return false;
-        }
-        $this->isMale = (bool) $bool;
-        return true;
+        $this->isFemale = (bool) $bool;
     }
     
     function setStat($statInt, $value) {

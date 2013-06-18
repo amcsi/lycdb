@@ -41,14 +41,14 @@ abstract class Lycee {
     }
     
     protected function checkCostValue($amount) {
-        $check = Check::isIntBetween($amount,0,MAX_COST);
+        $check = Check::isIntBetween($amount,0,self::MAX_COST);
         if (!$check) {
             if ($check===false) {
                 throw new MyException 
                     ("Cost amount type isn't an integer!",557291834,$amount);
             } else {
                 throw new MyException 
-                    ("Cost amount must be between 0 and ".maxCost."!",639414439,$amount);
+                    ("Cost amount must be between 0 and ".self::MAX_COST."!",639414439,$amount);
             }
         }
     }

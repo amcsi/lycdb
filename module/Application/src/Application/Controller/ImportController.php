@@ -15,12 +15,29 @@ use Zend\View\Model\ViewModel;
 class ImportController extends AbstractActionController
 {
     public function indexAction() {
+        return $this->lyceeImport();
+    }
+
+    public function omoshiroiAction() {
         return $this->omoshiroiImport();
+    }
+
+    public function lyceeAction() {
+        return $this->lyceeImport();
     }
 
     public function omoshiroiImport() {
         $importer = new \Lycee\OmoshiroiImporter;
         $importer->importByHtmlFile('data/omoshiroi-lycee-search.html');
+        return false;
+    }
+
+    public function lyceeImport() {
+        $sm = $this->getServiceLocator();
+        var_dump(get_class_methods($sm));
+        $cache = $sm->get('Lycee\Cache');
+        $importer = new \Lycee\LyceeImporter;
+        $importer->setCache($cache);
         return false;
     }
 }

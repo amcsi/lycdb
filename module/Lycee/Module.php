@@ -20,23 +20,6 @@ class Module
     public function onBootstrap($e) {
     }
 
-    public function getCacheSettings() {
-        $aDay = 60 * 60 * 24;
-        $ttl = $aDay;
-        $cacheDir = './data/cache/lycee';
-        $options = array (
-            'ttl' => $ttl,
-            'cache_dir' => $cacheDir,
-            'dir_permission' => 0777,
-            'file_permission' => 0666,
-        );
-        $config = array (
-            'name' => 'filesystem',
-            'options' => $options
-        );
-        return $config;
-    }
-
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';

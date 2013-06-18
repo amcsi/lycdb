@@ -36,7 +36,7 @@ class Module
             'factories' => array(
                 'Lycee\LyceeImporter' => function ($sm) {
                     $cache = $sm->get('Lycee\Cache');
-                    $lyceeImporter = new Lycee\LyceeImporter;
+                    $lyceeImporter = new LyceeImporter;
                     $lyceeImporter->setCache($cache);
                     return $lyceeImporter;
                 }

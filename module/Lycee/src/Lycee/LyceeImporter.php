@@ -9,6 +9,7 @@ class LyceeImporter {
     protected $_cache;
 
     public function __construct() {
+        echo "instantiated lycee importer (should be after 'before invoke' if lazy loading)<br>\n";
     }
 
     public function setCache(\Zend\Cache\Storage\Adapter\AbstractAdapter $cache) {

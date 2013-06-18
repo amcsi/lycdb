@@ -11,6 +11,7 @@ class Char extends Card {
     protected $spotFlags;
     protected $basicAbilities = array(); // Key represents the type. Holds an onject or TRUE as a value
     public $abilityNames = array ();
+    public $abilityTexts = array ();
     public $abilityCostObj;
     
     // negative basic abilities do not have costs

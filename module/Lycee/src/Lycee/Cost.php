@@ -80,7 +80,7 @@ class Cost extends Lycee {
             $html = str_replace($img, '', $html);
         }
         $this->isAuto = true;
-        $trimmed = trim(strip_tags($html));
+        $trimmed = trim(strip_tags($html), " \t\n\r\0\x0B,");
         if ($trimmed) {
             $this->text = $trimmed;
         }

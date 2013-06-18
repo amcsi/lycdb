@@ -118,8 +118,27 @@ class OmoshiroiImporter {
         if ($isChar) {
             $basicAbilityMap = $this->getBasicAbilityMap();
             $brSplit = explode('<br />', $innerHtml);
+
+            /**
+             * this is marked true if the previous row was the name and cost of a special ability
+             **/
+            $nextIsSpecialAbility = false;
+
             foreach ($brSplit as $val) {
                 $val = trim(strip_tags($val, '<br><span><img>'));
+
+                /**
+                 * @todo
+                 * Do properly.
+                 * Detect comments. Retain targetting spans. Retain ability gaining spans. Allow 2 row special abilities.
+                 **/
+
+                if ($nextIsSpecialAbility) {
+                    $card->abilityTexts[Card::LANG_EN] = $val;
+                    $nextIsSpecialAbility = false;
+                    continue;
+                }
+
                 $pattern = '@^<span id="basicAbility">(.*): (.*)</span>@';
                 $isBasicAbility = preg_match($pattern, $val, $matches);
                 if ($isBasicAbility) {
@@ -132,13 +151,20 @@ class OmoshiroiImporter {
                     $this->addBasicAbilityToChar($card, $matches[1], $matches[2]);
                 }
 
+                $pattern = '@^<span id="specialAbility">(.*):</span> (.*)@';
+                $isSpecialAbility = preg_match($pattern, $val, $matches);
+                if ($isSpecialAbility) {
+                    $this->addSpecialAbilityToChar($card, $matches[1], $matches[2]);
+                }
+
                 $pattern = '@^<span id="specialAbility">(.*): (.*)</span>@';
                 $isSpecialAbility = preg_match($pattern, $val, $matches);
                 if ($isSpecialAbility) {
-                    $cost = new Cost;
-                    $cost->fillByOmoshiroiHtml($matches[2]);
-                    $card->abilityNames[Card::LANG_EN] = $matches[1];
-                    $card->abilityCostObj = $cost;
+                    $this->addSpecialAbilityToChar($card, $matches[1], $matches[2]);
+                }
+
+                if ($isSpecialAbility) {
+                    $nextIsSpecialAbility = true;
                 }
 
             }
@@ -162,6 +188,14 @@ class OmoshiroiImporter {
             $msg = sprintf("Basic ability not found. Text: %s\nCard name: %s\n", $basicAbilityTextName, $card->nameEng);
             trigger_error($msg);
         }
+    }
+
+    public function addSpecialAbilityToChar(Char $card, $specialAbilityTextName, $costText) {
+        $card->abilityNames[Card::LANG_EN] = $specialAbilityTextName;
+        $card->abilityTexts[Card::LANG_EN] = $description;
+        $cost = new Cost;
+        $cost->fillByOmoshiroiHtml($costText);
+        $card->abilityCostObj = $cost;
     }
 
     public function getBasicAbilityMap() {

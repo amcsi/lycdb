@@ -33,7 +33,14 @@ class Module
                 'Zend\Cache\Service\StorageCacheAbstractServiceFactory'
             ),
             'aliases' => array(),
-            'factories' => array(),
+            'factories' => array(
+                'Lycee\LyceeImporter' => function ($sm) {
+                    $cache = $sm->get('Lycee\Cache');
+                    $lyceeImporter = new Lycee\LyceeImporter;
+                    $lyceeImporter->setCache($cache);
+                    return $lyceeImporter;
+                }
+            ),
             'invokables' => array(),
             'services' => array(),
             'shared' => array(),

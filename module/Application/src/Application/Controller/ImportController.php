@@ -34,10 +34,7 @@ class ImportController extends AbstractActionController
 
     public function lyceeImport() {
         $sm = $this->getServiceLocator();
-        var_dump(get_class_methods($sm));
-        $cache = $sm->get('Lycee\Cache');
-        $importer = new \Lycee\LyceeImporter;
-        $importer->setCache($cache);
+        $importer = $sm->get('Lycee\LyceeImporter');
         return false;
     }
 }

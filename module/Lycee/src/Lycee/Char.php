@@ -56,18 +56,14 @@ class Char extends Card {
         if (!isset($statInt, $value)) {
             return false;
         }
-        if (!Check::isValidStat) {
-            return false;
-        }
-        $value = (int) $value;
         switch ($statInt) {
-            case STAT_AP:
+            case self::STAT_AP:
                 $this->ap = $value;
                 break;
-            case STAT_DP:
+            case self::STAT_DP:
                 $this->dp = $value;
                 break;
-            case STAT_SP:
+            case self::STAT_SP:
                 $this->sp = $value;
                 break;
             default:
@@ -146,6 +142,17 @@ class Char extends Card {
             ) 
             and parent::isObjectComplete()
         );
+    }
+
+    public function setGenderByText($gender) {
+        $isMale = false !== strpos($gender, 'm') || false !== strpos($gender, 'M') ||
+            false !== strpos($gender, '男') || false !== strpos($gender, '♂')
+        ;
+        $isFemale = false !== strpos($gender, 'f') || false !== strpos($gender, 'F') ||
+            false !== strpos($gender, '女') || false !== strpos($gender, '♀')
+        ;
+        $this->isMale = $isMale;
+        $this->isFemale = $isFemale;
     }
 }
 ?>

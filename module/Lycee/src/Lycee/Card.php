@@ -62,6 +62,10 @@ abstract class Card extends Lycee {
             }
         }
     }
+
+    public function setCostByJapaneseArray($array) {
+
+    }
     
     public function setText($lang, $text) {
         $this->texts[(int) $lang] = $text;

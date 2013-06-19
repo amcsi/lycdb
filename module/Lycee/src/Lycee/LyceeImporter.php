@@ -86,27 +86,88 @@ class LyceeImporter {
     }
 
     public function getCardByTablesList2(array $tableArray) {
+        /**
+         * Card id, type, name, elements, ex
+         **/
         $firstCells = $tableArray[0]->getElementsByTagName('td');
         $cidText = trim(strip_tags($firstCells->item(0)->textContent));
         $cardTypeText = trim($firstCells->item(1)->textContent, " \t\n\r\0\x0B　");
         $name = trim($firstCells->item(2)->textContent);
         $pattern = '@<img src="([^\"]*)"@';
-        $elementArr = array ();
-        $elementImgEls = $firstCells->item(3)->getElementsByTagName('img');
-        foreach ($elementImgEls as $el) {
-            $alt = $el->getAttribute('alt');
-            $elementArr[$alt] = true;
-        }
+        $elementArr = $this->countElementsByDomElement($firstCells->item(3));
         $exText = trim($firstCells->item(4)->textContent);
         preg_match('@EX　(\d+)@', $exText, $matches2);
         $ex = $matches2[1];
 
         $card = Card::newCardByTypeText($cardTypeText);
+        $isChar = $card instanceof Char;
         $card->setCidText($cidText);
         $card->setJpName($name);
         $card->setElementByJapaneseArray($elementArr);
         $card->ex = (int) $ex;
-        var_dump($card);
+
+        $secondCells = $tableArray[1]->getElementsByTagName('td');
+        $costElementArr = $this->countElementsByDomElement($secondCells->item(0));
+        if ($isChar) {
+            $positionImgs = $secondCells->item(1)->getElementsByTagName('img');
+            $flags = 0;
+            for ($i = 0; $i < 6; $i++) {
+                $img = $positionImgs->item($i);
+                $hasPosition = false !== strpos($img->getAttribute('href'), 'b.gif');
+                if ($hasPosition) {
+                    $flags |= (1 << $i);
+                }
+            }
+            if ($flags) {
+                $card->setSpotFlags($flags);
+            }
+            $ap = str_replace('AP　', '', $secondCells->item(2 + 6)->textContent);
+            $dp = str_replace('DP　', '', $secondCells->item(3 + 6)->textContent);
+            $sp = str_replace('SP　', '', $secondCells->item(4 + 6)->textContent);
+            $gender = str_replace('性別　', '', $secondCells->item(5 + 6)->textContent);
+            $card->setGenderByText($gender);
+            $card->setStat(Char::STAT_AP, $ap);
+            $card->setStat(Char::STAT_DP, $dp);
+            $card->setStat(Char::STAT_SP, $sp);
+        }
+        $rarity = trim(str_replace('ﾚｱﾘﾃｨ　', '', $secondCells->item(6 + 6)->textContent));
+        $card->rarity = $rarity;
+
+        var_dump($card, $costElementArr);
+    }
+
+    /**
+     * Counts the amount of elements in a dom element by its images.
+     * The japanese element names are used as the keys.
+     * 
+     * @param mixed $html 
+     * @access public
+     * @return void
+     */
+    public function countElementsByDomElement(\DomElement $el) {
+        $elementArr = array ();
+        $elementImgEls = $el->getElementsByTagName('img');
+        foreach ($elementImgEls as $el) {
+            $alt = $el->getAttribute('alt');
+            if (!isset($elementArr[$alt])) {
+                $elementArr[$alt] = 1;
+            }
+            else {
+                $elementArr[$alt]++;
+            }
+        }
+        return $elementArr;
+    }
+
+    /**
+     * Counts the amount of elements in a partial html by its images
+     * 
+     * @param mixed $html 
+     * @access public
+     * @return void
+     */
+    public function countElementsByHtml($html) {
+
     }
 
     public function getSets() {

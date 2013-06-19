@@ -2,12 +2,21 @@
 namespace Lycee;
 /**
  * Class for importing files from http://lycee-tcg.com/
+ *
+ * S_L - which filter menu should be open by default
+ *      1: sets
+ * page_out - How many results to display per page
+ * page_list - Style to show results.
+ *      1: thumbnail view
+ *      2: list view (with all needed details except image)
+ * 
  **/
 
 class LyceeImporter {
 
     public $baseUrl = 'http://lycee-tcg.com/card_list';
     public $convertToUtf8 = true;
+    public $websiteVersionTag = "website-version-1";
 
     /**
      * \Lycee\Zend\CacheHelper
@@ -36,7 +45,20 @@ class LyceeImporter {
 
     public function import() {
         $sets = $this->getSets();
-        var_dump($sets);
+        $this->importSetByArray($sets[0]);
+    }
+
+    public function importSetByArray($arr) {
+        $parsedUrl = parse_url($arr['page']);
+        parse_str($parsedUrl['query'], $qs);
+        $qs['page_out'] = 500;
+        $qs['page_list'] = 2;
+        $options = array ();
+        $options['lifetime'] = 60 * 60 * 24 * 265 * 5; // 5 years.
+        $options['cache_tags'] = array ($this->websiteVersionTag);
+        $html = $this->request($parsedUrl['path'], $qs, $options);
+        echo $html;
+        exit;
     }
 
     public function getSets() {

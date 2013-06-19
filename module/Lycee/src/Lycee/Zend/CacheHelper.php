@@ -36,7 +36,7 @@ class CacheHelper {
         $ret = $cache->setItem($cacheKey, $result);
         $cache->setTags($cacheKey, $cacheTags);
         if (isset($options['lifetime'])) {
-            $this->_cacheOptions->setTtl($this->defaultTtl);
+            $this->_cacheOptions->setTtl($this->_defaultTtl);
         }
         return $ret;
     }

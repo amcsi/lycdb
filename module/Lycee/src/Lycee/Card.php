@@ -10,7 +10,11 @@ abstract class Card extends Lycee {
     public $nameEng;
 
     protected $set;
-    protected $costElement;
+    /**
+     * @var array
+     * @access protected
+     */
+    protected $cost;
     public $ex;
     protected $elementFlags;
     protected $texts; // array
@@ -64,7 +68,18 @@ abstract class Card extends Lycee {
     }
 
     public function setCostByJapaneseArray($array) {
-
+        $map = $this->getJapaneseElementMap();
+        $costArray = array ();
+        foreach ($array as $japaneseElement => $amount) {
+            $enumVal = $map[$japaneseElement];
+            if (is_int($enumVal)) {
+                $costArray[$enumVal] = $amount;
+            }
+            else {
+                trigger_error("Bad japanese element: `$japaneseElement`");
+            }
+        }
+        $this->cost = $costArray;
     }
     
     public function setText($lang, $text) {
@@ -160,7 +175,7 @@ abstract class Card extends Lycee {
         if (!Check::isIntBetween($element, 0, STAR)) {
             return false;
         }
-        return $this->costElement[$element];
+        return isset($this->cost[$element]) ? $this->cost[$element] : 0;
     }
     
     public function insertElement($element, $boolean) {
@@ -175,7 +190,7 @@ abstract class Card extends Lycee {
         return isset(
             $this->cid,
             $this->nameJap,
-            $this->costElement,
+            $this->cost,
             $this->ex,
             $this->elementFlags,
             $this->nameEng,

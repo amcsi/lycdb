@@ -106,8 +106,12 @@ class LyceeImporter {
         $card->setElementByJapaneseArray($elementArr);
         $card->ex = (int) $ex;
 
+        /**
+         * Card cost, position, ap, dp, sp, gender, rarity
+         **/
         $secondCells = $tableArray[1]->getElementsByTagName('td');
         $costElementArr = $this->countElementsByDomElement($secondCells->item(0));
+        $card->setCostByJapaneseArray($costElementArr);
         if ($isChar) {
             $positionImgs = $secondCells->item(1)->getElementsByTagName('img');
             $flags = 0;
@@ -133,7 +137,7 @@ class LyceeImporter {
         $rarity = trim(str_replace('ﾚｱﾘﾃｨ　', '', $secondCells->item(6 + 6)->textContent));
         $card->rarity = $rarity;
 
-        var_dump($card, $costElementArr);
+        var_dump($card);
     }
 
     /**

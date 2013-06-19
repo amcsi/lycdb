@@ -7,6 +7,7 @@ namespace Lycee;
 class LyceeImporter {
 
     public $baseUrl = 'http://lycee-tcg.com/card_list';
+    public $convertToUtf8 = true;
 
     /**
      * \Lycee\Zend\CacheHelper
@@ -57,6 +58,7 @@ class LyceeImporter {
 
     public function requestFullUrl($url, $params = array (), $options = array ()) {
         $cache = $this->getCache();
+
         $useCache = !isset($options['use_cache']) || empty($options['use_cache']); // use cache by default.
         if (!$useCache || !($result = $cache->getCachedResult($url, $params, $options))) {
             $args = (array) $params;
@@ -64,7 +66,14 @@ class LyceeImporter {
             if ($result) {
                 $cache->cacheResult($result, $url, $params, $options);
             }
-		}
+        }
+        $convertToUtf8 = $this->convertToUtf8;
+        if (isset($options['convertToUtf8'])) {
+            $convertToUtf8 = $options['convertToUtf8'];
+        }
+        if ($convertToUtf8) {
+            $result = mb_convert_encoding($result, 'utf-8', array ('utf-8', 'EUC_JP', 'ISO-8859-2'));
+        }
         return $result;
         
     }

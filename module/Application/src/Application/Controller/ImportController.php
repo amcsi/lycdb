@@ -35,6 +35,7 @@ class ImportController extends AbstractActionController
     public function lyceeImport() {
         $sm = $this->getServiceLocator();
         $importer = $sm->get('Lycee\LyceeImporter');
+        $result = $importer->import();
         return false;
     }
 }

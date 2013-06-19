@@ -3,6 +3,12 @@ namespace Lycee\Zend;
 
 class CacheHelper {
 
+    /**
+     * \Zend\Cache\Storage\Adapter\AbstractAdapter
+     * 
+     * @var mixed
+     * @access protected
+     */
     protected $_cache;
     protected $_cacheOptions;
     protected $_defaultTtl;
@@ -14,13 +20,13 @@ class CacheHelper {
     }
 
     public function getCachedResult($method, $params = array (), $options = array ()) {
-        $cache = $this->_cache();
+        $cache = $this->_cache;
         $cacheKey = $this->getCacheKey($method, $params, $options);
         return $cache->getItem($cacheKey);
     }
 
     public function cacheResult($result, $method, $params = array (), $options = array ()) {
-        $cache = $this->_cache();
+        $cache = $this->_cache;
         $cacheKey = $this->getCacheKey($method, $params, $options);
 		$cacheTags = isset($options['cache_tags']) ? $options['cache_tags'] : array ();
         if (isset($options['lifetime'])) {
@@ -28,7 +34,7 @@ class CacheHelper {
             $this->_cacheOptions->setTtl($lifetime);
         }
         $ret = $cache->setItem($cacheKey, $result);
-        $cache->setTags($cacheTags);
+        $cache->setTags($cacheKey, $cacheTags);
         if (isset($options['lifetime'])) {
             $this->_cacheOptions->setTtl($this->defaultTtl);
         }
@@ -43,12 +49,12 @@ class CacheHelper {
     }
 
     public function clearCachedResult($result, $params = array (), $options = array ()) {
-        $cache = $this->_cache();
+        $cache = $this->_cache;
         $cacheKey = $this->getCacheKey($result, $params, $options);
         $cache->clear($cacheKey);
     }
 
     public function __call($method, $args) {
-        return call_user_func_array(array ('parent', $method), $args);
+        return call_user_func_array(array ($this->_cache, $method), $args);
     }
 }

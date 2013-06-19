@@ -53,5 +53,16 @@ abstract class Lycee {
         }
     }
     
+    public function getJapaneseElementMap() {
+        static $ret = array (
+            '雪' => self::SNOW,
+            '月' => self::MOON,
+            '花' => self::FLOWER,
+            '宙' => self::LIGHTNING,
+            '日' => self::SUN,
+            '無' => self::STAR,
+        );
+        return $ret;
+    }
 }
 ?>

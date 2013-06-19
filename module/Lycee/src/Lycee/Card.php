@@ -11,8 +11,8 @@ abstract class Card extends Lycee {
 
     protected $set;
     protected $costElement;
-    protected $exValue;
-    protected $exElementFlags;
+    public $ex;
+    protected $elementFlags;
     protected $texts; // array
     protected $comments;
     
@@ -31,7 +31,7 @@ abstract class Card extends Lycee {
             $prop = lcfirst(substr(__call, 3));
             if (property_exists(__CLASS__, $prop)) {
                 switch ($prop) {
-                    case 'exElementFlags':
+                    case 'elementFlags':
                         throw new BadMethodCallException;
                         break;
                     default:
@@ -47,6 +47,19 @@ abstract class Card extends Lycee {
         }
         else {
             throw new BadMethodCallException;
+        }
+    }
+
+    public function setElementByJapaneseArray($array) {
+        $map = $this->getJapaneseElementMap();
+        foreach ($array as $japaneseElement => $bool) {
+            $enumVal = $map[$japaneseElement];
+            if (is_int($enumVal)) {
+                $this->insertElement($enumVal, $bool);
+            }
+            else {
+                trigger_error("Bad japanese element: `$japaneseElement`");
+            }
         }
     }
     
@@ -73,11 +86,11 @@ abstract class Card extends Lycee {
         }
     }
     
-    public function getExIsElement($element) {
-        if (!Check::isValidExElement($element)) {
+    public function getElement($element) {
+        if (!Check::isValidElement($element)) {
             return false;
         }
-        return (Bw::getBits($this->exElementFlags, $element, 1));
+        return (Bw::getBits($this->elementFlags, $element, 1));
     }
     
     public function findSet() {
@@ -89,7 +102,20 @@ abstract class Card extends Lycee {
         $this->nameJap;
     }
     
-    
+    public static function newCardByTypeText($typeText) {
+        switch (strtolower($typeText)) {
+        case 'character':
+            return new Char;
+        case 'area':
+            return new Area;
+        case 'event':
+            return new Event;
+        case 'item':
+            return new Item;
+        default:
+            trigger_error("No such card type: $typeText");
+        }
+    }
     
     
     public function getTextByPriority($firstLang = LANG_ENG, $secondLang = false) {
@@ -133,11 +159,11 @@ abstract class Card extends Lycee {
         return $this->costElement[$element];
     }
     
-    public function insertExIsElement($element, $boolean) {
+    public function insertElement($element, $boolean) {
         if (!isset($element, $boolean)) {
             return false;
         }
-        $this->isExElementFlags = Bw::changeBits($this->exIsElementFlags, 0, 1, (int) $boolean);
+        $this->elementFlags = Bw::changeBits($this->elementFlags, 0, 1, (int) $boolean);
         return true;
     }
     
@@ -146,17 +172,26 @@ abstract class Card extends Lycee {
             $this->cid,
             $this->nameJap,
             $this->costElement,
-            $this->exValue,
-            $this->exElementFlags,
+            $this->ex,
+            $this->elementFlags,
             $this->nameEng,
             $this->texts,
             $this->comments
         );
     }
+
+    public function setJpName($name) {
+        $this->nameJap = $name;
+    }
+
+    public function setCidText($cidText) {
+        $pattern = "@(\w+)-(\d+)([A-Z])?@";
+        $success = preg_match($pattern, $cidText, $matches);
+        if ($success) {
+            $this->cid = intval($matches[2], 10);
+        }
+        else {
+            trigger_error("Card id text did not match pattern. Text: `$cidText`");
+        }
+    }
 }
-
-
-
-
-
-?>

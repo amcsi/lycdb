@@ -11,6 +11,7 @@ namespace Lycee;
  *      2: list view (with all needed details except image)
  * 
  **/
+use \Zend\Dom\Query;
 
 class LyceeImporter {
 
@@ -85,6 +86,27 @@ class LyceeImporter {
     }
 
     public function getCardByTablesList2(array $tableArray) {
+        $firstCells = $tableArray[0]->getElementsByTagName('td');
+        $setText = trim(strip_tags($firstCells->item(0)->textContent));
+        $cardTypeText = trim($firstCells->item(1)->textContent, " \t\n\r\0\x0B　");
+        $name1 = trim($firstCells->item(2)->textContent);
+        $pattern = '@<img src="([^\"]*)"@';
+        $costArr = array ();
+        $costImgEls = $firstCells->item(3)->getElementsByTagName('img');
+        foreach ($costImgEls as $el) {
+            $alt = $el->getAttribute('alt');
+            if (!isset($costArr[$alt])) {
+                $costArr[$alt] = 1;
+            }
+            else {
+                $costArr[$alt]++;
+            }
+        }
+        $costImgs = preg_match_all($pattern, $firstCells->item(3)->textContent, $matches);
+        $exText = trim($firstCells->item(4)->textContent);
+        preg_match('@EX　(\d+)@', $exText, $matches2);
+
+        var_dump($setText, $cardTypeText, $name1, $costArr, $matches2);
     }
 
     public function getSets() {

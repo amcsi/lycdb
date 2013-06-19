@@ -57,8 +57,34 @@ class LyceeImporter {
         $options['lifetime'] = 60 * 60 * 24 * 265 * 5; // 5 years.
         $options['cache_tags'] = array ($this->websiteVersionTag);
         $html = $this->request($parsedUrl['path'], $qs, $options);
-        echo $html;
-        exit;
+
+        $domQuery = new \Zend\Dom\Query($html);
+        $selector = '#card_list_main div.m_15 > *';
+        $selectEls = $domQuery->execute($selector);
+
+        $tableArray = array ();
+
+        $cards = array ();
+
+        /**
+         * Cards in the HTML are usually 4 tables separated by a br. 2 brs mark the end. 
+         */
+        foreach ($selectEls as $selectEl) {
+            if ('table' == $selectEl->tagName) {
+                $tableArray[] = $selectEl;
+            }
+            else if ('br' == $selectEl->tagName) {
+                if ($tableArray) {
+                    $card = $this->getCardByTablesList2($tableArray);
+                    $cards[] = $card;
+                }
+                $tableArray = array ();
+            }
+        }
+        var_dump(count($cards));
+    }
+
+    public function getCardByTablesList2(array $tableArray) {
     }
 
     public function getSets() {

@@ -154,5 +154,28 @@ class Char extends Card {
         $this->isMale = $isMale;
         $this->isFemale = $isFemale;
     }
+
+    public function getJapaneseBasicAbilityMap() {
+        static $ret = array (
+            'ダッシュ'                  => self::DASH,
+            'アグレッシブ'              => self::AGGRESSIVE,
+            'ステップ'                  => self::STEP,
+            'サイドステップ'            => slef::SIDE_STEP,
+            'オーダーステップ'          => self::ORDER_STEP,
+            'ジャンプ'                  => self::JUMP,
+            'エスケープ'                => self::ESCAPE,
+            'サイドアタック'            => self::SIDE_ATTACK,
+            'タックス・トラッシュ'      => self::TAX_TRASH,
+            'タックス・ウェイクアップ'  => self::TAX_WAKEUP,
+            'サポーター'                => self::SUPPORTER,
+            'タッチ'                    => self::TOUCH,
+            'アタッカー'                => self::ATTACKER,
+            'ディフェンダー'            => self::DEFENDER,
+            'ボーナス'                  => self::BONUS,
+            'ペナルティ'                => self::PENALTY,
+            'デッキ・ボーナス'          => self::DECK_BONUS,
+        );
+        return $ret;
+    }
 }
 ?>

@@ -79,12 +79,33 @@ class Cost extends Lycee {
             }
             $html = str_replace($img, '', $html);
         }
-        $this->isAuto = true;
+        $this->isAuto = $auto;
         $trimmed = trim(strip_tags($html), " \t\n\r\0\x0B,");
         if ($trimmed) {
             $this->text = $trimmed;
         }
     }
     
+    public function fillByLyceeArray($array) {
+        $elementMap = $this->getJapaneseElementMap();
+        $auto = true;
+        foreach ($array as $japKey => $amount) {
+            if ($amount) {
+                $auto = false;
+                if ('0' === $japKey) {
+                    // the cost is free
+                    return;
+                }
+                else if ('T' == $japKey) {
+                    $this->isTap = true;
+                }
+                else if (isset($elementMap[$japKey])) {
+                    $enumVal = $elementMap[$japKey];
+                    $this->insertCostElement($amount, $enumVal);
+                }
+            }
+        }
+        $this->isAuto = $auto;
+    }
 }
 ?>

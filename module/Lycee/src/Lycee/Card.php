@@ -199,6 +199,10 @@ abstract class Card extends Lycee {
         );
     }
 
+    public function setMainAbilityText($abilityText) {
+        $this->abilityTexts[self::LANG_JP] = $abilityText;
+    }
+
     public function setJpName($name) {
         $this->nameJap = $name;
     }

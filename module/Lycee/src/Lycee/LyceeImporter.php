@@ -137,12 +137,96 @@ class LyceeImporter {
         $rarity = trim(str_replace('ﾚｱﾘﾃｨ　', '', $secondCells->item(6 + 6)->textContent));
         $card->rarity = $rarity;
 
+        if ($isChar) {
+            $thirdRows = $tableArray[2]->getElementsByTagName('tr');
+
+            $currentSubTextType = -1;
+
+            /**
+             * These are the orders in abilities should be listed for a character.
+             * Something is wrong if the order appears to be messed up.
+             **/
+            $typeConversion = 0;
+            $typeBasicAbility = 1;
+            $typeSpecialAbility = 2;
+
+            $nextIsSpecialAbilityText = false;
+
+            $basicAbilityMap = $card->getJapaneseBasicAbilityMap();
+            foreach ($thirdRows as $abilityRow) {
+                $tds = $abilityRow->getElementsByTagName('td');
+                $td1 = $tds->item(0);
+                /**
+                 * If on last row we marked the next row being the ability text, then this is the ability text :)
+                 */
+                if ($nextIsSpecialAbilityText) {
+                    $nextIsSpecialAbilityText = false;
+                    // @todo change images into Lycdb markup
+                    $card->setSpecialAbilityText(trim($td1->textContent));
+
+                    continue;
+                }
+                if (2 == $td1->getAttribute('rowspan')) {
+                    $td2 = $tds->item(1);
+
+                    $card->setSpecialAbilityName($td1->textContent);
+                    $currentSubTextType = $typeSpecialAbility;
+                    $japaneseCostArray = $this->countElementsByDomElement($td2);
+                    $costText = trim(strip_tags($td2->textContent));
+                    $cost = new Cost;
+                    $cost->text = $costText;
+                    $cost->fillByLyceeArray($japaneseCostArray);
+                    $card->setSpecialAbilityCost($cost);
+
+                    $nextIsSpecialAbilityText = true;
+
+                    continue;
+                }
+                else {
+                    $td2 = $tds->item(1);
+                    $name = $td1->textContent;
+                    if ('コンバージョン' == $name) {
+                        if ($typeConversion < $currentSubTextType) {
+                            $msg = "Order error: ability type detected as conversion, but last type was: `$currentSubTextType`";
+                            trigger_error($msg);
+                        }
+                        $currentSubTextType = $typeConversion;
+                        $card->conversion = $td2->textContent;
+                    }
+                    else if (isset($basicAbilityMap[$name])) {
+                        $basicAbilityEnumVal = $basicAbilityMap[$name];
+                        if (0 <= $basicAbilityEnumVal) {
+                            $japaneseCostArray = $this->countElementsByDomElement($td2);
+                            $costText = trim(strip_tags($td2->textContent));
+                            $cost = new Cost;
+                            $cost->text = $costText;
+                            $cost->fillByLyceeArray($japaneseCostArray);
+                        }
+                        else {
+                            // no cost
+                            $cost = false;
+                        }
+                        $card->setBasicAbility($basicAbilityEnumVal, true, $cost);
+                    }
+                    else {
+                        $msg = "Couldn't map to a registered basic ability: `$name`";
+                        trigger_error($msg);
+                    }
+                }
+            }
+        }
+        else {
+            $thirdCells = $tableArray[2]->getElementsByTagName('td');
+            $card->setMainAbilityText($thirdCells->item(2)->textContent);
+        }
+
         var_dump($card);
     }
 
     /**
      * Counts the amount of elements in a dom element by its images.
      * The japanese element names are used as the keys.
+     * Also, 0 means free and T means tap.
      * 
      * @param mixed $html 
      * @access public

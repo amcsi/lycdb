@@ -13,6 +13,7 @@ class Char extends Card {
     public $abilityNames = array ();
     public $abilityTexts = array ();
     public $abilityCostObj;
+    public $conversion = '';
     
     // negative basic abilities do not have costs
     const DASH          = -2;
@@ -155,12 +156,24 @@ class Char extends Card {
         $this->isFemale = $isFemale;
     }
 
+    public function setSpecialAbilityName($name) {
+        $this->abilityNames[self::LANG_JP] = $name;
+    }
+
+    public function setSpecialAbilityCost(Cost $cost) {
+        $this->abilityCostObj = $cost;
+    }
+
+    public function setSpecialAbilityText($text) {
+        $this->abilityTexts[self::LANG_JP] = $text;
+    }
+
     public function getJapaneseBasicAbilityMap() {
         static $ret = array (
             'ダッシュ'                  => self::DASH,
             'アグレッシブ'              => self::AGGRESSIVE,
             'ステップ'                  => self::STEP,
-            'サイドステップ'            => slef::SIDE_STEP,
+            'サイドステップ'            => self::SIDE_STEP,
             'オーダーステップ'          => self::ORDER_STEP,
             'ジャンプ'                  => self::JUMP,
             'エスケープ'                => self::ESCAPE,

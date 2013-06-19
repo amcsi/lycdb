@@ -37,7 +37,7 @@ class Module
                 'Lycee\LyceeImporter' => function ($sm) {
                     $cache = $sm->get('Lycee\Cache');
                     $lyceeImporter = new LyceeImporter;
-                    $lyceeImporter->setCache($cache);
+                    $lyceeImporter->setServiceManager($sm);
                     return $lyceeImporter;
                 }
             ),

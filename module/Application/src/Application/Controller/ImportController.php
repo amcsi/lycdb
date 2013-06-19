@@ -34,12 +34,7 @@ class ImportController extends AbstractActionController
 
     public function lyceeImport() {
         $sm = $this->getServiceLocator();
-        echo "before get service<br>\n";
         $importer = $sm->get('Lycee\LyceeImporter');
-        echo "after get service<br>\n";
-        echo "before invoke<br>\n";
-        $importer->request('lol');
-        echo "after invoke<br>\n";
         return false;
     }
 }

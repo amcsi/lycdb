@@ -1,26 +1,228 @@
-<div class="hero-unit">
-    <h1><?php echo sprintf($this->translate('Welcome to %sZend Framework 2%s'), '<span class="zf-green">', '</span>') ?></h1>
-    <p><?php echo sprintf($this->translate('Congratulations! You have successfully installed the %sZF2 Skeleton Application%s. You are currently running Zend Framework version %s. This skeleton can serve as a simple starting point for you to begin building your application on ZF2.'), '<a href="https://github.com/zendframework/ZendSkeletonApplication" target="_blank">', '</a>', \Zend\Version\Version::VERSION) ?></p>
-    <p><a class="btn btn-success btn-large" href="https://github.com/zendframework/zf2" target="_blank"><?php echo $this->translate('Fork Zend Framework 2 on GitHub') ?> &raquo;</a></p>
-</div>
-
-<div class="row">
-
-    <div class="span4">
-        <h2><?php echo $this->translate('Follow Development') ?></h2>
-        <p><?php echo sprintf($this->translate('Zend Framework 2 is under active development. If you are interested in following the development of ZF2, there is a special ZF2 portal on the official Zend Framework website which provides links to the ZF2 %swiki%s, %sdev blog%s, %sissue tracker%s, and much more. This is a great resource for staying up to date with the latest developments!'), '<a href="http://framework.zend.com/wiki/display/ZFDEV2/Home">', '</a>', '<a href="http://framework.zend.com/zf2/blog">', '</a>', '<a href="http://framework.zend.com/issues/browse/ZF2">', '</a>') ?></p>
-        <p><a class="btn btn-success" href="http://framework.zend.com/zf2" target="_blank"><?php echo $this->translate('ZF2 Development Portal') ?> &raquo;</a></p>
-    </div>
-
-    <div class="span4">
-        <h2><?php echo $this->translate('Discover Modules') ?></h2>
-        <p><?php echo sprintf($this->translate('The community is working on developing a community site to serve as a repository and gallery for ZF2 modules. The project is available %son GitHub%s. The site is currently live and currently contains a list of some of the modules already available for ZF2.'), '<a href="https://github.com/zendframework/modules.zendframework.com">', '</a>') ?></p>
-        <p><a class="btn btn-success" href="http://modules.zendframework.com/" target="_blank"><?php echo $this->translate('Explore ZF2 Modules') ?> &raquo;</a></p>
-   </div>
-
-   <div class="span4">
-       <h2><?php echo $this->translate('Help &amp; Support') ?></h2>
-       <p><?php echo sprintf($this->translate('If you need any help or support while developing with ZF2, you may reach us via IRC: %s#zftalk on Freenode%s. We\'d love to hear any questions or feedback you may have regarding the beta releases. Alternatively, you may subscribe and post questions to the %smailing lists%s.'), '<a href="irc://irc.freenode.net/zftalk">', '</a>', '<a href="http://framework.zend.com/wiki/display/ZFDEV/Mailing+Lists">', '</a>') ?></p>
-       <p><a class="btn btn-success" href="http://webchat.freenode.net?channels=zftalk" target="_blank"><?php echo $this->translate('Ping us on IRC') ?> &raquo;</a></p>
-   </div>
-</div>
+        <input type='button' value='Show/hide basic search' onclick="show_hide('basic_search_form');">
+        <form id='basic_search_form' method='get' action='#'>
+            <fieldset class="card_search">
+                <legend>Basic search</legend>
+                <ul>
+                    <li>
+                        <label for='basic_search_name' class="form_title">Card name</label>
+                        <input class="card_name" id='basic_search_name' type='text' name='name' value=''>
+                    </li>
+                    <li>
+                        <label for='basic_search_card_type' class="form_title">Card type</label>
+                        <select id='basic_search_card_type' name='card_type'>
+                            <option value='-2' selected="selected">-</option>
+                            <option value='-1'>non-character</option>
+                            <option value='0'>Character</option>
+                            <option value='1'>Area</option>
+                            <option value='2'>Item</option>
+                            <option value='3'>Event</option>
+                            
+                        </select>
+                    </li>
+                    <li>
+                        <label for='basic_search_name' class="form_title">Cost</label>
+                        <select id='basic_search_cost_type' name='cost_type'>
+                            <option value="0" selected="selected">-</option>
+                            <option value="1">payable by:</option>
+                            <option value="2">is exactly:</option>
+                        </select>
+                        <label for="basic_search_cost_snow"><img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"></label>
+                        <select id='basic_search_cost_snow' name='cost_snow'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_moon"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"></label>
+                        <select id='basic_search_cost_moon' name='cost_moon'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_lightning"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"></label>
+                        <select id='basic_search_cost_lightning' name='cost_lightning'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_flower"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"></label>
+                        <select id='basic_search_cost_flower' name='cost_flower'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_sun"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif"></label>
+                        <select id='basic_search_cost_sun' name='cost_sun'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                        <label for="basic_search_cost_star"><img alt='star' src="<?php echo $this->basePath() ?>/img/star.gif"></label>
+                        <select id='basic_search_cost_star' name='cost_star'>
+                            <option value='0'>0</option>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                            <option value='6'>6</option>
+                            <option value='7'>7</option>
+                            <option value='8'>8</option>
+                            <option value='9'>9</option>
+                            <option value='10'>10</option>
+                            <option value='11'>11</option>
+                            <option value='12'>12</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label for='basic_search_name' class="form_title">Ex</label>
+                        <select id="basic_search_ex_operator" name="ex_operator">
+                            <option value="1" selected="selected">≥</option>
+                            <option value="0">=</option>
+                            <option value="-1">≤</option>
+                        </select>
+                        <select id="basic_search_ex" name="ex">
+                            <option value="0">0</option>
+                            <option value="0">1</option>
+                            <option value="0">2</option>
+                            <option value="0">3</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label class="form_title">Element</label>
+                        <select id='basic_search_element_type' name='element_type'>
+                            <option value='0'>-</option>
+                            <option value='1'>has:</option>
+                            <option value='2'>is:</option>
+                        </select>
+                        <label for="basic_search_element_snow"><img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"></label><input type="checkbox" id="basic_search_element_snow" name="element_snow">
+                        <label for="basic_search_element_moon"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"></label><input type="checkbox" id="basic_search_element_moon" name="element_moon">
+                        <label for="basic_search_element_lightning"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"></label><input type="checkbox" id="basic_search_element_lightning" name="element_lightning">
+                        <label for="basic_search_element_flower"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"></label><input type="checkbox" id="basic_search_element_flower" name="element_flower">
+                        <label for="basic_search_element_sun"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif"></label><input type="checkbox" id="basic_search_element_sun" name="element_sun">
+                    </li>
+                    <li>
+                        <label for='basic_search_text' class="form_title">Text contains</label>
+                        <input class="card_text" id='basic_search_text' type='text' name='text' value=''>
+                    </li>
+                </ul>
+            </fieldset>
+        </form>
+        <table class="card_results">
+            <thead>
+                <colgroup class="card_result_columns">
+                    <col class="card_id">
+                    <col class="card_name">
+                    <col class="card_sets">
+                    <col class="card_cost">
+                    <col class="card_ex">
+                    <col class="card_element">
+                    <col class="card_spots">
+                    <col class="card_ap">
+                    <col class="card_dp">
+                    <col class="card_sp">
+                </colgroup>
+                <tr class="card_result_columns">
+                    <th class="card_id" id="card_result_title_0" onclick="reorder_table('card_result', 0)">Card ID</th>
+                    <th class="card_name" id="card_result_title_1" onclick="reorder_table('card_result', 1)">Name</th>
+                    <th class="card_sets" id="card_result_title_9" onclick="reorder_table('card_result', 2)">Card sets</th>
+                    <th class="card_cost" id="card_result_title_2" onclick="reorder_table('card_result', 3)">Cost</th>
+                    <th class="card_ex" id="card_result_title_3" onclick="reorder_table('card_result', 4)">Ex</th>
+                    <th class="card_element" id="card_result_title_4" onclick="reorder_table('card_result', 5)">Element</th>
+                    <th class="card_spots" id="card_result_title_5" onclick="reorder_table('card_result', 6)">FL</th>
+                    <th class="card_ap" id="card_result_title_6" onclick="reorder_table('card_result', 7)">AP</th>
+                    <th class="card_dp" id="card_result_title_7" onclick="reorder_table('card_result', 8)">DP</th>
+                    <th class="card_sp" id="card_result_title_8" onclick="reorder_table('card_result', 9)">SP</th>
+                </tr>
+            </thead>
+            
+            
+            <tbody>
+                <tr id="card_result_0" class="character">
+                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">CH-0409</td>
+                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">Tohno Akiha</td>
+                    <td>Type-Moon 1.0</td>
+                    <td><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='star' src="<?php echo $this->basePath() ?>/img/star.gif"><img alt='star' src="<?php echo $this->basePath() ?>/img/star.gif"></td>
+                    <td>2</td>
+                    <td><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"></td>
+                    <td>
+                        <div class="card_spot_row">
+                            <img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1"><img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1"><img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1">
+                        </div>
+                        <div class="card_spot_row">
+                            <img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1"><img src="<?php echo $this->basePath() ?>/img/spot-off.gif" alt="0"><img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1">
+                        </div>
+                    </td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>1</td>
+                </tr>
+                <tr id="card_result_1" class="event">
+                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">EV-0207</td>
+                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">Big Mistake</td>
+                    <td>Type-Moon 2.0</td>
+                    <td style="width:120px;">
+                        <img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif">
+                    </td>
+                    <td>0</td>
+                    <td>
+                        <img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif">
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>

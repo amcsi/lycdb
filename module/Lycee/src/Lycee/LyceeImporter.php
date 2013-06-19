@@ -35,7 +35,32 @@ class LyceeImporter {
     }
 
     public function import() {
-        return $this->getIndexHtml();
+        $sets = $this->getSets();
+        var_dump($sets);
+    }
+
+    public function getSets() {
+        $key = 'setsArray';
+        $cache = $this->getCache();
+        $sets = $cache->getCachedResult($key);
+        if (!$sets) {
+            $indexHtml = $this->getIndexHtmlWithSetsOpen();
+            $domQuery = new \Zend\Dom\Query();
+            $domQuery->setDocumentHtml($indexHtml, 'utf-8');
+            $setEls = $domQuery->execute('#card_list_main div.m_14a div.m_14b_y div.m_14e a');
+            $ret = array ();
+            foreach ($setEls as $el) {
+                $set['page'] = $el->getAttribute('href');
+                $text = trim($el->textContent);
+                $pattern = '@^(.*)（(\d+)）$@'; // note the japanese parentheses characters
+                preg_match($pattern, $text, $matches);
+                $set['name'] = $matches[1];
+                $set['count'] = $matches[2];
+                $ret[] = $set;
+            }
+            $cache->cacheResult($sets, $key);
+        }
+        return $ret;
     }
 
     /**
@@ -45,9 +70,10 @@ class LyceeImporter {
      * @access public
      * @return void
      */
-    public function getIndexHtml() {
+    public function getIndexHtmlWithSetsOpen() {
         $page = 'index.cgi';
-        $indexHtml = $this->request($page);
+        $params = array ('S_L' => 1);
+        $indexHtml = $this->request($page, $params);
         return $indexHtml;
     }
 
@@ -72,7 +98,8 @@ class LyceeImporter {
             $convertToUtf8 = $options['convertToUtf8'];
         }
         if ($convertToUtf8) {
-            $result = mb_convert_encoding($result, 'utf-8', array ('utf-8', 'EUC_JP', 'ISO-8859-2'));
+            $result = mb_convert_encoding($result, 'utf-8', array ('EUC_JP'));
+            $result = str_replace('charset=EUC-JP', 'charset=UTF-8', $result);
         }
         return $result;
         

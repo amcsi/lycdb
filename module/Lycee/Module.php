@@ -39,7 +39,8 @@ class Module
                     $lyceeImporter = new LyceeImporter;
                     $lyceeImporter->setServiceManager($sm);
                     return $lyceeImporter;
-                }
+                },
+                'AMysql' => 'Lycee\Zend\AMysqlFactory',
             ),
             'invokables' => array(),
             'services' => array(),

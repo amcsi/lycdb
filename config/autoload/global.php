@@ -12,5 +12,10 @@
  */
 
 return array(
-    // ...
+    'amysql' => array (
+        'host' => 'localhost',
+        'user' => 'lycdb',
+        'password' => '',
+        'db'        => 'lycdb',
+    ),
 );

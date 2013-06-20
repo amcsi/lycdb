@@ -1,2 +1,4 @@
 <?php
-return array ();
+return array (
+    'AMysql' => './vendor/amcsi/amysql/AMysql.php',
+);

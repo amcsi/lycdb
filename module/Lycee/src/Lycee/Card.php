@@ -176,7 +176,7 @@ abstract class Card extends Lycee {
         if (!isset($element)) {
             return false;
         }
-        if (!Check::isIntBetween($element, 0, STAR)) {
+        if (!Check::isIntBetween($element, 0, self::STAR)) {
             return false;
         }
         return isset($this->cost[$element]) ? $this->cost[$element] : 0;
@@ -212,6 +212,7 @@ abstract class Card extends Lycee {
     }
 
     public function setCidText($cidText) {
+        $this->cidText = $cidText;
         $pattern = "@(\w+)-(\d+)([A-Z])?@";
         $success = preg_match($pattern, $cidText, $matches);
         if ($success) {
@@ -219,6 +220,9 @@ abstract class Card extends Lycee {
         }
         else {
             trigger_error("Card id text did not match pattern. Text: `$cidText`");
+        }
+        if (!empty($matches[3])) {
+            $this->alternate = $matches[3];
         }
     }
 
@@ -228,5 +232,44 @@ abstract class Card extends Lycee {
 
     public function getErrors() {
         return $this->_errors;
+    }
+
+    public function toDbData() {
+        $data = array ();
+        $data['cid']                     = $this->cidText;
+        $data['name_jp']                 = $this->nameJap;
+        $data['name_en']                 = $this->nameEng;
+        $data['rarity']                  = $this->rarity;
+        $data['ex']                      = $this->ex;
+        $data['is_snow']                 = $this->getElement(self::SNOW);
+        $data['is_moon']                 = $this->getElement(self::MOON);
+        $data['is_lightning']                 = $this->getElement(self::LIGHTNING);
+        $data['is_flower']                 = $this->getElement(self::FLOWER);
+        $data['is_sun']                 = $this->getElement(self::SUN);
+        $data['cost_snow']                 = $this->getCostElement(self::SNOW);
+        $data['cost_moon']                 = $this->getCostElement(self::MOON);
+        $data['cost_lightning']                 = $this->getCostElement(self::LIGHTNING);
+        $data['cost_flower']                 = $this->getCostElement(self::FLOWER);
+        $data['cost_sun']                 = $this->getCostElement(self::SUN);
+        $data['cost_star']                 = $this->getCostElement(self::STAR);
+        $data['ability_desc_jp']         = $this->texts[self::LANG_JP];
+        $data['ability_desc_en']         = $this->texts[self::LANG_EN];
+        $data['comments_jp']            = isset($this->comments[self::LANG_JP]) ? $this->comments[self::LANG_JP] : '';
+        $data['comments_en']            = isset($this->comments[self::LANG_EN]) ? $this->comments[self::LANG_EN] : '';
+        $data['import_errors']          = join("\n", $this->getErrors());
+
+        $data['type'] = null;
+        $data['ability_cost_jp'] = '';
+        $data['ability_cost_en'] = '';
+        $data['ability_name_jp'] = '';
+        $data['ability_name_en'] = '';
+        $data['conversion_jp'] = '';
+        $data['basic_ability_flags'] = '';
+        $data['basic_abilities_jp'] = '';
+        $data['basic_abilities_en'] = '';
+        $data['is_male']            = 0;
+        $data['is_female']            = 0;
+        $data['locked']            = 0;
+        return $data;
     }
 }

@@ -17,7 +17,7 @@ class Check extends Config {
         return ($x < 0 or $x > Config::MAX_EX_VALUE) ? false : true;
     }
     
-    public static function isValidExElement($x) {
+    public static function isValidElement($x) {
         return ($x < 0 or $x > 4) ? false : true;
     }
     

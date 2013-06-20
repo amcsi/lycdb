@@ -19,7 +19,7 @@ class Cost extends Lycee {
     }
     
     public function getCostElement($element) {
-        $amount = $this->getBits($this->cost, $this->costSizes * $element, $this->costSizes);
+        $amount = Bw::getBits($this->cost, $this->costSizes * $element, $this->costSizes);
         return $amount;
     }
     
@@ -35,6 +35,31 @@ class Cost extends Lycee {
         
         $integer = Bw::changeBits($this->cost, $element * $this->costSizes, $this->costSizes, $amount);
         $this->cost = $integer;
+    }
+
+    public function toLycdbMarkup() {
+        $ret = '';
+        if ($this->isAuto) {
+            return '';
+        }
+        else if ($this->isTap) {
+            $ret .= '[tap]';
+        }
+        else if (!$this->cost) {
+            return '[0]';
+        }
+        $ret =
+            str_repeat('[snow]', $this->getCostElement(self::SNOW)) .
+            str_repeat('[moon]', $this->getCostElement(self::MOON)) .
+            str_repeat('[flower]', $this->getCostElement(self::FLOWER)) .
+            str_repeat('[lightning]', $this->getCostElement(self::LIGHTNING)) .
+            str_repeat('[sun]', $this->getCostElement(self::SUN)) .
+            str_repeat('[star]', $this->getCostElement(self::STAR))
+        ;
+        if ($this->text) {
+            $ret .= " $this->text";
+        }
+        return $ret;
     }
 
     public function getOmoshiroiMap() {

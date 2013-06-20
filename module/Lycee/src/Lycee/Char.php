@@ -15,9 +15,6 @@ class Char extends Card {
     public $abilityCostObj;
     public $conversion = '';
     
-    // negative basic abilities do not have costs
-    const DASH          = -2;
-    const AGGRESSIVE    = -1;
     const STEP          = 0;
     const SIDE_STEP     = 1;
     const ORDER_STEP    = 2;
@@ -33,6 +30,8 @@ class Char extends Card {
     const BONUS         = 12;
     const PENALTY       = 13;
     const DECK_BONUS    = 14;
+    const DASH          = 15;
+    const AGGRESSIVE    = 16;
     
     const STAT_AP = 0;
     const STAT_DP = 1;
@@ -190,6 +189,45 @@ class Char extends Card {
         );
         return $ret;
     }
+    
+    public function getJapaneseBasicAbilityFlippedMap() {
+        static $ret;
+        if (!$ret) {
+            $ret = array_flip($this->getJapaneseBasicAbilityMap());
+        }
+        return $ret;
+    }
+
+    public function getEnglishBasicAbilityMap() {
+        static $ret = array (
+            'Dash'                  => self::DASH,
+            'Aggressive'              => self::AGGRESSIVE,
+            'Step'                  => self::STEP,
+            'Side Step'            => self::SIDE_STEP,
+            'Order Step'          => self::ORDER_STEP,
+            'Jump'                  => self::JUMP,
+            'Escape'                => self::ESCAPE,
+            'Side Attack'            => self::SIDE_ATTACK,
+            'Tax Trash'      => self::TAX_TRASH,
+            'Tax Wakeup'  => self::TAX_WAKEUP,
+            'Supporter'                => self::SUPPORTER,
+            'Touch'                    => self::TOUCH,
+            'Attacker'                => self::ATTACKER,
+            'Defender'            => self::DEFENDER,
+            'Bonus'                  => self::BONUS,
+            'Penalty'                => self::PENALTY,
+            'Deck Bonus'          => self::DECK_BONUS,
+        );
+        return $ret;
+    }
+    
+    public function getEnglishBasicAbilityFlippedMap() {
+        static $ret;
+        if (!$ret) {
+            $ret = array_flip($this->getEnglishBasicAbilityMap());
+        }
+        return $ret;
+    }
 
     public function basicAbilityHasCost($basicAbilityInt) {
         static $noCosts = array (
@@ -197,6 +235,49 @@ class Char extends Card {
         );
         $hasCost = !in_array($basicAbilityInt, $noCosts);
         return $hasCost;
+    }
+
+    public function toDbData() {
+        $data = parent::toDbData();
+        $data['type'] = self::CHAR;
+        $abilityCostObj = $this->abilityCostObj;
+        if ($abilityCostObj) {
+            $data['ability_cost_jp'] = $abilityCostObj->toLycdbMarkup();
+            $data['ability_cost_en'] = $abilityCostObj->toLycdbMarkup();
+        }
+        $data['ability_name_jp'] = $this->abilityNames[self::LANG_JP];
+        $data['ability_name_en'] = isset($this->abilityNames[self::LANG_EN]) ? $this->abilityNames[self::LANG_EN] : null;
+        $data['conversion_jp'] = $this->conversion;
+        $data['basic_ability_flags'] = $this->getBasicAbilityFlags();
+        $basicAbilitiesJp = array ();
+        $basicAbilitiesEn = array ();
+        $basicAbilitiesJpFlipped = $this->getJapaneseBasicAbilityFlippedMap();
+        $basicAbilitiesEnFlipped = $this->getEnglishBasicAbilityFlippedMap();
+        foreach ($this->basicAbilities as $key => $val) {
+            $babJp = $basicAbilitiesJpFlipped[$key];
+            $babEn = $basicAbilitiesEnFlipped[$key];
+            if ($val instanceof Cost) {
+                $textPart = $val->toLycdbMarkup();
+                $babEn .= " $textPart";
+                $babJp .= " $textPart";
+            }
+            $basicAbilitiesJp[] = $babJp;
+            $basicAbilitiesEn[] = $babEn;
+        }
+        $data['basic_abilities_jp'] = join("\n", $basicAbilitiesJp);
+        $data['basic_abilities_en'] = join("\n", $basicAbilitiesEn);
+        $data['is_male']            = $this->isMale ? 1 : 0;
+        $data['is_female']            = $this->isFemale ? 1 : 0;
+        return $data;
+    }
+
+    public function getBasicAbilityFlags() {
+        $keys = array_keys($this->basicAbilities);
+        $flags = 0;
+        foreach ($keys as $key) {
+            $flags |= 1 << $key;
+        }
+        return $flags;
     }
 }
 ?>

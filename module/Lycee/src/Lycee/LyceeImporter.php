@@ -30,6 +30,7 @@ class LyceeImporter {
     protected $_serviceManager;
 
     public $setsTableName = 'lycdb_sets';
+    public $cardsTableName = 'lycdb_cards';
 
     public function __construct() {
     }
@@ -76,6 +77,7 @@ class LyceeImporter {
     }
 
     public function importSetByArray($arr) {
+        $amysql = $this->getAMysql();
         $qs = $arr['qs'];
         $qs['page_out'] = 500;
         $qs['page_list'] = 2;
@@ -107,7 +109,35 @@ class LyceeImporter {
                 $tableArray = array ();
             }
         }
-        var_dump(count($cards));
+        $datas = array ();
+        $neededData = array (
+            'cid', 'name_jp', 'rarity', 'ex', 'is_snow', 'is_moon', 'is_lightning', 'is_flower', 'is_sun',
+            'cost_snow', 'cost_moon', 'cost_lightning', 'cost_flower', 'cost_sun', 'cost_star',
+            'ability_desc_jp', 'comments_jp', 'import_errors', 'type', 'ability_cost_jp', 'ability_name_jp',
+            'conversion_jp', 'basic_ability_flags', 'basic_abilities_jp', 'is_male', 'is_female', 'import_errors'
+        );
+        foreach ($cards as $card) {
+            $data = $card->toDbData();
+            $dataToUse = array ();
+            if ($data['locked']) {
+                continue;
+            }
+            foreach ($neededData as $key) {
+                if (!array_key_exists($key, $data)) {
+                    trigger_error("Missing key: $key. Aborting set: $arr[extId]", E_USER_WARNING);
+                    return;
+                }
+                else {
+                    $dataToUse[$key] = $data[$key];
+                }
+            }
+            $dataToUse['insert_date'] = $amysql->expr('CURRENT_TIMESTAMP');
+            $datas[] = $dataToUse;
+        }
+        $stmt = $amysql->newStatement();
+        $stmt->insertReplaceOnDuplicateKeyUpdate('INSERT', $this->cardsTableName, $datas);
+        $stmt->execute();
+        var_dump("Affected rows: " . $stmt->affectedRows);
     }
 
     public function getCardByTablesList2(array $tableArray) {
@@ -228,7 +258,7 @@ class LyceeImporter {
             $card->setMainAbilityText($thirdCells->item(2)->textContent);
         }
 
-        var_dump($card);
+        return $card;
     }
 
     public function toLycdbMarkup($html) {

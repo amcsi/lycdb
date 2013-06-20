@@ -20,6 +20,8 @@ abstract class Card extends Lycee {
     protected $texts; // array
     protected $comments;
 
+    public $setExtId;
+
     protected $_errors = array ();
     
     const CHAR = 0;

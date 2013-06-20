@@ -16,6 +16,7 @@ class AMysqlFactory implements FactoryInterface {
             $config['amysql']['password']
         );
         $amysql->selectDb($config['amysql']['db']);
+        $amysql->setCharset('utf8');
 
         return $amysql;
     }

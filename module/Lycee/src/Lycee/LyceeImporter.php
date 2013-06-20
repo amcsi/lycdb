@@ -26,13 +26,23 @@ class LyceeImporter {
      * @access protected
      */
     protected $_cache;
+    protected $_amysql;
     protected $_serviceManager;
+
+    public $setsTableName = 'lycdb_sets';
 
     public function __construct() {
     }
 
     public function setServiceManager(\Zend\ServiceManager\ServiceManager $serviceManager) {
         $this->_serviceManager = $serviceManager;
+    }
+
+    public function getAMysql() {
+        if (!$this->_amysql) {
+            $this->_amysql = $this->_serviceManager->get('amysql');
+        }
+        return $this->_amysql;
     }
 
     public function getCache() {
@@ -46,18 +56,33 @@ class LyceeImporter {
 
     public function import() {
         $sets = $this->getSets();
+        $amysql = $this->getAMysql();
+        $setDatas = array ();
+        foreach ($sets as $set) {
+            $setData = array ();
+            $setData['name_jp'] = $set['name'];
+            $setData['ext_id'] = $set['extId'];
+            $setDatas[] = $setData;
+        }
+        try {
+            $stmt = $amysql->newStatement();
+            $stmt->insertReplace('INSERT IGNORE', $this->setsTableName, $setDatas);
+            $stmt->execute();
+        }
+        catch (AMysql_Exception $e) {
+            trigger_error($e);
+        }
         $this->importSetByArray($sets[0]);
     }
 
     public function importSetByArray($arr) {
-        $parsedUrl = parse_url($arr['page']);
-        parse_str($parsedUrl['query'], $qs);
+        $qs = $arr['qs'];
         $qs['page_out'] = 500;
         $qs['page_list'] = 2;
         $options = array ();
         $options['lifetime'] = 60 * 60 * 24 * 265 * 5; // 5 years.
         $options['cache_tags'] = array ($this->websiteVersionTag);
-        $html = $this->request($parsedUrl['path'], $qs, $options);
+        $html = $this->request($arr['path'], $qs, $options);
 
         $domQuery = new \Zend\Dom\Query($html);
         $selector = '#card_list_main div.m_15 > *';
@@ -379,6 +404,16 @@ class LyceeImporter {
                 preg_match($pattern, $text, $matches);
                 $set['name'] = $matches[1];
                 $set['count'] = $matches[2];
+                $parsedUrl = parse_url($set['page']);
+                parse_str($parsedUrl['query'], $qs);
+                $set['path'] = $parsedUrl['path'];
+                $set['qs'] = $qs;
+                $setExtId = null;
+                foreach ($qs as $key => $val) {
+                    if (preg_match('@^S_L_(\d+)$@', $key, $matches)) {
+                        $set['extId'] = $matches[1];
+                    }
+                }
                 $ret[] = $set;
             }
             $cache->cacheResult($sets, $key);

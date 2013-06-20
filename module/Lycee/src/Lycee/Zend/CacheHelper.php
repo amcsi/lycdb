@@ -22,7 +22,14 @@ class CacheHelper {
     public function getCachedResult($method, $params = array (), $options = array ()) {
         $cache = $this->_cache;
         $cacheKey = $this->getCacheKey($method, $params, $options);
-        return $cache->getItem($cacheKey);
+        if (isset($options['lifetime'])) {
+            $this->_cacheOptions->setTtl($options['lifetime']);
+        }
+        $ret = $cache->getItem($cacheKey);
+        if (isset($options['lifetime'])) {
+            $this->_cacheOptions->setTtl($this->_defaultTtl);
+        }
+        return $ret;
     }
 
     public function cacheResult($result, $method, $params = array (), $options = array ()) {
@@ -30,8 +37,7 @@ class CacheHelper {
         $cacheKey = $this->getCacheKey($method, $params, $options);
 		$cacheTags = isset($options['cache_tags']) ? $options['cache_tags'] : array ();
         if (isset($options['lifetime'])) {
-            $lifetime = !empty($options['lifetime']) ? $options['lifetime'] : false;
-            $this->_cacheOptions->setTtl($lifetime);
+            $this->_cacheOptions->setTtl($options['lifetime']);
         }
         $ret = $cache->setItem($cacheKey, $result);
         $cache->setTags($cacheKey, $cacheTags);

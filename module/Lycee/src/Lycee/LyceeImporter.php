@@ -117,6 +117,9 @@ class LyceeImporter {
             'conversion_jp', 'basic_ability_flags', 'basic_abilities_jp', 'is_male', 'is_female', 'import_errors'
         );
         foreach ($cards as $card) {
+            if ($card->alternate) {
+                continue;
+            }
             $data = $card->toDbData();
             $dataToUse = array ();
             if ($data['locked']) {

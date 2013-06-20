@@ -9,6 +9,8 @@ abstract class Card extends Lycee {
     public $nameJap;
     public $nameEng;
 
+    public $alternate = '';
+
     protected $set;
     /**
      * @var array

@@ -1043,6 +1043,39 @@ class AMysql_Statement implements IteratorAggregate, Countable {
 	return $this;
     }
 
+    public function insertReplaceOnDuplicateKeyUpdate($type, $tableName, array $data) {
+	$cols = array ();
+	$vals = array();
+	if (!$data) {
+	    return false;
+	}
+	$tableSafe = AMysql_Abstract::escapeIdentifier($tableName);
+        $columnsValues = $this->buildColumnsValues($data);
+        $sql = "$type INTO $tableSafe $columnsValues";
+
+        $updates = array ();
+        if (is_array (reset($data))) {
+            if (is_int(key(reset($data)))) {
+                $updates = array_keys($data);
+            }
+            else {
+                $updates = array_keys(reset($data));
+            }
+        }
+        else {
+            $updates = array_keys($data);
+        }
+        foreach ($updates as &$val) {
+            $val = "$val=VALUES($val)";
+        }
+        $updatesString = join(', ', $updates);
+
+        $sql .=  "ON DUPLICATE KEY UPDATE $updatesString";
+
+	$this->prepare($sql);
+	return $this;
+    }
+
     public function insert($tableName, array $data) {
         return $this->insertReplace('INSERT', $tableName, $data);
     }

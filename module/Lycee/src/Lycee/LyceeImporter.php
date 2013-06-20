@@ -66,7 +66,7 @@ class LyceeImporter {
         }
         try {
             $stmt = $amysql->newStatement();
-            $stmt->insertReplace('INSERT IGNORE', $this->setsTableName, $setDatas);
+            $stmt->insertReplaceOnDuplicateKeyUpdate('INSERT', $this->setsTableName, $setDatas);
             $stmt->execute();
         }
         catch (AMysql_Exception $e) {

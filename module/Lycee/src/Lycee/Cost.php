@@ -96,7 +96,7 @@ class Cost extends Lycee {
                     // the cost is free
                     return;
                 }
-                else if ('T' == $japKey) {
+                else if ('T' === $japKey) {
                     $this->isTap = true;
                 }
                 else if (isset($elementMap[$japKey])) {
@@ -106,6 +106,13 @@ class Cost extends Lycee {
             }
         }
         $this->isAuto = $auto;
+    }
+
+    public function setText($text) {
+        $this->text = $text;
+        if ($text) {
+            $this->isAuto = false;
+        }
     }
 }
 ?>

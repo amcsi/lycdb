@@ -190,5 +190,13 @@ class Char extends Card {
         );
         return $ret;
     }
+
+    public function basicAbilityHasCost($basicAbilityInt) {
+        static $noCosts = array (
+            self::DASH, self::AGGRESSIVE, self::ATTACKER, self::DEFENDER
+        );
+        $hasCost = !in_array($basicAbilityInt, $noCosts);
+        return $hasCost;
+    }
 }
 ?>

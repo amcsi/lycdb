@@ -194,19 +194,36 @@ class LyceeImporter {
                         $card->conversion = $td2->textContent;
                     }
                     else if (isset($basicAbilityMap[$name])) {
-                        $basicAbilityEnumVal = $basicAbilityMap[$name];
-                        if (0 <= $basicAbilityEnumVal) {
-                            $japaneseCostArray = $this->countElementsByDomElement($td2);
-                            $costText = trim(strip_tags($td2->textContent));
-                            $cost = new Cost;
-                            $cost->text = $costText;
-                            $cost->fillByLyceeArray($japaneseCostArray);
+                        $this->addBasicAbilityToCard($card, $name, $td2->textContent);
+                    }
+                    else if (preg_match('@\].*\[@', $td1->textContent)) {
+                        $td1Html = $this->getInnerHtml($td1);
+                        $td2Html = $this->getInnerHtml($td2);
+                        // official lycee website bug remedy
+                        // @todo make more dry!
+                        $split = preg_split('@\][^\[]*\[@', $td1Html);
+                        $count = count($split);
+                        $split[$count - 1] .= ":" . $td2Html; // haxx
+                        foreach ($split as $content) {
+                            $abilityAndCost = explode(':', $content);
+                            if ('コンバージョン' == $abilityAndCost[0]) {
+                                if ($typeConversion < $currentSubTextType) {
+                                    $msg = "Order error: ability type detected as conversion, but last type was: `$currentSubTextType`";
+                                    trigger_error($msg);
+                                }
+                                $currentSubTextType = $typeConversion;
+                                $card->conversion = $abilityAndCost[1];
+                            }
+                            else if (isset($basicAbilityMap[$abilityAndCost[0]])) {
+                                $costHtml = isset($abilityAndCost[1]) ? $abilityAndCost[1] : '';
+                                $this->addBasicAbilityToCard($card, $abilityAndCost[0], $costHtml);
+                            }
+                            else {
+                                $msg = sprintf("Failed to detect conversion or basic ability within Lycee safety net: `%s`",
+                                    $abilityAndCost[0]);
+                                trigger_error($msg);
+                            }
                         }
-                        else {
-                            // no cost
-                            $cost = false;
-                        }
-                        $card->setBasicAbility($basicAbilityEnumVal, true, $cost);
                     }
                     else {
                         $msg = "Couldn't map to a registered basic ability: `$name`";
@@ -221,6 +238,34 @@ class LyceeImporter {
         }
 
         var_dump($card);
+    }
+
+    public function getInnerHtml(\DomElement $element) {
+        $innerHTML = ""; 
+        $children = $element->childNodes; 
+        $doc = $element->ownerDocument;
+        foreach ($children as $child) 
+        { 
+            $innerHTML .= $doc->saveXML($child);
+        } 
+        return $innerHTML; 
+    }
+
+    public function addBasicAbilityToCard($card, $japaneseBasicAbility, $costHtml) {
+        $basicAbilityMap = $card->getJapaneseBasicAbilityMap();
+        $basicAbilityEnumVal = $basicAbilityMap[$japaneseBasicAbility];
+        if ($card->basicAbilityHasCost($basicAbilityEnumVal)) {
+            $japaneseCostArray = $this->countElementsByHtml($costHtml);
+            $costText = trim(strip_tags($costHtml));
+            $cost = new Cost;
+            $cost->fillByLyceeArray($japaneseCostArray);
+            $cost->setText($costText);
+        }
+        else {
+            // no cost
+            $cost = false;
+        }
+        $card->setBasicAbility($basicAbilityEnumVal, true, $cost);
     }
 
     /**
@@ -255,6 +300,17 @@ class LyceeImporter {
      * @return void
      */
     public function countElementsByHtml($html) {
+        $elementArr = array ();
+        $success = preg_match_all('@<img[^>]*alt="([^"]*)"[^>]*>@', $html, $matches);
+        foreach ($matches[1] as $alt) {
+            if (!isset($elementArr[$alt])) {
+                $elementArr[$alt] = 1;
+            }
+            else {
+                $elementArr[$alt]++;
+            }
+        }
+        return $elementArr;
 
     }
 

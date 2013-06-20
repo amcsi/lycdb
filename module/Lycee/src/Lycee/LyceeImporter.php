@@ -135,15 +135,25 @@ class LyceeImporter {
             $datas[] = $dataToUse;
         }
         $stmt = $amysql->newStatement();
-        $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $data);
+        $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $datas);
         $stmt->execute();
-        $affectedRows = $stmt->affectedRows;
-        foreach ($datas as &$data) {
+        $insertCount = $affectedRows = $stmt->affectedRows;
+        $updateDateData = array (
+            'update_date' => $amysql->expr('CURRENT_TIMESTAMP')
+        );
+        $updatedCount = 0;
+        foreach ($datas as $data) {
             unset($data['insert_date']);
+            $success = $amysql->update($this->cardsTableName, $data, 'cid = ?', $data['cid']);
+            if ($amysql->affectedRows) {
+                $updatedCount++;
+                $amysql->update($this->cardsTableName, $updateDateData, 'cid = ?', $data['cid']);
+
+            }
         }
-        var_dump("New rows: " . $stmt->affectedRows);
-        $amysql->updateMultipleByData($this->cardsTableName, $datas, 'cid');
-        var_dump("Updated: " . $amysql->multipleAffectedRows);
+
+        var_dump("New rows: " . $insertCount);
+        var_dump("Updated: " . $updatedCount);
     }
 
     public function getCardByTablesList2(array $tableArray) {

@@ -140,8 +140,6 @@ class LyceeImporter {
         if ($isChar) {
             $thirdRows = $tableArray[2]->getElementsByTagName('tr');
 
-            $currentSubTextType = -1;
-
             /**
              * These are the orders in abilities should be listed for a character.
              * Something is wrong if the order appears to be messed up.
@@ -155,21 +153,33 @@ class LyceeImporter {
             foreach ($thirdRows as $abilityRow) {
                 $tds = $abilityRow->getElementsByTagName('td');
                 $td1 = $tds->item(0);
+                $td1Html = $this->getInnerHtml($td1);
+                if (!$nextIsSpecialAbilityText) {
+                    $td2 = $tds->item(1);
+                    $td2Html = $this->getInnerHtml($td2);
+                }
                 /**
                  * If on last row we marked the next row being the ability text, then this is the ability text :)
                  */
                 if ($nextIsSpecialAbilityText) {
                     $nextIsSpecialAbilityText = false;
+
+                    $specialAbilityText = trim($td1Html);
+                    $pattern = '@(?:<br>)*(※.*)$@i';
+                    $hasComments = preg_match($pattern, $specialAbilityText, $matches);
+                    if ($hasComments) {
+                        $comments = str_replace('<br>', "\n", $matches[1]);
+                        $card->setComment(Card::LANG_JP, $comments);
+                        $specialAbilityText = preg_replace($pattern, '', $specialAbilityText);
+                    }
                     // @todo change images into Lycdb markup
-                    $card->setSpecialAbilityText(trim($td1->textContent));
+                    $card->setSpecialAbilityText($specialAbilityText);
 
                     continue;
                 }
                 if (2 == $td1->getAttribute('rowspan')) {
-                    $td2 = $tds->item(1);
 
                     $card->setSpecialAbilityName($td1->textContent);
-                    $currentSubTextType = $typeSpecialAbility;
                     $japaneseCostArray = $this->countElementsByDomElement($td2);
                     $costText = trim(strip_tags($td2->textContent));
                     $cost = new Cost;
@@ -182,8 +192,6 @@ class LyceeImporter {
                     continue;
                 }
                 else {
-                    $td1Html = $this->getInnerHtml($td1);
-                    $td2Html = $this->getInnerHtml($tds->item(1));
                     $this->addConversionOrAbilityToCard($card, $td1Html, $td2Html);
                 }
             }
@@ -208,11 +216,6 @@ class LyceeImporter {
     public function addConversionOrAbilityToCard(Char $card, $td1Html, $td2Html) {
         $basicAbilityMap = $card->getJapaneseBasicAbilityMap();
         if ('コンバージョン' == $td1Html) {
-            if ($typeConversion < $currentSubTextType) {
-                $msg = "Order error: ability type detected as conversion, but last type was: `$currentSubTextType`";
-                trigger_error($msg);
-            }
-            $currentSubTextType = $typeConversion;
             $card->conversion = $td2Html;
         }
         else if (isset($basicAbilityMap[$td1Html])) {
@@ -245,7 +248,7 @@ class LyceeImporter {
         $doc = $element->ownerDocument;
         foreach ($children as $child) 
         { 
-            $innerHTML .= $doc->saveXML($child);
+            $innerHTML .= $doc->saveHTML($child);
         } 
         return $innerHTML; 
     }

@@ -168,11 +168,12 @@ class LyceeImporter {
                     $pattern = '@(?:<br>)*(※.*)$@i';
                     $hasComments = preg_match($pattern, $specialAbilityText, $matches);
                     if ($hasComments) {
-                        $comments = str_replace('<br>', "\n", $matches[1]);
+                        $comments = $matches[1];
+                        $comments = $this->toLycdbMarkup($comments);
                         $card->setComment(Card::LANG_JP, $comments);
                         $specialAbilityText = preg_replace($pattern, '', $specialAbilityText);
                     }
-                    // @todo change images into Lycdb markup
+                    $specialAbilityText = $this->toLycdbMarkup($specialAbilityText);
                     $card->setSpecialAbilityText($specialAbilityText);
 
                     continue;
@@ -183,6 +184,7 @@ class LyceeImporter {
                     $japaneseCostArray = $this->countElementsByDomElement($td2);
                     $costText = trim(strip_tags($td2->textContent));
                     $cost = new Cost;
+                    $costText = $this->toLycdbMarkup($costText);
                     $cost->text = $costText;
                     $cost->fillByLyceeArray($japaneseCostArray);
                     $card->setSpecialAbilityCost($cost);
@@ -202,6 +204,49 @@ class LyceeImporter {
         }
 
         var_dump($card);
+    }
+
+    public function toLycdbMarkup($html) {
+        $pattern = '@<img [^>]*alt="([^"]*)"[^>]*>@';
+        $html = preg_replace_callback($pattern, array ($this, 'imageReplaceCallback'), $html);
+        $html = preg_replace('@<span class="red">([^<]*)</span>@', '[target]\1[/target]', $html);
+        $html = str_replace('<br>', "\n", $html);
+        if (false !== strpos($html, '<')) {
+            $msg = sprintf("There still is HTML in the marked up result: %s", $html);
+            trigger_error($msg);
+        }
+        return $html;
+    }
+
+    public function imageReplaceCallback($matches) {
+        $alt = $matches[1];
+        $elementMap = Lycee::getJapaneseElementMap();
+        if ('t' == $alt || 'T' == $alt) {
+            return '[tap]';
+        }
+        else if ('0' === $alt) {
+            return '[0]';
+        }
+        else if (isset($elementMap[$alt])) {
+            switch ($elementMap[$alt]) {
+            case Lycee::SNOW:
+                return '[snow]';
+            case Lycee::MOON:
+                return '[moon]';
+            case Lycee::FLOWER:
+                return '[flower]';
+            case Lycee::LIGHTNING:
+                return '[lightning]';
+            case Lycee::SUN:
+                return '[sun]';
+            case Lycee::STAR:
+                return '[star]';
+            }
+        }
+        else {
+            trigger_error("Couldn't convert to lycdb markup: `$alt`");
+            return "[?]";
+        }
     }
 
     /**
@@ -261,6 +306,7 @@ class LyceeImporter {
             $costText = trim(strip_tags($costHtml));
             $cost = new Cost;
             $cost->fillByLyceeArray($japaneseCostArray);
+            $costText = $this->toLycdbMarkup($costText);
             $cost->setText($costText);
         }
         else {

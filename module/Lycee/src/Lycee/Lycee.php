@@ -53,7 +53,7 @@ abstract class Lycee {
         }
     }
     
-    public function getJapaneseElementMap() {
+    public static function getJapaneseElementMap() {
         static $ret = array (
             '雪' => self::SNOW,
             '月' => self::MOON,

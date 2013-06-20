@@ -135,7 +135,7 @@ class LyceeImporter {
             $datas[] = $dataToUse;
         }
         $stmt = $amysql->newStatement();
-        $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $data);
+        $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $datas);
         $stmt->execute();
         $affectedRows = $stmt->affectedRows;
         foreach ($datas as &$data) {

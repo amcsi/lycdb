@@ -283,7 +283,7 @@ class LyceeImporter {
         }
         else {
             $msg = "Couldn't map to a registered basic ability: `$td1Html`";
-            trigger_error($msg);
+            $card->addError($msg);
         }
     }
 

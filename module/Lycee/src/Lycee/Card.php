@@ -19,6 +19,8 @@ abstract class Card extends Lycee {
     protected $elementFlags;
     protected $texts; // array
     protected $comments;
+
+    protected $_errors = array ();
     
     const CHAR = 0;
     const AREA = 1;
@@ -216,5 +218,13 @@ abstract class Card extends Lycee {
         else {
             trigger_error("Card id text did not match pattern. Text: `$cidText`");
         }
+    }
+
+    public function addError($error) {
+        $this->_errors[] = $error;
+    }
+
+    public function getErrors() {
+        return $this->_errors;
     }
 }

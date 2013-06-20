@@ -211,8 +211,15 @@ abstract class Card extends Lycee {
         $this->nameJap = $name;
     }
 
+    public function getCidText() {
+        return $this->cidText;
+    }
+
     public function setCidText($cidText) {
-        $this->cidText = $cidText;
+        $this->fullCidText = $cidText;
+        $cidPattern = "@\w+-\d+@";
+        $success = preg_match($cidPattern, $cidText, $matches);
+        $this->cidText = $matches[0];
         $pattern = "@(\w+)-(\d+)([A-Z])?@";
         $success = preg_match($pattern, $cidText, $matches);
         if ($success) {
@@ -236,7 +243,7 @@ abstract class Card extends Lycee {
 
     public function toDbData() {
         $data = array ();
-        $data['cid']                     = $this->cidText;
+        $data['cid']                     = $this->getCidText();
         $data['name_jp']                 = $this->nameJap;
         $data['name_en']                 = $this->nameEng;
         $data['rarity']                  = $this->rarity;

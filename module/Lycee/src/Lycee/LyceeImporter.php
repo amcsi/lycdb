@@ -135,9 +135,15 @@ class LyceeImporter {
             $datas[] = $dataToUse;
         }
         $stmt = $amysql->newStatement();
-        $stmt->insertReplaceOnDuplicateKeyUpdate('INSERT', $this->cardsTableName, $datas);
+        $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $data);
         $stmt->execute();
-        var_dump("Affected rows: " . $stmt->affectedRows);
+        $affectedRows = $stmt->affectedRows;
+        foreach ($datas as &$data) {
+            unset($data['insert_date']);
+        }
+        var_dump("New rows: " . $stmt->affectedRows);
+        $amysql->updateMultipleByData($this->cardsTableName, $datas, 'cid');
+        var_dump("Updated: " . $amysql->multipleAffectedRows);
     }
 
     public function getCardByTablesList2(array $tableArray) {

@@ -1043,7 +1043,7 @@ class AMysql_Statement implements IteratorAggregate, Countable {
 	return $this;
     }
 
-    public function insertReplaceOnDuplicateKeyUpdate($type, $tableName, array $data) {
+    public function insertReplaceOnDuplicateKeyUpdate($type, $tableName, array $data, $except = array ()) {
 	$cols = array ();
 	$vals = array();
 	if (!$data) {
@@ -1065,6 +1065,7 @@ class AMysql_Statement implements IteratorAggregate, Countable {
         else {
             $updates = array_keys($data);
         }
+        $updates = array_diff($updates, $except);
         foreach ($updates as &$val) {
             $val = "$val=VALUES($val)";
         }

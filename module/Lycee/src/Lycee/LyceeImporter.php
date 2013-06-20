@@ -152,7 +152,6 @@ class LyceeImporter {
 
             $nextIsSpecialAbilityText = false;
 
-            $basicAbilityMap = $card->getJapaneseBasicAbilityMap();
             foreach ($thirdRows as $abilityRow) {
                 $tds = $abilityRow->getElementsByTagName('td');
                 $td1 = $tds->item(0);
@@ -183,52 +182,9 @@ class LyceeImporter {
                     continue;
                 }
                 else {
-                    $td2 = $tds->item(1);
-                    $name = $td1->textContent;
-                    if ('コンバージョン' == $name) {
-                        if ($typeConversion < $currentSubTextType) {
-                            $msg = "Order error: ability type detected as conversion, but last type was: `$currentSubTextType`";
-                            trigger_error($msg);
-                        }
-                        $currentSubTextType = $typeConversion;
-                        $card->conversion = $td2->textContent;
-                    }
-                    else if (isset($basicAbilityMap[$name])) {
-                        $this->addBasicAbilityToCard($card, $name, $td2->textContent);
-                    }
-                    else if (preg_match('@\].*\[@', $td1->textContent)) {
-                        $td1Html = $this->getInnerHtml($td1);
-                        $td2Html = $this->getInnerHtml($td2);
-                        // official lycee website bug remedy
-                        // @todo make more dry!
-                        $split = preg_split('@\][^\[]*\[@', $td1Html);
-                        $count = count($split);
-                        $split[$count - 1] .= ":" . $td2Html; // haxx
-                        foreach ($split as $content) {
-                            $abilityAndCost = explode(':', $content);
-                            if ('コンバージョン' == $abilityAndCost[0]) {
-                                if ($typeConversion < $currentSubTextType) {
-                                    $msg = "Order error: ability type detected as conversion, but last type was: `$currentSubTextType`";
-                                    trigger_error($msg);
-                                }
-                                $currentSubTextType = $typeConversion;
-                                $card->conversion = $abilityAndCost[1];
-                            }
-                            else if (isset($basicAbilityMap[$abilityAndCost[0]])) {
-                                $costHtml = isset($abilityAndCost[1]) ? $abilityAndCost[1] : '';
-                                $this->addBasicAbilityToCard($card, $abilityAndCost[0], $costHtml);
-                            }
-                            else {
-                                $msg = sprintf("Failed to detect conversion or basic ability within Lycee safety net: `%s`",
-                                    $abilityAndCost[0]);
-                                trigger_error($msg);
-                            }
-                        }
-                    }
-                    else {
-                        $msg = "Couldn't map to a registered basic ability: `$name`";
-                        trigger_error($msg);
-                    }
+                    $td1Html = $this->getInnerHtml($td1);
+                    $td2Html = $this->getInnerHtml($tds->item(1));
+                    $this->addConversionOrAbilityToCard($card, $td1Html, $td2Html);
                 }
             }
         }
@@ -238,6 +194,49 @@ class LyceeImporter {
         }
 
         var_dump($card);
+    }
+
+    /**
+     * addConversionOrAbilityToCard 
+     * 
+     * @param mixed $card       Character object
+     * @param mixed $td1Html    Contining the name of the ability or conversion
+     * @param mixed $td2Html    Containing the cost
+     * @access public
+     * @return void
+     */
+    public function addConversionOrAbilityToCard(Char $card, $td1Html, $td2Html) {
+        $basicAbilityMap = $card->getJapaneseBasicAbilityMap();
+        if ('コンバージョン' == $td1Html) {
+            if ($typeConversion < $currentSubTextType) {
+                $msg = "Order error: ability type detected as conversion, but last type was: `$currentSubTextType`";
+                trigger_error($msg);
+            }
+            $currentSubTextType = $typeConversion;
+            $card->conversion = $td2Html;
+        }
+        else if (isset($basicAbilityMap[$td1Html])) {
+            $this->addBasicAbilityToCard($card, $td1Html, $td2Html);
+        }
+        else if (preg_match('@\].*\[@', $td1Html)) {
+            // official lycee website bug remedy
+            $split = preg_split('@\][^\[]*\[@', $td1Html);
+            $count = count($split);
+            $split[$count - 1] .= ":" . $td2Html; // haxx
+            foreach ($split as $content) {
+                $abilityAndCost = explode(':', $content);
+                if (!isset($abilityAndCost[1])) {
+                    $abilityAndCost[1] = '';
+                }
+                $td1Html = $abilityAndCost[0];
+                $td2Html = $abilityAndCost[1];
+                $this->addConversionOrAbilityToCard($card, $td1Html, $td2Html);
+            }
+        }
+        else {
+            $msg = "Couldn't map to a registered basic ability: `$td1Html`";
+            trigger_error($msg);
+        }
     }
 
     public function getInnerHtml(\DomElement $element) {

@@ -17,7 +17,11 @@ class SearchController extends AbstractActionController
     public function indexAction() {
         $sm = $this->getServiceLocator();
         $model = $sm->get('Lycee\Model');
-        $result = $importer->get();
-        $this->view->cards = $result;
+        $options = array ();
+        $options['template'] = true;
+        $result = $model->get($options);
+        $view = array ();
+        $view['cards'] = $result;
+        return new ViewModel($view);
     }
 }

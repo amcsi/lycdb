@@ -154,13 +154,17 @@ table.card_results td, table.card_results th {
     border:1px solid rgb(255,224,128);
     vertical-align:middle;
 }
-table.card_results tbody tr.character td,
-div.character {
+table.card_results tbody tr.character td {
     background-color:rgb(200,163,197);
 }
-table.card_results tbody tr.event td,
-div.event {
+table.card_results tbody tr.event td {
     background-color:rgb(255,160,128);
+}
+table.card_results tbody tr.area td {
+    background-color: #99ee99;
+}
+table.card_results tbody tr.item td {
+    background-color: #eeee99;
 }
 tr.card_result_columns th {
     color: white;
@@ -168,6 +172,13 @@ tr.card_result_columns th {
 }
 thead.card_result_columns {
     padding:1px;
+}
+.card_results td.ex,
+.card_results td.ap,
+.card_results td.dp,
+.card_results td.sp
+{
+    text-align: center;
 }
 th.card_id, col.card_id { width:60px; }
 th.card_name, col.card_name { width:200px; }

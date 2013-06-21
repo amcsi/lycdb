@@ -187,63 +187,48 @@
             
             
             <tbody>
-                <?php foreach ($this->cards as $card): ?>
-                <tr id="card_result_<?= $card['id'] ?>" class="character">
+                <?php foreach ($this->cards as $key => $card): ?>
+                <tr id="card_result_<?= $card['id'] ?>" class="<?= $card['type_text'] ?> <?= $key % 2 ? 'odd' : 'even' ?>">
                     <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)"><?= $card['cid'] ?></td>
                     <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)"><?= $card['name_jp'] ?></td>
                     <td>Coming soon...</td>
-                    <td><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='star' src="<?php echo $this->basePath() ?>/img/star.gif"><img alt='star' src="<?php echo $this->basePath() ?>/img/star.gif"></td>
-                    <td>2</td>
-                    <td><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"></td>
-                    <td>
-                        <div class="card_spot_row">
-                            <img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1"><img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1"><img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1">
-                        </div>
-                        <div class="card_spot_row">
-                            <img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1"><img src="<?php echo $this->basePath() ?>/img/spot-off.gif" alt="0"><img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1">
-                        </div>
+                    <td class="cost">
+                        <?= $this->lycdbMarkupToHtml($card['cost_markup']) ?>
                     </td>
-                    <td>3</td>
-                    <td>2</td>
-                    <td>1</td>
-                </tr>
-                <?php endforeach ?>
-                <tr id="card_result_0" class="character">
-                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">CH-0409</td>
-                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">Tohno Akiha</td>
-                    <td>Type-Moon 1.0</td>
-                    <td><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='star' src="<?php echo $this->basePath() ?>/img/star.gif"><img alt='star' src="<?php echo $this->basePath() ?>/img/star.gif"></td>
-                    <td>2</td>
-                    <td><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"></td>
-                    <td>
-                        <div class="card_spot_row">
-                            <img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1"><img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1"><img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1">
-                        </div>
-                        <div class="card_spot_row">
-                            <img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1"><img src="<?php echo $this->basePath() ?>/img/spot-off.gif" alt="0"><img src="<?php echo $this->basePath() ?>/img/spot-on.gif" alt="1">
-                        </div>
-                    </td>
-                    <td>3</td>
-                    <td>2</td>
-                    <td>1</td>
-                </tr>
-                <tr id="card_result_1" class="event">
-                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">EV-0207</td>
-                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)">Big Mistake</td>
-                    <td>Type-Moon 2.0</td>
-                    <td style="width:120px;">
-                        <img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif">
-                    </td>
-                    <td>0</td>
-                    <td>
-                        <img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif">
+                    <td class="ex">
+                        <?= $card['ex'] ?>
                     </td>
                     <td>
+                        <?= $this->lycdbMarkupToHtml($card['elements_markup']) ?>
+                    </td>
+                    <?php if (!$card['type']): ?>
+                    <td class="positions">
+                        <?= $this->lycdbMarkupToHtml($card['position_markup']) ?>
+                    </td>
+                    <td class="ap">
+                        <?= $card['ap'] ?>
+                    </td>
+                    <td class="dp">
+                        <?= $card['dp'] ?>
+                    </td>
+                    <td class="sp">
+                        <?= $card['sp'] ?>
+                    </td>
+                    <?php else: ?>
+                    <td class="positions">
                         &nbsp;
                     </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td class="ap">
+                        &nbsp;
+                    </td>
+                    <td class="dp">
+                        &nbsp;
+                    </td>
+                    <td class="sp">
+                        &nbsp;
+                    </td>
+                    <?php endif ?>
                 </tr>
+                <?php endforeach ?>
             </tbody>
         </table>

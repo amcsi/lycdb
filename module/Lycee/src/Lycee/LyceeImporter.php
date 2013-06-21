@@ -248,7 +248,7 @@ class LyceeImporter {
             if ($flags) {
                 $card->setSpotFlags($flags);
             }
-            $pattern = '@/d+@';
+            $pattern = '@\d+@';
             $ap = 0;
             $dp = 0;
             $sp = 0;

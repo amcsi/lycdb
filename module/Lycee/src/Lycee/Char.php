@@ -32,6 +32,7 @@ class Char extends Card {
     const DECK_BONUS    = 14;
     const DASH          = 15;
     const AGGRESSIVE    = 16;
+    const BOOST         = 17;
     
     const STAT_AP = 0;
     const STAT_DP = 1;
@@ -173,12 +174,18 @@ class Char extends Card {
             'アグレッシブ'              => self::AGGRESSIVE,
             'ステップ'                  => self::STEP,
             'サイドステップ'            => self::SIDE_STEP,
+            'サイド・ステップ'          => self::SIDE_STEP,
+            'サイド･ステップ'           => self::SIDE_STEP,
             'オーダーステップ'          => self::ORDER_STEP,
+            'オーダー・ステップ'        => self::ORDER_STEP,
+            'オーダー･ステップ'         => self::ORDER_STEP,
             'ジャンプ'                  => self::JUMP,
             'エスケープ'                => self::ESCAPE,
             'サイドアタック'            => self::SIDE_ATTACK,
+            'タックストラッシュ'        => self::TAX_TRASH,
             'タックス・トラッシュ'      => self::TAX_TRASH,
             'タックス･トラッシュ'       => self::TAX_TRASH,
+            'タックスウェイクアップ'    => self::TAX_WAKEUP,
             'タックス・ウェイクアップ'  => self::TAX_WAKEUP,
             'タックス･ウェイクアップ'   => self::TAX_WAKEUP,
             'サポーター'                => self::SUPPORTER,
@@ -187,8 +194,10 @@ class Char extends Card {
             'ディフェンダー'            => self::DEFENDER,
             'ボーナス'                  => self::BONUS,
             'ペナルティ'                => self::PENALTY,
+            'デッキボーナス'            => self::DECK_BONUS,
             'デッキ・ボーナス'          => self::DECK_BONUS,
             'デッキ･ボーナス'           => self::DECK_BONUS,
+            'ブースト'                  => self::BOOST,
         );
         return $ret;
     }

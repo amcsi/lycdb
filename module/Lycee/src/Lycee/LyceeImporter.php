@@ -373,7 +373,7 @@ class LyceeImporter {
      */
     public function addConversionOrAbilityToCard(Char $card, $td1Html, $td2Html) {
         $basicAbilityMap = $card->getJapaneseBasicAbilityMap();
-        if ('コンバージョン' == $td1Html) {
+        if ('コンバージョン' == $td1Html || 'コンバ−ジョン' == $td1Html) {
             $card->conversion = $td2Html;
         }
         else if (isset($basicAbilityMap[$td1Html])) {
@@ -418,10 +418,15 @@ class LyceeImporter {
         $basicAbilityMap = $card->getJapaneseBasicAbilityMap();
         $basicAbilityEnumVal = $basicAbilityMap[$japaneseBasicAbility];
         if ($card->basicAbilityHasCost($basicAbilityEnumVal)) {
-            $japaneseCostArray = $this->countElementsByHtml($costHtml);
-            $costText = trim(strip_tags($costHtml));
             $cost = new Cost;
-            $cost->fillByLyceeArray($japaneseCostArray);
+            if (Char::BOOST == $basicAbilityEnumVal) {
+                $costText = $costHtml;
+            }
+            else {
+                $japaneseCostArray = $this->countElementsByHtml($costHtml);
+                $cost->fillByLyceeArray($japaneseCostArray);
+                $costText = trim(strip_tags($costHtml));
+            }
             $costText = $this->toLycdbMarkup($costText, $toMarkupOptions);
             $cost->setText($costText);
         }

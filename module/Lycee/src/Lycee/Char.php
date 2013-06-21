@@ -178,7 +178,9 @@ class Char extends Card {
             'エスケープ'                => self::ESCAPE,
             'サイドアタック'            => self::SIDE_ATTACK,
             'タックス・トラッシュ'      => self::TAX_TRASH,
+            'タックス･トラッシュ'       => self::TAX_TRASH,
             'タックス・ウェイクアップ'  => self::TAX_WAKEUP,
+            'タックス･ウェイクアップ'   => self::TAX_WAKEUP,
             'サポーター'                => self::SUPPORTER,
             'タッチ'                    => self::TOUCH,
             'アタッカー'                => self::ATTACKER,
@@ -186,6 +188,7 @@ class Char extends Card {
             'ボーナス'                  => self::BONUS,
             'ペナルティ'                => self::PENALTY,
             'デッキ・ボーナス'          => self::DECK_BONUS,
+            'デッキ･ボーナス'           => self::DECK_BONUS,
         );
         return $ret;
     }

@@ -70,14 +70,23 @@ class LyceeImporter {
             $stmt->insertReplaceOnDuplicateKeyUpdate('INSERT', $this->setsTableName, $setDatas);
             $stmt->execute();
         }
-        catch (AMysql_Exception $e) {
+        catch (\AMysql_Exception $e) {
             trigger_error($e);
         }
         $met = ini_get('max_execution_time');
         foreach ($sets as $set) {
-            set_time_limit($met);
-            $this->importSetByArray($set);
+            try {
+                set_time_limit($met);
+                $this->importSetByArray($set);
+            }
+            catch (\AMysql_Exception $e) {
+                trigger_error($e);
+            }
+            catch (\Exception $e) {
+                trigger_error($e);
+            }
         }
+        echo "Done importing.";
     }
 
     public function importSetByArray($arr) {
@@ -143,15 +152,29 @@ class LyceeImporter {
             $dataToUse['insert_date'] = $amysql->expr('CURRENT_TIMESTAMP');
             $datas[] = $dataToUse;
         }
-        $stmt = $amysql->newStatement();
-        $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $datas);
-        $stmt->execute();
-        $affectedRows = $stmt->affectedRows;
+        if (!$datas) {
+            trigger_error("No cards to insert or update. Set: " . print_r($arr, true));
+            return;
+        }
+        try {
+            $stmt = $amysql->newStatement();
+            $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $datas);
+            $stmt->execute();
+            $affectedRows = $stmt->affectedRows;
+        }
+        catch (\Exception $e) {
+            trigger_error("Couldn't update some rows. $e");
+        }
         foreach ($datas as &$data) {
             unset($data['insert_date']);
         }
         var_dump("New rows: " . $stmt->affectedRows);
-        $amysql->updateMultipleByData($this->cardsTableName, $datas, 'cid');
+        try {
+            $amysql->updateMultipleByData($this->cardsTableName, $datas, 'cid');
+        }
+        catch (\Exception $e) {
+            trigger_error("Couldn't update some rows. $e");
+        }
         var_dump("Updated: " . $amysql->multipleAffectedRows);
     }
 
@@ -166,23 +189,25 @@ class LyceeImporter {
         $pattern = '@<img src="([^\"]*)"@';
         $elementArr = $this->countElementsByDomElement($firstCells->item(3));
         $exText = trim($firstCells->item(4)->textContent);
-        preg_match('@\d+@', $exText, $matches2);
+        $foundEx = preg_match('@\d+@', $exText, $matches2);
 
         if ('ＩTEM' == $cardTypeText) {
             $cardTypeText = 'ITEM';
         }
-        $card = Card::newCardByTypeText($cardTypeText);
+        $card = Card::newCardByTypeText($cardTypeText, $cidText);
 
-        if (!$matches2[0]) {
-            $card->addError("Couldn't find card's ex");
-        }
-
-        $ex = $matches2[0];
         $isChar = $card instanceof Char;
         $card->setCidText($cidText);
         $card->setJpName($name);
         $card->setElementByJapaneseArray($elementArr);
-        $card->ex = (int) $ex;
+        if ($foundEx) {
+            $ex = $matches2[0];
+            $card->ex = (int) $ex;
+        }
+        else {
+            $card->addError("Couldn't find card's ex");
+        }
+
 
         /**
          * Card cost, position, ap, dp, sp, gender, rarity
@@ -214,6 +239,10 @@ class LyceeImporter {
         }
         $rarity = trim(str_replace('ﾚｱﾘﾃｨ　', '', $secondCells->item(6 + 6)->textContent));
         $card->rarity = $rarity;
+
+        $toMarkupOptions = array (
+            'card' => $card
+        );
 
         if ($isChar) {
             $thirdRows = $tableArray[2]->getElementsByTagName('tr');
@@ -247,11 +276,11 @@ class LyceeImporter {
                     $hasComments = preg_match($pattern, $specialAbilityText, $matches);
                     if ($hasComments) {
                         $comments = $matches[1];
-                        $comments = $this->toLycdbMarkup($comments);
+                        $comments = $this->toLycdbMarkup($comments, $toMarkupOptions);
                         $card->setComment(Card::LANG_JP, $comments);
                         $specialAbilityText = preg_replace($pattern, '', $specialAbilityText);
                     }
-                    $specialAbilityText = $this->toLycdbMarkup($specialAbilityText);
+                    $specialAbilityText = $this->toLycdbMarkup($specialAbilityText, $toMarkupOptions);
                     $card->setSpecialAbilityText($specialAbilityText);
 
                     continue;
@@ -262,7 +291,7 @@ class LyceeImporter {
                     $japaneseCostArray = $this->countElementsByDomElement($td2);
                     $costText = trim(strip_tags($td2->textContent));
                     $cost = new Cost;
-                    $costText = $this->toLycdbMarkup($costText);
+                    $costText = $this->toLycdbMarkup($costText, $toMarkupOptions);
                     $cost->text = $costText;
                     $cost->fillByLyceeArray($japaneseCostArray);
                     $card->setSpecialAbilityCost($cost);
@@ -284,7 +313,7 @@ class LyceeImporter {
         return $card;
     }
 
-    public function toLycdbMarkup($html) {
+    public function toLycdbMarkup($html, $options = array ()) {
         $pattern = '@<img [^>]*alt="([^"]*)"[^>]*>@';
         $html = preg_replace_callback($pattern, array ($this, 'imageReplaceCallback'), $html);
         $html = preg_replace('@<span class="red">([^<]*?)</span>@', '[target]\1[/target]', $html);
@@ -292,7 +321,12 @@ class LyceeImporter {
         $html = str_replace('<br>', "\n", $html);
         if (false !== strpos($html, '<')) {
             $msg = sprintf("There still is HTML in the marked up result: %s", $html);
-            trigger_error($msg);
+            if (isset($options['card'])) {
+                $options['card']->addError($msg);
+            }
+            else {
+                trigger_error($msg);
+            }
         }
         return $html;
     }
@@ -378,6 +412,9 @@ class LyceeImporter {
     }
 
     public function addBasicAbilityToCard($card, $japaneseBasicAbility, $costHtml) {
+        $toMarkupOptions = array (
+            'card' => $card
+        );
         $basicAbilityMap = $card->getJapaneseBasicAbilityMap();
         $basicAbilityEnumVal = $basicAbilityMap[$japaneseBasicAbility];
         if ($card->basicAbilityHasCost($basicAbilityEnumVal)) {
@@ -385,7 +422,7 @@ class LyceeImporter {
             $costText = trim(strip_tags($costHtml));
             $cost = new Cost;
             $cost->fillByLyceeArray($japaneseCostArray);
-            $costText = $this->toLycdbMarkup($costText);
+            $costText = $this->toLycdbMarkup($costText, $toMarkupOptions);
             $cost->setText($costText);
         }
         else {

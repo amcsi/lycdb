@@ -100,7 +100,7 @@ class LyceeImporter {
         $options['lifetime'] = 60 * 60 * 24 * 265 * 5; // 5 years.
         $options['cache_tags'] = array ($this->websiteVersionTag);
         if ($arr['listsCards']) {
-            $options['alternate_cache'] = 1;
+            $options['alternate_cache'] = 2;
         }
         $html = $this->request($arr['path'], $qs, $options);
 

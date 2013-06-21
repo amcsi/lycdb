@@ -88,3 +88,8 @@ CREATE TABLE IF NOT EXISTS `lycdb_sets` (
   UNIQUE KEY `ext_id` (`ext_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+
+
+-- ------------------------
+
+ALTER TABLE  `lycdb_cards` CHANGE  `update_date`  `update_date` TIMESTAMP NULL DEFAULT NULL ;

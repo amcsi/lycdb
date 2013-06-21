@@ -152,30 +152,39 @@ class LyceeImporter {
             $dataToUse['insert_date'] = $amysql->expr('CURRENT_TIMESTAMP');
             $datas[] = $dataToUse;
         }
+
         if (!$datas) {
             trigger_error("No cards to insert or update. Set: " . print_r($arr, true));
             return;
         }
+
+        $insertCount = 0;
         try {
             $stmt = $amysql->newStatement();
             $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $datas);
             $stmt->execute();
-            $affectedRows = $stmt->affectedRows;
+            $insertCount = $affectedRows = $stmt->affectedRows;
         }
         catch (\Exception $e) {
             trigger_error("Couldn't update some rows. $e");
         }
-        foreach ($datas as &$data) {
+
+        $updateDateData = array (
+            'update_date' => $amysql->expr('CURRENT_TIMESTAMP')
+        );
+        $updatedCount = 0;
+        foreach ($datas as $data) {
             unset($data['insert_date']);
+            $success = $amysql->update($this->cardsTableName, $data, 'cid = ?', $data['cid']);
+            if ($amysql->affectedRows) {
+                $updatedCount++;
+                $amysql->update($this->cardsTableName, $updateDateData, 'cid = ?', $data['cid']);
+                printf("Updated card: %s<br>\n", $data['cid']);
+            }
         }
-        var_dump("New rows: " . $stmt->affectedRows);
-        try {
-            $amysql->updateMultipleByData($this->cardsTableName, $datas, 'cid');
-        }
-        catch (\Exception $e) {
-            trigger_error("Couldn't update some rows. $e");
-        }
-        var_dump("Updated: " . $amysql->multipleAffectedRows);
+
+        var_dump("New rows: " . $insertCount);
+        var_dump("Updated: " . $updatedCount);
     }
 
     public function getCardByTablesList2(array $tableArray) {

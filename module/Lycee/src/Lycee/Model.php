@@ -42,7 +42,7 @@ class Model {
         }
         $elements = array ('snow', 'moon', 'flower', 'lightning', 'sun', 'star');
         if (!empty($options['cost'])) {
-            $costType = isset($options['cost_type']) ? $options['cost_type'] : 1;
+            $costType = isset($options['cost_type']) ? $options['cost_type'] : 0;
             // payable by
             if (1 == $costType) {
                 $total = 0;
@@ -73,10 +73,8 @@ class Model {
         if (isset($options['ex'], $options['ex_equality'])) {
             $eq = $options['ex_equality'];
             if (!$options['ex'] && 0 < $options['ex_equality']) {
-
             }
             else if (\Lycee\Config::MAX_EX_VALUE <= $options['ex'] && $options['ex_equality'] < 0) {
-
             }
             else {
                 $op = '=';

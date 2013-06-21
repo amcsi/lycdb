@@ -38,7 +38,7 @@ class Model {
                 $displayElements = '';
                 foreach ($elements as $element) {
                     if ($row["cost_$element"]) {
-                        $displayCost .= "[$element]";
+                        $displayCost .= str_repeat("[$element]", $row["cost_$element"]);
                     }
                     if (!empty($row["is_$element"])) {
                         $displayElements .= "[$element]";

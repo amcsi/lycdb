@@ -95,3 +95,9 @@ CREATE TABLE IF NOT EXISTS `lycdb_sets` (
 ALTER TABLE  `lycdb_cards` CHANGE  `update_date`  `update_date` TIMESTAMP NULL DEFAULT NULL ;
 
 ALTER TABLE  `lycdb_cards` DROP  `rarity` ;
+
+ALTER TABLE  `lycdb_cards` ADD  `ap` TINYINT NOT NULL DEFAULT  '0' AFTER  `conversion_en` ,
+ADD  `dp` TINYINT NOT NULL DEFAULT  '0' AFTER  `ap` ,
+ADD  `sp` TINYINT NOT NULL DEFAULT  '0' AFTER  `dp` ,
+ADD  `position_flags` INT NOT NULL DEFAULT  '0' AFTER  `sp` ;
+

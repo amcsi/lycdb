@@ -132,7 +132,8 @@ class LyceeImporter {
             'cid', 'name_jp', 'ex', 'is_snow', 'is_moon', 'is_lightning', 'is_flower', 'is_sun',
             'cost_snow', 'cost_moon', 'cost_lightning', 'cost_flower', 'cost_sun', 'cost_star',
             'ability_desc_jp', 'comments_jp', 'import_errors', 'type', 'ability_cost_jp', 'ability_name_jp',
-            'conversion_jp', 'basic_ability_flags', 'basic_abilities_jp', 'is_male', 'is_female', 'import_errors'
+            'conversion_jp', 'basic_ability_flags', 'basic_abilities_jp', 'is_male', 'is_female', 'import_errors',
+            'ap', 'dp', 'sp', 'position_flags',
         );
         $cardCount = count($cards);
         $alternateCount = 0;
@@ -247,9 +248,34 @@ class LyceeImporter {
             if ($flags) {
                 $card->setSpotFlags($flags);
             }
-            $ap = str_replace('AP　', '', $secondCells->item(2 + 6)->textContent);
-            $dp = str_replace('DP　', '', $secondCells->item(3 + 6)->textContent);
-            $sp = str_replace('SP　', '', $secondCells->item(4 + 6)->textContent);
+            $pattern = '@/d+@';
+            $ap = 0;
+            $dp = 0;
+            $sp = 0;
+            $suc = preg_match($pattern, $secondCells->item(2 + 6)->textContent, $matches);
+            if ($suc) {
+                $ap = $matches[0];
+            }
+            else {
+                $card->addError("Could not find AP");
+            }
+
+            $suc = preg_match($pattern, $secondCells->item(3 + 6)->textContent, $matches);
+            if ($suc) {
+                $dp = $matches[0];
+            }
+            else {
+                $card->addError("Could not find DP");
+            }
+
+            $suc = preg_match($pattern, $secondCells->item(4 + 6)->textContent, $matches);
+            if ($suc) {
+                $sp = $matches[0];
+            }
+            else {
+                $card->addError("Could not find SP");
+            }
+
             $gender = str_replace('性別　', '', $secondCells->item(5 + 6)->textContent);
             $card->setGenderByText($gender);
             $card->setStat(Char::STAT_AP, $ap);

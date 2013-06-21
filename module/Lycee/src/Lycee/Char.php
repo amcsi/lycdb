@@ -5,10 +5,10 @@ class Char extends Card {
     
     protected $isMale = false;
     protected $isFemale = false;
-    protected $ap;
-    protected $dp;
-    protected $sp;
-    protected $spotFlags;
+    protected $ap = 0;
+    protected $dp = 0;
+    protected $sp = 0;
+    protected $spotFlags = 0;
     protected $basicAbilities = array(); // Key represents the type. Holds an onject or TRUE as a value
     public $abilityNames = array ();
     public $abilityTexts = array ();
@@ -279,7 +279,11 @@ class Char extends Card {
         $data['basic_abilities_jp'] = join("\n", $basicAbilitiesJp);
         $data['basic_abilities_en'] = join("\n", $basicAbilitiesEn);
         $data['is_male']            = $this->isMale ? 1 : 0;
-        $data['is_female']            = $this->isFemale ? 1 : 0;
+        $data['is_female']          = $this->isFemale ? 1 : 0;
+        $data['ap']                 = $this->ap;
+        $data['dp']                 = $this->dp;
+        $data['sp']                 = $this->sp;
+        $data['position_flags']     = $this->spotFlags;
         return $data;
     }
 

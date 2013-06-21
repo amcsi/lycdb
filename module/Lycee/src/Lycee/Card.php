@@ -283,6 +283,10 @@ abstract class Card extends Lycee {
         $data['comments_en']            = isset($this->comments[self::LANG_EN]) ? $this->comments[self::LANG_EN] : '';
         $data['import_errors']          = join("\n", $this->getErrors());
 
+        $data['ap'] = 0;
+        $data['dp'] = 0;
+        $data['sp'] = 0;
+        $data['position_flags'] = 0;
         $data['type'] = null;
         $data['ability_cost_jp'] = '';
         $data['ability_cost_en'] = '';

@@ -290,7 +290,7 @@ class LyceeImporter {
                         $specialAbilityText = preg_replace($pattern, '', $specialAbilityText);
                     }
                     $specialAbilityText = $this->toLycdbMarkup($specialAbilityText, $toMarkupOptions);
-                    $card->setSpecialAbilityText($specialAbilityText);
+                    $card->setMainAbilityText($specialAbilityText);
 
                     continue;
                 }

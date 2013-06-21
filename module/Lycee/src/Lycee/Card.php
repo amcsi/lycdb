@@ -223,7 +223,7 @@ abstract class Card extends Lycee {
     }
 
     public function setMainAbilityText($abilityText) {
-        $this->abilityTexts[self::LANG_JP] = $abilityText;
+        $this->texts[self::LANG_JP] = $abilityText;
     }
 
     public function setJpName($name) {
@@ -278,7 +278,7 @@ abstract class Card extends Lycee {
         $data['cost_sun']                 = $this->getCostElement(self::SUN);
         $data['cost_star']                 = $this->getCostElement(self::STAR);
         $data['ability_desc_jp']         = $this->texts[self::LANG_JP];
-        $data['ability_desc_en']         = $this->texts[self::LANG_EN];
+        $data['ability_desc_en']         = isset($this->texts[self::LANG_EN]) ? $this->texts[self::LANG_EN] : '';
         $data['comments_jp']            = isset($this->comments[self::LANG_JP]) ? $this->comments[self::LANG_JP] : '';
         $data['comments_en']            = isset($this->comments[self::LANG_EN]) ? $this->comments[self::LANG_EN] : '';
         $data['import_errors']          = join("\n", $this->getErrors());

@@ -127,7 +127,7 @@ abstract class Card extends Lycee {
         $this->nameJap;
     }
     
-    public static function newCardByTypeText($typeText) {
+    public static function newCardByTypeText($typeText, $cidText = null) {
         switch (strtolower($typeText)) {
         case 'character':
             return new Char;
@@ -138,7 +138,24 @@ abstract class Card extends Lycee {
         case 'item':
             return new Item;
         default:
-            trigger_error("No such card type: $typeText");
+            $msg = "No such card type: $typeText";
+            if ($cidText) {
+                $split = explode('-', $cidText);
+                switch ($split[0]) {
+                case 'CH':
+                    return new Char;
+                case 'AR':
+                    return new Area;
+                case 'EV':
+                    return new Event;
+                case 'IT':
+                    return new Item;
+                }
+            }
+            trigger_error($msg);
+            $ret = new Char;
+            $ret->addError($msg);
+            return $ret;
         }
     }
     

@@ -73,11 +73,17 @@ class LyceeImporter {
         catch (AMysql_Exception $e) {
             trigger_error($e);
         }
-        $this->importSetByArray($sets[0]);
+        $met = ini_get('max_execution_time');
+        foreach ($sets as $set) {
+            set_time_limit($met);
+            $this->importSetByArray($set);
+        }
     }
 
     public function importSetByArray($arr) {
         $amysql = $this->getAMysql();
+        printf("Importing set %s ...", $arr['name']);
+        ob_flush();
         $qs = $arr['qs'];
         $qs['page_out'] = 500;
         $qs['page_list'] = 2;
@@ -160,10 +166,18 @@ class LyceeImporter {
         $pattern = '@<img src="([^\"]*)"@';
         $elementArr = $this->countElementsByDomElement($firstCells->item(3));
         $exText = trim($firstCells->item(4)->textContent);
-        preg_match('@EX　(\d+)@', $exText, $matches2);
-        $ex = $matches2[1];
+        preg_match('@\d+@', $exText, $matches2);
 
+        if ('ＩTEM' == $cardTypeText) {
+            $cardTypeText = 'ITEM';
+        }
         $card = Card::newCardByTypeText($cardTypeText);
+
+        if (!$matches2[0]) {
+            $card->addError("Couldn't find card's ex");
+        }
+
+        $ex = $matches2[0];
         $isChar = $card instanceof Char;
         $card->setCidText($cidText);
         $card->setJpName($name);
@@ -273,7 +287,8 @@ class LyceeImporter {
     public function toLycdbMarkup($html) {
         $pattern = '@<img [^>]*alt="([^"]*)"[^>]*>@';
         $html = preg_replace_callback($pattern, array ($this, 'imageReplaceCallback'), $html);
-        $html = preg_replace('@<span class="red">([^<]*)</span>@', '[target]\1[/target]', $html);
+        $html = preg_replace('@<span class="red">([^<]*?)</span>@', '[target]\1[/target]', $html);
+        $html = preg_replace('@<span class="blue_c">([^<]*?)</span>@', '[color=blue]\1[/color]', $html);
         $html = str_replace('<br>', "\n", $html);
         if (false !== strpos($html, '<')) {
             $msg = sprintf("There still is HTML in the marked up result: %s", $html);

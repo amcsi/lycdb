@@ -19,6 +19,7 @@ class LycdbMarkupToHtml extends AbstractHelper {
         $string = str_replace('[off]', $this->getImgTag("$imgBase/spot-off.gif", '[off]'), $string);
         $string = preg_replace("@\[target\](.*?)\[/target\]@", '<span class="target">\1</span>', $string);
         $string = preg_replace("@\[color=(\w+)\](.*?)\[/color\]@", '<span style="color: \1;">\2</span>', $string);
+        $string = nl2br($string);
         return $string;
     }
 

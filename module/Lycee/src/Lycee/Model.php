@@ -80,6 +80,8 @@ class Model {
                         break;
                 }
                 $row['type_text'] = $tt;
+                $row['default_image_external'] = str_replace('-', '_', strtolower($row['cid'])) . '_l.jpg';
+                $row['sets_string'] = 'Coming soon...';
             }
         }
         return $result;

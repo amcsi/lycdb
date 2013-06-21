@@ -257,3 +257,6 @@ div.card_js_spots {
 p.ability_name {
     margin-bottom:2px;
 }
+span.conversion {
+    color: orange;
+}

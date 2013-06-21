@@ -188,10 +188,12 @@
             
             <tbody>
                 <?php foreach ($this->cards as $key => $card): ?>
-                <tr id="card_result_<?= $card['id'] ?>" class="<?= $card['type_text'] ?> <?= $key % 2 ? 'odd' : 'even' ?>">
+                <tr id="card_result_<?= $card['cid'] ?>" class="<?= $card['type_text'] ?> <?= $key % 2 ? 'odd' : 'even' ?>">
                     <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)"><?= $card['cid'] ?></td>
                     <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)"><?= $card['name_jp'] ?></td>
-                    <td>Coming soon...</td>
+                    <td class="sets">
+                        <?= nl2br($this->escapeHtml($card['sets_string'])) ?>
+                    </td>
                     <td class="cost">
                         <?= $this->lycdbMarkupToHtml($card['cost_markup']) ?>
                     </td>
@@ -232,3 +234,125 @@
                 <?php endforeach ?>
             </tbody>
         </table>
+
+
+    <div id='hidden'>
+        <?php if (isset($this->cards)): ?>
+        <?php foreach($this->cards as $key => $card): ?>
+        <div class="hidden card_js <?= $card['type_text'] ?>" id="card_js_<?= $card['cid'] ?>">
+            <div class="card_js_image">
+            <img alt="CH-0409 Tohno Akiha" src="http://lycee-tcg.com/card_list/images/card_images/<?= $card['default_image_external'] ?>" width="136">
+            </div>
+            <div class="card_js_details">
+                <div class="card_js_id card_js_detail_left">
+                    <span><?= $card['cid'] ?></span>
+                </div>
+                <div class="card_js_sets">
+                    <span><?= nl2br($this->escapeHtml($card['sets_string'])) ?></span>
+                </div>
+                <div class="card_js_name">
+                    <span class="card_name card_js_detail_left">
+                        <?= $this->escapeHtml($card['name_en']) ?>
+                    </span>
+                </div>
+                <div class="card_js_name_jap">
+                    <span class="card_name jap">
+                        <?= $this->escapeHtml($card['name_jp']) ?>
+                    </span>
+                </div>
+                <div class="card_js_ex card_js_detail_left">
+                    <span>
+                        <strong>Ex:</strong> <?= $card['ex'] ?>
+                        <?= $this->lycdbMarkupToHtml($card['elements_markup']) ?>
+                    </span>
+                </div>
+                <div class="card_js_cost">
+                    <span>
+                        <?= $this->lycdbMarkupToHtml($card['cost_markup']) ?>
+                    </span>
+                </div>
+                <?php if (\Lycee\Card::CHAR == $card['type']): ?>
+                <div class="card_js_ap_dp_sp card_js_detail_left">
+                <div class='left ap'><?= $card['ap'] ?></div>
+                    <div class='left dp'><?= $card['dp'] ?></div>
+                    <div class='left sp'><?= $card['sp'] ?></div>
+                </div>
+                <div class="card_js_spots">
+                    <?= $this->lycdbMarkupToHtml($card['position_markup']) ?>
+                </div>
+                <div class="card_js_text card_js_detail_full">
+                    <?php if ($card['conversion_jp']): ?>
+                    <span class="conversion">Conversion: <?= $card['conversion_jp'] ?></span>
+                    <?php endif ?>
+                    <?php foreach (explode("\n", $card['basic_abilities_jp']) as $basicAbility): ?>
+                    <p class="basic_ability_name">
+                        <span>
+                            <?= $this->lycdbMarkupToHtml($basicAbility) ?>
+                        </span>
+                    </p>
+                    <?php endforeach ?>
+                    <p class="ability_name">
+                        <span>
+                            <?= $this->escapeHtml($card['ability_name_jp']) ?>:
+                            <?= $this->lycdbMarkupToHtml($card['ability_cost_jp']) ?>
+                        </span>
+                    </p>
+                    <p class="card_text">
+                        <span>
+                            <?= $this->lycdbMarkupToHtml($card['ability_desc_jp']) ?>
+                        </span>
+                    </p>
+                </div>
+                <?php else: ?>
+                <div class="card_js_text card_js_detail_full">
+                    <p class="card_text">
+                        <span>
+                            <?= $this->lycdbMarkupToHtml($card['ability_desc_jp']) ?>
+                        </span>
+                    </p>
+                </div>
+                <?php endif ?>
+            </div>
+        </div>
+        <?php endforeach ?>
+        <?php endif ?>
+        
+        
+        <div class="hidden card_js event" id="card_js_1">
+            <div class="card_js_image">
+                <img alt="CH-0409 Tohno Akiha" src="<?php echo $this->basePath() ?>/img/cards/middle/tm02/EV-0207-m.jpg">
+            </div>
+            <div class="card_js_details">
+                <div class="card_js_id card_js_detail_left">
+                    <span>EV-0207</span>
+                </div>
+                <div class="card_js_sets">
+                    <span>Type-Moon 2.0</span>
+                </div>
+                <div class="card_js_name">
+                    <span class="card_name card_js_detail_left">Big Mistake</span>
+                </div>
+                <div class="card_js_name_jap">
+                    <span class="card_name jap">大失敗</span>
+                </div>
+                <div class="card_js_ex card_js_detail_left">
+                    <span>
+                        <strong class="ex">Ex</strong> <span class="ex">0</span>
+                        <img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif">
+                    </span>
+                </div>
+                <div class="card_js_cost">
+                    <span>
+                        <img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif">
+                    </span>
+                </div>
+                <div class="card_js_text card_js_detail_full">
+                    <p class="card_text">
+                        <span>
+                            Discard all cards in <span class="target">your opponent's hand</span>. For every card discarded, discard 3 cards from your deck.
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>

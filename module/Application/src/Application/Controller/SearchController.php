@@ -19,7 +19,28 @@ class SearchController extends AbstractActionController
         $model = $sm->get('Lycee\Model');
         $options = array ();
         $options['template'] = true;
+
+        $request = $this->getRequest();
+        if ($request->getQuery('search')) {
+            $options['name'] = $request->getQuery('name');
+            $options['type'] = $request->getQuery('card_type');
+            $options['cost_type'] = $request->getQuery('cost_type');
+            $options['element_type'] = $request->getQuery('element_type');
+            $elements = array ('snow', 'moon', 'flower', 'lightning', 'sun', 'star');
+            $options['cost'] = array ();
+            $options['element'] = array ();
+            foreach ($elements as $key => $element) {
+                $options['cost'][$key] = $request->getQuery("cost_$element");
+                if (\Lycee\Lycee::STAR != $key) {
+                    $options['element'][$key] = (bool) $request->getQuery("element_$element");
+                }
+            }
+            $options['ex'] = $request->getQuery('ex');
+            $options['ex_equality'] = $request->getQuery('ex_operator');
+            $options['text'] = $request->getQuery('text');
+        }
         $result = $model->get($options);
+
         $view = array ();
         $view['cards'] = $result;
         return new ViewModel($view);

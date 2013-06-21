@@ -1,5 +1,6 @@
         <input type='button' value='Show/hide basic search' onclick="show_hide('basic_search_form');">
-        <form id='basic_search_form' method='get' action='#'>
+        <form id='basic_search_form' method='get' action=''>
+            <input type="hidden" name="search" value="1">
             <fieldset class="card_search">
                 <legend>Basic search</legend>
                 <ul>
@@ -153,6 +154,10 @@
                     <li>
                         <label for='basic_search_text' class="form_title">Text contains</label>
                         <input class="card_text" id='basic_search_text' type='text' name='text' value=''>
+                    </li>
+                    <li>
+                        <label for='basic_search_text' class="form_title">&nbsp;</label>
+                        <input type="submit" value="Search">
                     </li>
                 </ul>
             </fieldset>

@@ -16,13 +16,10 @@ class Model {
     public function get($options = array ()) {
         $amysql = $this->amysql;
 
-        $limit = ' LIMIT 50 ';
+        $limit = ' LIMIT 300 ';
         $offset = ' OFFSET 0 ';
         $wheres = array ();
         $binds = array ();
-        $wheres[] = 'ex <= :ex';
-        $binds['ex'] = 2;
-        $where = $wheres ? ' WHERE ' . join (' AND ', $wheres) : '';
 
         if (!empty($options['name'])) {
             $expr = $amysql->expr(\AMysql_Expr::ESCAPE_LIKE, $options['name']);
@@ -46,15 +43,8 @@ class Model {
         $elements = array ('snow', 'moon', 'flower', 'lightning', 'sun', 'star');
         if (!empty($options['cost'])) {
             $costType = isset($options['cost_type']) ? $options['cost_type'] : 1;
-            // exact cost
-            if (2 == $costType) {
-                foreach ($elements as $key => $element) {
-                    $wheres[] = "cost_$element = :cost_$element";
-                    $binds["cost_$element"] = isset($cost[$key]) ? $cost[$key] : 0;
-                }
-            }
             // payable by
-            else {
+            if (1 == $costType) {
                 $total = 0;
                 $starWheres = array ();
                 foreach ($elements as $key => $element) {
@@ -71,35 +61,40 @@ class Model {
                     }
                 }
             }
+            // exact cost
+            else if (2 == $costType) {
+                foreach ($elements as $key => $element) {
+                    $wheres[] = "cost_$element = :cost_$element";
+                    $binds["cost_$element"] = isset($cost[$key]) ? $cost[$key] : 0;
+                }
+            }
         }
 
         if (isset($options['ex'], $options['ex_equality'])) {
             $eq = $options['ex_equality'];
-            $op = '=';
-            if (0 < $eq) {
-                $op = '<=';
+            if (!$options['ex'] && 0 < $options['ex_equality']) {
+
             }
-            else if ($eq < 0) {
-                $op = '>=';
+            else if (\Lycee\Config::MAX_EX_VALUE <= $options['ex'] && $options['ex_equality'] < 0) {
+
             }
-            $wheres[] = "ex $op :ex";
-            $binds['ex'] = $options['ex'];
+            else {
+                $op = '=';
+                if ($eq < 0) {
+                    $op = '<=';
+                }
+                else if (0 < $eq) {
+                    $op = '>=';
+                }
+                $wheres[] = "ex $op :ex";
+                $binds['ex'] = $options['ex'];
+            }
         }
 
         if (isset($options['element'])) {
             $elementType = isset($options['element_type']) ? $options['element_type'] : 1;
-            // is
-            if (2 == $elementType) {
-                foreach ($elements as $key => $element) {
-                    if (Lycee::STAR == $key) {
-                        continue;
-                    }
-                    $op = !empty($options['element'][$key]) ? '!=' : '=';
-                    $wheres[] = "is_$element $op 0";
-                }
-            }
             // has
-            else {
+            if (1 == $elementType) {
                 foreach ($elements as $key => $element) {
                     if (Lycee::STAR == $key) {
                         continue;
@@ -107,6 +102,16 @@ class Model {
                     if (!empty($options['element'][$key])) {
                         $wheres[] = "is_$element != 0";
                     }
+                }
+            }
+            // is
+            else if (2 == $elementType) {
+                foreach ($elements as $key => $element) {
+                    if (Lycee::STAR == $key) {
+                        continue;
+                    }
+                    $op = !empty($options['element'][$key]) ? '!=' : '=';
+                    $wheres[] = "is_$element $op 0";
                 }
             }
         }
@@ -118,6 +123,8 @@ class Model {
             $expr = $amysql->expr(\AMysql_Expr::ESCAPE_LIKE, $options['text']);
             $binds['text'] = $expr;
         }
+
+        $where = $wheres ? ' WHERE ' . join (' AND ', $wheres) : '';
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM $this->cardsTableName $where $limit $offset";
         $stmt = $this->amysql->prepare($sql);

@@ -91,7 +91,7 @@ class LyceeImporter {
 
     public function importSetByArray($arr) {
         $amysql = $this->getAMysql();
-        printf("Importing set %s ...", $arr['name']);
+        printf("Importing set %s ...<br>\n", $arr['name']);
         ob_flush();
         $qs = $arr['qs'];
         $qs['page_out'] = 500;
@@ -99,6 +99,9 @@ class LyceeImporter {
         $options = array ();
         $options['lifetime'] = 60 * 60 * 24 * 265 * 5; // 5 years.
         $options['cache_tags'] = array ($this->websiteVersionTag);
+        if ($arr['listsCards']) {
+            $options['alternate_cache'] = 1;
+        }
         $html = $this->request($arr['path'], $qs, $options);
 
         $domQuery = new \Zend\Dom\Query($html);
@@ -131,8 +134,11 @@ class LyceeImporter {
             'ability_desc_jp', 'comments_jp', 'import_errors', 'type', 'ability_cost_jp', 'ability_name_jp',
             'conversion_jp', 'basic_ability_flags', 'basic_abilities_jp', 'is_male', 'is_female', 'import_errors'
         );
+        $cardCount = count($cards);
+        $alternateCount = 0;
         foreach ($cards as $card) {
             if ($card->alternate) {
+                $alternateCount++;
                 continue;
             }
             $data = $card->toDbData();
@@ -153,38 +159,42 @@ class LyceeImporter {
             $datas[] = $dataToUse;
         }
 
-        if (!$datas) {
-            trigger_error("No cards to insert or update. Set: " . print_r($arr, true));
-            return;
+        if (!$cards) {
+            //trigger_error("No cards to insert or update.");
+            echo "<span class=\"error\">Url: " . $this->getFullUrl($arr['path'], $qs) . " " . print_r($arr, true) . "</span>";
         }
 
         $insertCount = 0;
-        try {
-            $stmt = $amysql->newStatement();
-            $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $datas);
-            $stmt->execute();
-            $insertCount = $affectedRows = $stmt->affectedRows;
-        }
-        catch (\Exception $e) {
-            trigger_error("Couldn't update some rows. $e");
-        }
-
-        $updateDateData = array (
-            'update_date' => $amysql->expr('CURRENT_TIMESTAMP')
-        );
         $updatedCount = 0;
-        foreach ($datas as $data) {
-            unset($data['insert_date']);
-            $success = $amysql->update($this->cardsTableName, $data, 'cid = ?', $data['cid']);
-            if ($amysql->affectedRows) {
-                $updatedCount++;
-                $amysql->update($this->cardsTableName, $updateDateData, 'cid = ?', $data['cid']);
-                printf("Updated card: %s<br>\n", $data['cid']);
+
+        if ($datas) {
+            try {
+                $stmt = $amysql->newStatement();
+                $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $datas);
+                $stmt->execute();
+                $insertCount = $affectedRows = $stmt->affectedRows;
+            }
+            catch (\Exception $e) {
+                trigger_error("Couldn't update some rows. $e");
+            }
+
+            $updateDateData = array (
+                'update_date' => $amysql->expr('CURRENT_TIMESTAMP')
+            );
+            foreach ($datas as $data) {
+                unset($data['insert_date']);
+                $success = $amysql->update($this->cardsTableName, $data, 'cid = ?', $data['cid']);
+                if ($amysql->affectedRows) {
+                    $updatedCount++;
+                    $amysql->update($this->cardsTableName, $updateDateData, 'cid = ?', $data['cid']);
+                    printf("Updated card: %s<br>\n", $data['cid']);
+                }
             }
         }
 
-        var_dump("New rows: " . $insertCount);
-        var_dump("Updated: " . $updatedCount);
+        printf("Set: %s<br>\ncards found: %d<br>\nalternate: %d<br>\ninserted: %d<br>\nupdated %s<br>\n<br>\n",
+            $arr['name'], $cardCount, $alternateCount, $insertCount, $updatedCount
+        );
     }
 
     public function getCardByTablesList2(array $tableArray) {
@@ -493,17 +503,18 @@ class LyceeImporter {
     }
 
     public function getSets() {
-        $key = 'setsArray';
+        $key = 'setsArray2';
         $cache = $this->getCache();
         $sets = $cache->getCachedResult($key);
         if (!$sets) {
+            echo "sets not cached<br>n\n";
             $indexHtml = $this->getIndexHtmlWithSetsOpen();
             $domQuery = new \Zend\Dom\Query();
             $domQuery->setDocumentHtml($indexHtml, 'utf-8');
             $setEls = $domQuery->execute('#card_list_main div.m_14a div.m_14b_y div.m_14e a');
             $ret = array ();
             foreach ($setEls as $el) {
-                $set['page'] = $el->getAttribute('href');
+                $set['page'] = str_replace("\r", '', $el->getAttribute('href'));
                 $text = trim($el->textContent);
                 $pattern = '@^(.*)（(\d+)）$@'; // note the japanese parentheses characters
                 preg_match($pattern, $text, $matches);
@@ -513,10 +524,14 @@ class LyceeImporter {
                 parse_str($parsedUrl['query'], $qs);
                 $set['path'] = $parsedUrl['path'];
                 $set['qs'] = $qs;
+                $set['listsCards'] = false;
                 $setExtId = null;
                 foreach ($qs as $key => $val) {
                     if (preg_match('@^S_L_(\d+)$@', $key, $matches)) {
                         $set['extId'] = $matches[1];
+                    }
+                    if (preg_match('@^S_L_number@', $key, $matches)) {
+                        $set['listsCards'] = true;
                     }
                 }
                 $ret[] = $set;
@@ -545,6 +560,13 @@ class LyceeImporter {
         return $this->requestFullUrl($fullUrl, $params, $options);
     }
 
+    public function getFullUrl($url, $params = array ()) {
+        if ($params) {
+            $url .= '?' . http_build_query($params);
+        }
+        return $url;
+    }
+
     public function requestFullUrl($url, $params = array (), $options = array ()) {
         $cache = $this->getCache();
 
@@ -569,9 +591,7 @@ class LyceeImporter {
     }
 
     protected function _requestFullUrl($url, $params = array (), $options = array ()) {
-        if ($params) {
-            $url .= '?' . http_build_query($params);
-        }
+        $url = $this->getFullUrl($url);
 		$result = file_get_contents($url);
 		return $result;
     }

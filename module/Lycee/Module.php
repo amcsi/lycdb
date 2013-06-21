@@ -40,6 +40,11 @@ class Module
                     $lyceeImporter->setServiceManager($sm);
                     return $lyceeImporter;
                 },
+                'Lycee\Model' => function ($sm) {
+                    $model = new Model;
+                    $model->setServiceManager($sm);
+                    return $model;
+                },
                 'AMysql' => 'Lycee\Zend\AMysqlFactory',
             ),
             'invokables' => array(),

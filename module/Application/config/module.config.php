@@ -15,7 +15,7 @@ return array(
                 'options' => array(
                     'route'    => '/',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
+                        'controller' => 'Application\Controller\Search',
                         'action'     => 'index',
                     ),
                 ),
@@ -63,6 +63,19 @@ return array(
                     ),
                 ),
             ),
+            'search' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/search[/:action]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Search',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
         ),
     ),
     'service_manager' => array(
@@ -84,6 +97,7 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Import' => 'Application\Controller\ImportController',
+            'Application\Controller\Search' => 'Application\Controller\SearchController',
         ),
     ),
     'view_manager' => array(

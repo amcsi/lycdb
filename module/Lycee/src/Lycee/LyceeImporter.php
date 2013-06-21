@@ -503,42 +503,36 @@ class LyceeImporter {
     }
 
     public function getSets() {
-        $key = 'setsArray2';
-        $cache = $this->getCache();
-        $sets = $cache->getCachedResult($key);
-        if (!$sets) {
-            echo "sets not cached<br>n\n";
-            $indexHtml = $this->getIndexHtmlWithSetsOpen();
-            $domQuery = new \Zend\Dom\Query();
-            $domQuery->setDocumentHtml($indexHtml, 'utf-8');
-            $setEls = $domQuery->execute('#card_list_main div.m_14a div.m_14b_y div.m_14e a');
-            $ret = array ();
-            foreach ($setEls as $el) {
-                $set['page'] = str_replace("\r", '', $el->getAttribute('href'));
-                $text = trim($el->textContent);
-                $pattern = '@^(.*)（(\d+)）$@'; // note the japanese parentheses characters
-                preg_match($pattern, $text, $matches);
-                $set['name'] = $matches[1];
-                $set['count'] = $matches[2];
-                $parsedUrl = parse_url($set['page']);
-                parse_str($parsedUrl['query'], $qs);
-                $set['path'] = $parsedUrl['path'];
-                $set['qs'] = $qs;
-                $set['listsCards'] = false;
-                $setExtId = null;
-                foreach ($qs as $key => $val) {
-                    if (preg_match('@^S_L_(\d+)$@', $key, $matches)) {
-                        $set['extId'] = $matches[1];
-                    }
-                    if (preg_match('@^S_L_number@', $key, $matches)) {
-                        $set['listsCards'] = true;
-                    }
+        $key = 'indexHtml';
+        $indexHtml = $this->getIndexHtmlWithSetsOpen();
+        $domQuery = new \Zend\Dom\Query();
+        $domQuery->setDocumentHtml($indexHtml, 'utf-8');
+        $setEls = $domQuery->execute('#card_list_main div.m_14a div.m_14b_y div.m_14e a');
+        $sets = array ();
+        foreach ($setEls as $el) {
+            $set['page'] = str_replace("\r", '', $el->getAttribute('href'));
+            $text = trim($el->textContent);
+            $pattern = '@^(.*)（(\d+)）$@'; // note the japanese parentheses characters
+            preg_match($pattern, $text, $matches);
+            $set['name'] = $matches[1];
+            $set['count'] = $matches[2];
+            $parsedUrl = parse_url($set['page']);
+            parse_str($parsedUrl['query'], $qs);
+            $set['path'] = $parsedUrl['path'];
+            $set['qs'] = $qs;
+            $set['listsCards'] = false;
+            $setExtId = null;
+            foreach ($qs as $key => $val) {
+                if (preg_match('@^S_L_(\d+)$@', $key, $matches)) {
+                    $set['extId'] = $matches[1];
                 }
-                $ret[] = $set;
+                if (preg_match('@^S_L_number@', $key, $matches)) {
+                    $set['listsCards'] = true;
+                }
             }
-            $cache->cacheResult($sets, $key);
+            $sets[] = $set;
         }
-        return $ret;
+        return $sets;
     }
 
     /**
@@ -550,8 +544,13 @@ class LyceeImporter {
      */
     public function getIndexHtmlWithSetsOpen() {
         $page = 'index.cgi';
-        $params = array ('S_L' => 1);
-        $indexHtml = $this->request($page, $params);
+        $params = array (
+            'S_L' => 1
+        );
+        $options = array (
+            'alternate_cache' => 3
+        );
+        $indexHtml = $this->request($page, $params, $options);
         return $indexHtml;
     }
 
@@ -591,7 +590,7 @@ class LyceeImporter {
     }
 
     protected function _requestFullUrl($url, $params = array (), $options = array ()) {
-        $url = $this->getFullUrl($url);
+        $url = $this->getFullUrl($url, $params);
 		$result = file_get_contents($url);
 		return $result;
     }

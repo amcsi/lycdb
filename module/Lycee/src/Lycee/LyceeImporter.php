@@ -240,7 +240,7 @@ class LyceeImporter {
             $flags = 0;
             for ($i = 0; $i < 6; $i++) {
                 $img = $positionImgs->item($i);
-                $hasPosition = false !== strpos($img->getAttribute('href'), 'b.gif');
+                $hasPosition = false !== strpos($img->getAttribute('src'), 'b.gif');
                 if ($hasPosition) {
                     $flags |= (1 << $i);
                 }

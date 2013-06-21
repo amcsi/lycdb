@@ -93,3 +93,5 @@ CREATE TABLE IF NOT EXISTS `lycdb_sets` (
 -- ------------------------
 
 ALTER TABLE  `lycdb_cards` CHANGE  `update_date`  `update_date` TIMESTAMP NULL DEFAULT NULL ;
+
+ALTER TABLE  `lycdb_cards` DROP  `rarity` ;

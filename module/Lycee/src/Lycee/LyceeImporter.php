@@ -126,7 +126,7 @@ class LyceeImporter {
         }
         $datas = array ();
         $neededData = array (
-            'cid', 'name_jp', 'rarity', 'ex', 'is_snow', 'is_moon', 'is_lightning', 'is_flower', 'is_sun',
+            'cid', 'name_jp', 'ex', 'is_snow', 'is_moon', 'is_lightning', 'is_flower', 'is_sun',
             'cost_snow', 'cost_moon', 'cost_lightning', 'cost_flower', 'cost_sun', 'cost_star',
             'ability_desc_jp', 'comments_jp', 'import_errors', 'type', 'ability_cost_jp', 'ability_name_jp',
             'conversion_jp', 'basic_ability_flags', 'basic_abilities_jp', 'is_male', 'is_female', 'import_errors'

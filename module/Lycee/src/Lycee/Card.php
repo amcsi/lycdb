@@ -265,7 +265,6 @@ abstract class Card extends Lycee {
         $data['cid']                     = $this->getCidText();
         $data['name_jp']                 = $this->nameJap;
         $data['name_en']                 = $this->nameEng;
-        $data['rarity']                  = $this->rarity;
         $data['ex']                      = $this->ex;
         $data['is_snow']                 = $this->getElement(self::SNOW);
         $data['is_moon']                 = $this->getElement(self::MOON);

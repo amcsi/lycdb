@@ -205,7 +205,7 @@ abstract class Card extends Lycee {
         if (!isset($element, $boolean)) {
             return false;
         }
-        $this->elementFlags = Bw::changeBits($this->elementFlags, 0, 1, (int) $boolean);
+        $this->elementFlags = Bw::changeBits($this->elementFlags, $element, 1, (int) $boolean);
         return true;
     }
     

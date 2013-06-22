@@ -205,8 +205,8 @@ p.ability_name {
 .card_js {
     background-color:white;
     border: 1px solid black;
-    height:200px;
-    width:500px;
+    height:260px;
+    width:700px;
     position:absolute;
     left:0px;
     right:0px;
@@ -239,7 +239,6 @@ span.ex {
 }
 .card_js_details div {
     padding:2px 0px;
-    font-size:80%;
 }
 span.jap {
     font-size:12px;

@@ -12,14 +12,16 @@ function display_card(card, e) {
     
     
     attachment = get_card_attachment(card);
-    attachment.removeClass("hidden");
+    attachment.show();
+    var img = attachment.find('img.card-image');
+    img.attr('src', img.attr('data-src'));
     current_attachment = attachment;
     update_card_attachment_position(e);
 }
 
 function hide_card(card, event) {
     attachment = get_card_attachment(card);
-    attachment.addClass("hidden");
+    attachment.hide();
 }
 
 function update_card_attachment_position(e) {

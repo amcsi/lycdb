@@ -246,7 +246,7 @@
         <?php foreach($this->cards as $key => $card): ?>
         <div class="hidden card_js <?= $card['type_text'] ?>" id="card_js_<?= $card['cid'] ?>">
             <div class="card_js_image">
-            <img alt="<?= $card['cid'] ?> <?= $card['name_en'] ? $card['name_en'] : $card['name_jp'] ?>" src="http://lycee-tcg.com/card_list/images/card_images/<?= $card['default_image_external'] ?>" width="180">
+            <img alt="<?= $card['cid'] ?> <?= $card['name_en'] ? $card['name_en'] : $card['name_jp'] ?>" src="<?= $this->basePath() ?>/lycee_images/180/<?= $card['cid'] ?>" width="180">
             </div>
             <div class="card_js_details">
                 <div class="card_js_id card_js_detail_left">

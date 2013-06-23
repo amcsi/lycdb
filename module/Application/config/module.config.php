@@ -63,6 +63,18 @@ return array(
                     ),
                 ),
             ),
+            'lycee_images' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/lycee_images/:sizeKey/:cid',
+                    'constraints' => array(
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\LyceeImage',
+                        'action'     => 'image',
+                    ),
+                ),
+            ),
             'search' => array(
                 'type'    => 'segment',
                 'options' => array(
@@ -98,6 +110,7 @@ return array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\Import' => 'Application\Controller\ImportController',
             'Application\Controller\Search' => 'Application\Controller\SearchController',
+            'Application\Controller\LyceeImage' => 'Application\Controller\LyceeImageController',
         ),
     ),
     'view_manager' => array(

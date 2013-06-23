@@ -97,7 +97,8 @@ class Module
     public function getViewHelperConfig() {
         return array (
             'invokables' => array (
-                'lycdbMarkupToHtml' => 'Application\View\Helper\LycdbMarkupToHtml'
+                'lycdbMarkupToHtml' => 'Application\View\Helper\LycdbMarkupToHtml',
+                'thumbnail' => 'Application\View\Helper\Thumbnail',
             )
         );
     }

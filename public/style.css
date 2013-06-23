@@ -35,7 +35,6 @@ table { border-collapse: collapse; border-spacing: 0; }
 body {
     width:780px;
     line-height: 1;
-    background-color:grey;
     font-family:tahoma;
     font-size:12px;
 }

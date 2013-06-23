@@ -23,7 +23,7 @@ class Module
     public $isDebugInvisibleSafe = false; // Is it safe to invisibly output debug information
     public $showAnalytics = false;
 
-    protected function _initEnv() {
+    protected function _initEnv($e) {
         if (!defined('APPLICATION_ENV')) {
             $appEnv = getenv('APPLICATION_ENV');
             if (!$appEnv) {
@@ -47,11 +47,25 @@ class Module
         }
         $this->isDebugOutputSafe = $this->isLocalDev || $this->isDevIp;
         $this->isDebugInvisibleSafe = $this->isDebugOutputSafe || $this->isLocalDev || $this->levelStaging;
+
+        $application = $e->getParam('application');
+        $viewModel = $application->getMvcEvent()->getViewModel();
+        $viewModel->appEnv = APPLICATION_ENV;
+
+        $sm = $application->getServiceManager();
+
+        $config = $sm->get('Config');
+        $viewModel->google_analytics = $config['google_analytics'];
+
+        if ($this->levelDevelopment) {
+            $amysql = $application->getServiceManager()->get('AMysql');
+            $amysql->profileQueries = true;
+        }
     }
 
     public function onBootstrap(MvcEvent $e)
     {
-        $this->_initEnv();
+        $this->_initEnv($e);
         $e->getApplication()->getServiceManager()->get('translator');
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();

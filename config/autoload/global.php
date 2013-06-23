@@ -18,4 +18,8 @@ return array(
         'password' => '',
         'db'        => 'lycdb',
     ),
+    'google_analytics' => array (
+        'code' => '',
+        'domain' => '',
+    )
 );

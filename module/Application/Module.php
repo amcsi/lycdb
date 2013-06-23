@@ -23,6 +23,10 @@ class Module
     public $isDebugInvisibleSafe = false; // Is it safe to invisibly output debug information
     public $showAnalytics = false;
 
+    public $sm;
+
+    public $config;
+
     protected function _initEnv($e) {
         if (!defined('APPLICATION_ENV')) {
             $appEnv = getenv('APPLICATION_ENV');
@@ -53,14 +57,11 @@ class Module
         $viewModel->appEnv = APPLICATION_ENV;
 
         $sm = $application->getServiceManager();
+        $this->sm = $sm;
 
         $config = $sm->get('Config');
+        $this->config = $config;
         $viewModel->google_analytics = $config['google_analytics'];
-
-        if ($this->levelDevelopment) {
-            $amysql = $application->getServiceManager()->get('AMysql');
-            $amysql->profileQueries = true;
-        }
     }
 
     public function onBootstrap(MvcEvent $e)
@@ -74,6 +75,18 @@ class Module
 		$response->getHeaders()->addHeaders(array (
 			'Content-Type' => 'text/html; charset=utf-8'
 		));
+        $eventManager->attach(MvcEvent::EVENT_RENDER, array ($this, 'onRender'));
+    }
+
+    public function onRender(MvcEvent $e) {
+
+        if (!empty($this->config['amysql']['profile'])) {
+            $sm = $this->sm;
+            $amysql = $sm->get('AMysql');
+            $viewModel = $e->getViewModel();
+            $viewModel->amysqlQueriesData = $amysql->getQueriesData();
+            $viewModel->amysqlTotalTime = $amysql->totalTime;
+        }
     }
 
     public function getConfig()

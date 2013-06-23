@@ -17,6 +17,7 @@ return array(
         'user' => 'lycdb',
         'password' => '',
         'db'        => 'lycdb',
+        'profile'   => false,
     ),
     'google_analytics' => array (
         'code' => '',

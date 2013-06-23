@@ -258,3 +258,20 @@ p.ability_name {
 span.conversion {
     color: orange;
 }
+table.queryInfoTable {
+    border: 1px solid black;
+    background-color: white;
+    border-collapse: collapse;
+}
+table.queryInfoTable td,
+table.queryInfoTable th
+{
+    border: 1px solid black;
+    padding: 5px;
+}
+table.queryInfoTable th.no {
+    width: 50px;
+}
+table.queryInfoTable th.time {
+    width: 200px;
+}

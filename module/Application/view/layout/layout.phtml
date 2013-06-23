@@ -48,6 +48,28 @@
             <span class="coding"><span class="property">Coding:</span> <a href="mailto:amcsi@mailbox.hu">amcsi</a></span><br>
             <span class="design"><span class="property">Design:</span> <a href="mailto:amcsi@mailbox.hu">amcsi</a></span>
         </div>
+        <?php if (isset($this->amysqlQueriesData)): ?>
+            <div>MySQL query information:</div>
+            <?php if ($this->amysqlQueriesData): ?>
+            <table class="queryInfoTable">
+                <tr>
+                    <th class="no">No.</th>
+                    <th class="query">Query</th>
+                    <th class="time">Time</th>
+                </tr>
+                <?php foreach ($this->amysqlQueriesData as $index => $row): ?>
+                <tr>
+                    <td>#<?= $index ?></td>
+                    <td><?= $this->escapeHtml($row['query']) ?></td>
+                    <td><?= $this->escapeHtml($row['time']) ?></td>
+                </tr>
+                <?php endforeach ?>
+            </table>
+            <?php else: ?>
+            <div>No MySQL queries were run</div>
+            <?php endif ?>
+
+        <?php endif ?>
     </div>
     
     

@@ -48,6 +48,8 @@ class LyceeImageController extends AbstractActionController
         $thumbnailHelper = $vhm->get('thumbnail');
         $file = $thumbnailHelper($params);
 
+        $this->httpCacheForDays(7);
+
         if ($ims = getenv('HTTP_IF_MODIFIED_SINCE')) {
             $filemtime = filemtime($file);
             if (strtotime($ims) < $filemtime) {
@@ -73,5 +75,13 @@ class LyceeImageController extends AbstractActionController
         }
         exit;
 
+    }
+
+    public function httpCacheForDays($n) {
+        $seconds_to_cache = 60 * 60 * 24 * $n;
+        $ts = gmdate("D, d M Y H:i:s", time() + $seconds_to_cache) . " GMT";
+        header("Expires: $ts");
+        header("Pragma: cache");
+        header("Cache-Control: max-age=$seconds_to_cache");
     }
 }

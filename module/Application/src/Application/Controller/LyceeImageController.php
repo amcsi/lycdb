@@ -48,13 +48,21 @@ class LyceeImageController extends AbstractActionController
         $thumbnailHelper = $vhm->get('thumbnail');
         $file = $thumbnailHelper($params);
 
+        if ($ims = getenv('HTTP_IF_MODIFIED_SINCE')) {
+            $filemtime = filemtime($file);
+            if (strtotime($ims) < $filemtime) {
+                header('HTTP/1.1 304 Not Modified');
+                exit;
+            }
+        }
+
         $getimagesize = getimagesize($file);
         if ($getimagesize) {
             /*
-            header("Content-Type: $getimagesize[mime]");
             header("Cache-Control: no-cache, must-revalidate"); 
             header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); 
              */
+            header("Content-Type: $getimagesize[mime]");
             readfile($file);
         }
         else {

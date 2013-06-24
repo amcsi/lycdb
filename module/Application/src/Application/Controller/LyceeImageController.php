@@ -51,6 +51,8 @@ class LyceeImageController extends AbstractActionController
         if ($ims = getenv('HTTP_IF_MODIFIED_SINCE')) {
             $filemtime = filemtime($file);
             if (strtotime($ims) < $filemtime) {
+            }
+            else {
                 header('HTTP/1.1 304 Not Modified');
                 exit;
             }

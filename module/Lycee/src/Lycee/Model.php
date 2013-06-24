@@ -24,7 +24,7 @@ class Model {
         if (!empty($options['name'])) {
             $expr = $amysql->expr(\AMysql_Expr::ESCAPE_LIKE, $options['name']);
             $wheres[] = 'name_jp LIKE :name OR name_en LIKE :name';
-            $binds['name'] = $options['name'];
+            $binds['name'] = $expr;
         }
 
         if (isset($options['type']) && -2 < ($type = $options['type'])) {

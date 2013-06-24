@@ -14,7 +14,10 @@ function display_card(card, e) {
     attachment = get_card_attachment(card);
     attachment.show();
     var img = attachment.find('img.card-image');
-    img.attr('src', img.attr('data-src'));
+    var targetSrc = img.attr('data-src');
+    if (img.attr('src') != targetSrc) {
+        img.attr('src', targetSrc);
+    }
     current_attachment = attachment;
     update_card_attachment_position(e);
 }

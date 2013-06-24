@@ -21,6 +21,8 @@ class SearchController extends AbstractActionController
         $options['template'] = true;
 
         $request = $this->getRequest();
+        //$page = $request->fromRoute('page', 1);
+        $page = $this->getEvent()->getRouteMatch()->getParam('page', 1);
         if ($request->getQuery('search')) {
             $options['name'] = $request->getQuery('name');
             $options['type'] = $request->getQuery('card_type');
@@ -38,11 +40,20 @@ class SearchController extends AbstractActionController
             $options['ex'] = $request->getQuery('ex');
             $options['ex_equality'] = $request->getQuery('ex_operator');
             $options['text'] = $request->getQuery('text');
+            $options['page'] = $page;
         }
         $result = $model->get($options);
+        $total = $model->foundRows;
+        $pageCount = $model->pageCount;
+
+        $paginator = new \Zend\Paginator\Paginator(new \Zend\Paginator\Adapter\Null($total));
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(50);
 
         $view = array ();
         $view['cards'] = $result;
+        $view['paginator'] = $paginator;
+        $view['route']  = 'search';
         return new ViewModel($view);
     }
 }

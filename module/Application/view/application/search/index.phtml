@@ -1,5 +1,5 @@
         <input type='button' value='Show/hide basic search' onclick="show_hide('basic_search_form');">
-        <form id='basic_search_form' method='get' action=''>
+        <form id='basic_search_form' method='get' action='' class="basicSearchForm">
             <input type="hidden" name="search" value="1">
             <fieldset class="card_search">
                 <legend>Basic search</legend>
@@ -162,6 +162,11 @@
                 </ul>
             </fieldset>
         </form>
+
+        <?php echo $this->paginationControl($this->paginator, 'Elastic', 'application/search/partial/pagination.phtml'
+            , array('route' => $this->route));
+        ?>
+
         <table class="card_results">
             <thead>
                 <colgroup class="card_result_columns">
@@ -240,6 +245,9 @@
             </tbody>
         </table>
 
+        <?php echo $this->paginationControl($this->paginator, 'Elastic', 'application/search/partial/pagination.phtml'
+            , array('route' => $this->route));
+        ?>
 
     <div id='hidden'>
         <?php if (isset($this->cards)): ?>

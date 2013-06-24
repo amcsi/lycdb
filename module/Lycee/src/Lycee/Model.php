@@ -9,6 +9,7 @@ class Model {
     public $cardsTableName = 'lycdb_cards';
 
     public $foundRows;
+    public $pageCount;
 
     public function __construct() {
     }
@@ -16,8 +17,12 @@ class Model {
     public function get($options = array ()) {
         $amysql = $this->amysql;
 
-        $limit = ' LIMIT 300 ';
-        $offset = ' OFFSET 0 ';
+        $perPage = max(10, isset($options['perPage']) ? (int) $options['perPage'] : 50);
+        $page = (int) (isset($options['page']) ? $options['page'] : 1);
+        $offset = ($page - 1) * $perPage;
+
+        $limit = " LIMIT $perPage ";
+        $offset = " OFFSET $offset ";
         $wheres = array ();
         $binds = array ();
 
@@ -129,6 +134,8 @@ class Model {
         $stmt->execute($binds);
         $result = $stmt->fetchAllAssoc();
         $this->foundRows = $this->amysql->foundRows();
+        $totalPages = (int) $this->foundRows / $perPage;
+        $this->pageCount = $totalPages;
 
         if (!empty($options['template'])) {
             $positionImgs = array (

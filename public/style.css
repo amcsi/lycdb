@@ -144,7 +144,7 @@ table.card_results thead.card_result_columns {
 }
 table.card_results {
     margin-top:10px;
-    margin-bottom:200px;
+    margin-bottom: 15px;
 }
 table.card_results thead.card_result_columns th,
 table.card_results td, table.card_results th {
@@ -282,4 +282,7 @@ table.queryInfoTable th.no {
 }
 table.queryInfoTable th.time {
     width: 200px;
+}
+.basicSearchForm {
+    margin-bottom: 15px;
 }

@@ -1,0 +1,32 @@
+<p>Found <strong><?= $this->pageCount ?></strong> results.<br>
+    Total pages: <strong><?= $this->totalItemCount ?></strong><br>
+</p>
+<?php if ($this->pageCount): ?>
+    <div class="pagination pagination-centered">
+            <!-- Previous page link -->
+            <?php if (isset($this->previous)): ?>
+                    <a class="not-current" href="<?php echo $this->url($this->route, array ('page' => $this->previous), array ('query' => getenv('QUERY_STRING'))); ?>">
+                        <<
+                    </a>
+            <?php else: ?>
+            <?php endif; ?>
+            <!-- Numbered page links -->
+            <?php foreach ($this->pagesInRange as $page): ?>
+                <?php if ($page != $this->current): ?>
+                        <a class="not-current" href="<?php echo $this->url($this->route, array ('page' => $page), array ('query' => getenv('QUERY_STRING'))); ?>">
+                            <?php echo $page; ?>
+                        </a>
+                <?php else: ?>
+                        <strong><a class="current" href="<?php echo $this->url($this->route, array ('page' => $page), array ('query' => getenv('QUERY_STRING'))); ?>"><?php echo $page; ?></a></strong>
+                <?php endif; ?>
+            <?php endforeach; ?>
+
+            <!-- Next page link -->
+            <?php if (isset($this->next)): ?>
+                    <a href="<?php echo $this->url($this->route, array ('page' => $this->next), array ('query' => getenv('QUERY_STRING'))); ?>">
+                        >>
+                    </a>
+            <?php else: ?>
+            <?php endif; ?>
+    </div>
+<?php endif; ?>

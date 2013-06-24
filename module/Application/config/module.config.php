@@ -78,13 +78,15 @@ return array(
             'search' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/search[/:action]',
+                    'route'    => '/search[/:action][/page/:page]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'page' => '[0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Search',
                         'action'     => 'index',
+                        'page'     => '1',
                     ),
                 ),
             ),

@@ -10,16 +10,22 @@ function show_hide(tag_id) {
 
 function display_card(card, e) {
     
-    
-    attachment = get_card_attachment(card);
-    attachment.show();
+    var attachment = get_card_attachment(card);
     var img = attachment.find('img.card-image');
-    var targetSrc = img.attr('data-src');
-    if (img.attr('src') != targetSrc) {
+    if (!img.length) {
+        var cont = attachment.find('div.card_js_image');
+        var targetSrc = cont.data('src');
+        var width = cont.data('width');
+        img = $('<img />');
+        img.addClass('card-image');
+        img.attr('width', width);
         img.attr('src', targetSrc);
+        cont.append(img);
     }
+    attachment.show();
     current_attachment = attachment;
     update_card_attachment_position(e);
+
 }
 
 function hide_card(card, event) {

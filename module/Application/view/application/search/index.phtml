@@ -245,8 +245,7 @@
         <?php if (isset($this->cards)): ?>
         <?php foreach($this->cards as $key => $card): ?>
         <div class="card_js <?= $card['type_text'] ?>" id="card_js_<?= $card['cid'] ?>" style="display: none;">
-            <div class="card_js_image">
-            <img class="card-image" alt="<?= $card['cid'] ?> <?= $card['name_en'] ? $card['name_en'] : $card['name_jp'] ?>" src="#" data-src="<?= $this->basePath() ?>/lycee_images/180/<?= $card['cid'] ?>" width="180">
+            <div class="card_js_image" data-src="<?= $this->basePath() ?>/lycee_images/180/<?= $card['cid'] ?>" data-width="180">
             </div>
             <div class="card_js_details">
                 <div class="card_js_id card_js_detail_left">
@@ -321,43 +320,4 @@
         </div>
         <?php endforeach ?>
         <?php endif ?>
-        
-        
-        <div class="hidden card_js event" id="card_js_1">
-            <div class="card_js_image">
-                <img alt="CH-0409 Tohno Akiha" src="<?php echo $this->basePath() ?>/img/cards/middle/tm02/EV-0207-m.jpg">
-            </div>
-            <div class="card_js_details">
-                <div class="card_js_id card_js_detail_left">
-                    <span>EV-0207</span>
-                </div>
-                <div class="card_js_sets">
-                    <span>Type-Moon 2.0</span>
-                </div>
-                <div class="card_js_name">
-                    <span class="card_name card_js_detail_left">Big Mistake</span>
-                </div>
-                <div class="card_js_name_jap">
-                    <span class="card_name jap">大失敗</span>
-                </div>
-                <div class="card_js_ex card_js_detail_left">
-                    <span>
-                        <strong class="ex">Ex</strong> <span class="ex">0</span>
-                        <img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif">
-                    </span>
-                </div>
-                <div class="card_js_cost">
-                    <span>
-                        <img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='snow' src="<?php echo $this->basePath() ?>/img/snow.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='moon' src="<?php echo $this->basePath() ?>/img/moon.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='lightning' src="<?php echo $this->basePath() ?>/img/lightning.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='flower' src="<?php echo $this->basePath() ?>/img/flower.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif"><img alt='sun' src="<?php echo $this->basePath() ?>/img/sun.gif">
-                    </span>
-                </div>
-                <div class="card_js_text card_js_detail_full">
-                    <p class="card_text">
-                        <span>
-                            Discard all cards in <span class="target">your opponent's hand</span>. For every card discarded, discard 3 cards from your deck.
-                        </span>
-                    </p>
-                </div>
-            </div>
-        </div>
     </div>

@@ -153,16 +153,24 @@ table.card_results td, table.card_results th {
     border:1px solid rgb(255,224,128);
     vertical-align:middle;
 }
-table.card_results tbody tr.character td {
+div.card_js.character,
+table.card_results tbody tr.character td
+{
     background-color:rgb(200,163,197);
 }
-table.card_results tbody tr.event td {
+div.card_js.event,
+table.card_results tbody tr.event td
+{
     background-color:rgb(255,160,128);
 }
-table.card_results tbody tr.area td {
+div.card_js.area,
+table.card_results tbody tr.area td
+{
     background-color: #99ee99;
 }
-table.card_results tbody tr.item td {
+div.card_js.item,
+table.card_results tbody tr.item td
+{
     background-color: #eeee99;
 }
 tr.card_result_columns th {

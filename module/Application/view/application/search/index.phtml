@@ -1,5 +1,5 @@
         <input type='button' value='Show/hide basic search' onclick="show_hide('basic_search_form');">
-        <form id='basic_search_form' method='get' action='' class="basicSearchForm">
+        <form id='basic_search_form' method='get' action='<?= $this->url($this->route) ?>' class="basicSearchForm">
             <input type="hidden" name="search" value="1">
             <fieldset class="card_search">
                 <legend>Basic search</legend>

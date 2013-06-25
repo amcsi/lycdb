@@ -40,8 +40,8 @@ class SearchController extends AbstractActionController
             $options['ex'] = $request->getQuery('ex');
             $options['ex_equality'] = $request->getQuery('ex_operator');
             $options['text'] = $request->getQuery('text');
-            $options['page'] = $page;
         }
+        $options['page'] = $page;
         $result = $model->get($options);
         $total = $model->foundRows;
         $pageCount = $model->pageCount;

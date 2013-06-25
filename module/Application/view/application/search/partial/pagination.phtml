@@ -1,12 +1,12 @@
-<p>Found <strong><?= $this->pageCount ?></strong> results.<br>
-    Total pages: <strong><?= $this->totalItemCount ?></strong><br>
+<p>Found <strong><?= $this->totalItemCount ?></strong> results.<br>
+    Total pages: <strong><?= $this->pageCount ?></strong><br>
 </p>
 <?php if ($this->pageCount): ?>
     <div class="pagination pagination-centered">
             <!-- Previous page link -->
             <?php if (isset($this->previous)): ?>
                     <a class="not-current" href="<?php echo $this->url($this->route, array ('page' => $this->previous), array ('query' => getenv('QUERY_STRING'))); ?>">
-                        <<
+                        &lt;&lt;
                     </a>
             <?php else: ?>
             <?php endif; ?>
@@ -24,7 +24,7 @@
             <!-- Next page link -->
             <?php if (isset($this->next)): ?>
                     <a href="<?php echo $this->url($this->route, array ('page' => $this->next), array ('query' => getenv('QUERY_STRING'))); ?>">
-                        >>
+                        &gt;&gt;
                     </a>
             <?php else: ?>
             <?php endif; ?>

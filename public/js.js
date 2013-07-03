@@ -9,7 +9,8 @@ function show_hide(tag_id) {
 }
 
 function display_card(card, e) {
-    
+    var tr = $(card).closest('tr');
+
     var attachment = get_card_attachment(card);
     var img = attachment.find('img.card-image');
     if (!img.length) {
@@ -23,9 +24,15 @@ function display_card(card, e) {
         cont.append(img);
     }
     attachment.show();
-    current_attachment = attachment;
-    update_card_attachment_position(e);
+    var height = attachment.outerHeight(true);
 
+    current_attachment = attachment;
+    attachment.position({
+        at: 'left+10 bottom+10',
+        my: 'left+10 top+10',
+        of: tr,
+        collition: 'flip'
+    });
 }
 
 function hide_card(card, event) {
@@ -33,14 +40,8 @@ function hide_card(card, event) {
     attachment.hide();
 }
 
-function update_card_attachment_position(e) {
-    var cursor = getPosition(e);
-    current_attachment.css('left', cursor.x + 4);
-    current_attachment.css('top', cursor.y + 4);
-}
-
 function get_card_attachment(card) {
-    var id = $(card).parent().attr('id').substr(12);
+    var id = $(card).closest('tr').attr('id').substr(12);
     return $("#card_js_" + id);
 }
 
@@ -61,3 +62,16 @@ function getPosition(e) {
     }
     return cursor;
 }
+
+$(function () {
+    var cardResults = $('table.card_results');
+    if (cardResults.length) {
+        var trs = cardResults.find('tbody tr');
+        trs.on('mouseover', 'td.cardId,td.cardName', function (evt) {
+            display_card(evt.currentTarget, evt);
+        });
+        trs.on('mouseout', 'td.cardId,td.cardName', function (evt) {
+            hide_card(evt.currentTarget, evt);
+        });
+    }
+});

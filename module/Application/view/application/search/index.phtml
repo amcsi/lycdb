@@ -199,8 +199,8 @@
             <tbody>
                 <?php foreach ($this->cards as $key => $card): ?>
                 <tr id="card_result_<?= $card['cid'] ?>" class="<?= $card['type_text'] ?> <?= $key % 2 ? 'odd' : 'even' ?>">
-                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)"><?= $card['cid'] ?></td>
-                    <td onmouseover="display_card(this, event);" onmouseout="hide_card(this, event);" onmousemove="update_card_attachment_position(event)"><?= $card['name_jp'] ?></td>
+                    <td class="cardId"><?= $card['cid'] ?></td>
+                    <td class="cardName"><?= $card['name_jp'] ?></td>
                     <td class="sets">
                         <?= nl2br($this->escapeHtml($card['sets_string'])) ?>
                     </td>

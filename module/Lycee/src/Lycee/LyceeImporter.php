@@ -352,7 +352,8 @@ class LyceeImporter {
         }
         else {
             $thirdCells = $tableArray[2]->getElementsByTagName('td');
-            $card->setMainAbilityText($thirdCells->item(2)->textContent);
+            $text = $this->toLycdbMarkup($this->getInnerHtml($thirdCells->item(2)), $toMarkupOptions);
+            $card->setMainAbilityText($text);
         }
 
         return $card;

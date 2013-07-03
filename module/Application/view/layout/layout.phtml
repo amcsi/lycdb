@@ -32,10 +32,10 @@
     </div>
     <div id='nav'>
         <ul class="nav left">
-            <li><a href='index.php?p=1'>About</a></li>
-            <li><a href='index.php'>News</a></li>
-            <li><a href='index.php?p=2'>Card search</a></li>
-            <li><a href='http://forums.akiba-ch.com/viewforum.php?f=4'>Akihabara Forums</a></li>
+            <li><a href='<?= $this->basePath() ?>/'>About</a></li>
+            <li><a href='<?= $this->basePath() ?>/'>News</a></li>
+            <li><a href='<?= $this->url('search') ?>'>Card search</a></li>
+            <li><a href='<?= $this->escapeHtml($this->viewconf['forums_url_base']) ?>/'>Forums</a></li>
         </ul>
         <ul class="nav right">
             <li><div><span>Welcome, <span class='nick'>amcsi</span>!</span></div></li>

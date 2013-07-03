@@ -22,5 +22,8 @@ return array(
     'google_analytics' => array (
         'code' => '',
         'domain' => '',
+    ),
+    'viewconf' => array (
+        'forums_url_base' => 'http://forums.lycee-tcg.eu',
     )
 );

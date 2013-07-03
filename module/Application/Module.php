@@ -62,6 +62,7 @@ class Module
         $config = $sm->get('Config');
         $this->config = $config;
         $viewModel->google_analytics = $config['google_analytics'];
+        $viewModel->viewconf = $config['viewconf'];
     }
 
     public function onBootstrap(MvcEvent $e)

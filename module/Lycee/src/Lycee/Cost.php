@@ -45,10 +45,10 @@ class Cost extends Lycee {
         else if ($this->isTap) {
             $ret .= '[tap]';
         }
-        else if (!$this->cost) {
+        else if (!$this->cost && !$this->text) {
             return '[0]';
         }
-        $ret =
+        $ret .=
             str_repeat('[snow]', $this->getCostElement(self::SNOW)) .
             str_repeat('[moon]', $this->getCostElement(self::MOON)) .
             str_repeat('[flower]', $this->getCostElement(self::FLOWER)) .

@@ -101,4 +101,10 @@ $(function () {
             }
         });
     }
+
+    $('span.tooltip').tooltip({
+        content: function (cb) {
+            cb($(this).prop('title').replace('\n', '<br>'));
+        }
+    });
 });

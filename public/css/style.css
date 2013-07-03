@@ -322,3 +322,6 @@ span.basicAbility {
 span.costText {
     color: #3c78ae;
 }
+td.cardName img {
+    vertical-align: middle;
+}

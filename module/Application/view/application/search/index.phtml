@@ -200,7 +200,10 @@
                 <?php foreach ($this->cards as $key => $card): ?>
                 <tr id="card_result_<?= $card['cid'] ?>" class="<?= $card['type_text'] ?> <?= $key % 2 ? 'odd' : 'even' ?>">
                     <td class="cardId"><?= $card['cid'] ?></td>
-                    <td class="cardName"><?= $card['name_jp'] ?></td>
+                    <td class="cardName"><?= $card['name_jp'] ?><?php if ($card['import_errors']): ?>
+                        <span class="clickable tooltip" title="Notice: The import script has reported errors regarding this card.
+We are already aware of this error and will fix it sometime soon so please don't report it to us."><img src="<?= $this->basePath() ?>/img/exclamation-red-frame.png" alt="warning"></span>
+                    <?php endif ?></td>
                     <td class="sets">
                         <?= nl2br($this->escapeHtml($card['sets_string'])) ?>
                     </td>

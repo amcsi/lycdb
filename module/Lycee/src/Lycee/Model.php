@@ -69,8 +69,9 @@ class Model {
             // exact cost
             else if (2 == $costType) {
                 foreach ($elements as $key => $element) {
+                    $costAmount = isset($options['cost'][$key]) ? $options['cost'][$key] : 0;
                     $wheres[] = "cost_$element = :cost_$element";
-                    $binds["cost_$element"] = isset($cost[$key]) ? $cost[$key] : 0;
+                    $binds["cost_$element"] = $costAmount;
                 }
             }
         }

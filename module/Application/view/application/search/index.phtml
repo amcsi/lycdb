@@ -296,17 +296,21 @@
                     <?php if ($card['conversion_jp']): ?>
                     <span class="conversion">Conversion: <?= $card['conversion_jp'] ?></span>
                     <?php endif ?>
-                    <?php foreach (explode("\n", $card['basic_abilities_jp']) as $basicAbility): ?>
+                    <?php if ($card['display_basic_abilities_jp_markup']): ?>
+                    <?php foreach ($card['display_basic_abilities_jp_markup'] as $basicAbility): ?>
                     <p class="basic_ability_name">
-                        <span>
-                            <?= $this->lycdbMarkupToHtml($basicAbility) ?>
-                        </span>
+                        <?= $this->lycdbMarkupToHtml($basicAbility) ?>
                     </p>
                     <?php endforeach ?>
+                    <?php endif ?>
                     <p class="ability_name">
                         <span>
-                            <?= $this->escapeHtml($card['ability_name_jp']) ?>:
-                            <?= $this->lycdbMarkupToHtml($card['ability_cost_jp']) ?>
+                            <span class="abilityName"><?php $cost = $this->lycdbMarkupToHtml($card['ability_cost_jp']) ?>
+                            <?= $this->escapeHtml($card['ability_name_jp']) 
+                            ?><?php if ($cost): ?>:<?php endif ?></span>
+                            <?php if ($cost): ?>
+                            <span class="cost"><?= $this->lycdbMarkupToHtml($card['ability_cost_jp']) ?></span>
+                            <?php endif ?>
                         </span>
                     </p>
                     <p class="card_text">
@@ -324,7 +328,9 @@
                     </p>
                 </div>
                 <?php endif ?>
+                <div style="clear: both;"></div>
             </div>
+            <div style="clear: both;"></div>
         </div>
         <?php endforeach ?>
         <?php endif ?>

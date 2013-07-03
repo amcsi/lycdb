@@ -32,7 +32,7 @@ div.container a.brand {
 }
 body {
     width:780px;
-    line-height: 1;
+    line-height: 1.2;
     font-family:tahoma;
     font-size:12px;
 }
@@ -156,6 +156,13 @@ table.card_results td, table.card_results th {
     border:1px solid rgb(255,224,128);
     vertical-align:middle;
 }
+div.card_js {
+    font-size: 14px;
+    line-height: 18px;
+}
+div.card_js img {
+    vertical-align: middle;
+}
 div.card_js.character,
 table.card_results tbody tr.character td
 {
@@ -213,10 +220,11 @@ p.ability_name {
     font-weight:bold;
 }
 .card_js {
+    width:700px;
+    min-height:260px;
+    padding: 10px;
     background-color:white;
     border: 1px solid black;
-    height:260px;
-    width:700px;
     position:absolute;
     left:0px;
     right:0px;
@@ -233,6 +241,11 @@ span.ex {
 .card_js_details {
     text-align:middle;
 }
+.card_js_details .card_js_spots {
+    font-size: 12px;
+    vertical-align: top;
+    line-height: 1;
+}
 .card_js_details .card_js_spots,
 .card_js_details .card_js_ap_dp_sp {
 }
@@ -246,9 +259,6 @@ span.ex {
 }
 .card_name_jap {
     font-style:italic;
-}
-.card_js_details div {
-    padding:2px 0px;
 }
 span.jap {
     font-size:12px;
@@ -288,4 +298,27 @@ table.queryInfoTable th.time {
 }
 .basicSearchForm {
     margin-bottom: 15px;
+}
+a.current {
+    font-weight: bold;
+}
+.card_js_image {
+    min-height: 1px;
+    width: 180px;
+}
+.card_js_details {
+    margin-left: 190px;
+}
+.card_js_detail_full {
+    padding: 10px;
+    background-color: white;
+}
+.card_js_detail_full {
+    background-color: rgba(255, 255, 255, .7);
+}
+span.basicAbility {
+    color: #268833;
+}
+span.costText {
+    color: #3c78ae;
 }

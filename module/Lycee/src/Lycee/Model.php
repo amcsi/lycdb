@@ -190,6 +190,18 @@ class Model {
                 $row['type_text'] = $tt;
                 $row['default_image_external'] = str_replace('-', '_', strtolower($row['cid'])) . '_l.jpg';
                 $row['sets_string'] = 'Coming soon...';
+                $basicAbilitiesJp = explode("\n", $row['basic_abilities_jp']);
+                $displayBasicAbilitiesJp = array ();
+                foreach ($basicAbilitiesJp as $bab) {
+                    $split = explode (' ', $bab, 2);
+                    $babName = $split[0];
+                    $displayBab = sprintf("<span class=\"basicAbility\">%s</span>", htmlspecialchars($babName));
+                    if (isset($split[1])) {
+                        $displayBab .= sprintf(" <span class=\"costText\">%s</span>", htmlspecialchars($split[1]));
+                    }
+                    $displayBasicAbilitiesJp[] = $displayBab;
+                }
+                $row['display_basic_abilities_jp_markup'] = $displayBasicAbilitiesJp;
             }
         }
         return $result;

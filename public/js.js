@@ -40,7 +40,7 @@ function update_card_attachment_position(e) {
 }
 
 function get_card_attachment(card) {
-    var id = $(card).parent().attr('id').substr(12);
+    var id = $(card).closest('tr').attr('id').substr(12);
     return $("#card_js_" + id);
 }
 
@@ -61,3 +61,20 @@ function getPosition(e) {
     }
     return cursor;
 }
+
+$(function () {
+    var cardResults = $('table.card_results');
+    if (cardResults.length) {
+        var trs = cardResults.find('tbody tr');
+        trs.on('mouseover', 'td.cardId,td.cardName', function (evt) {
+            display_card(evt.currentTarget, evt);
+        });
+        trs.on('mouseout', 'td.cardId,td.cardName', function (evt) {
+            hide_card(evt.currentTarget, evt);
+        });
+        trs.on('mousemove', 'td.cardId,td.cardName', function (evt) {
+            update_card_attachment_position(evt);
+        });
+    }
+
+});

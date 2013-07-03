@@ -66,12 +66,39 @@ function getPosition(e) {
 $(function () {
     var cardResults = $('table.card_results');
     if (cardResults.length) {
+        var keepMode = false;
+        var displayingCard = false;
         var trs = cardResults.find('tbody tr');
-        trs.on('mouseover', 'td.cardId,td.cardName', function (evt) {
-            display_card(evt.currentTarget, evt);
+        var lastOpenedHtmlEl = null;
+        var overlayOpenSelector = 'td.cardId,td.cardName';
+        $('html').click(function (evt) {
+            if (keepMode) {
+                var target = $(evt.target);
+                if (!target.closest('.card_js').length) {
+                    hide_card(lastOpenedHtmlEl, evt);
+                    keepMode = false;
+                    if ($(evt.target).closest(overlayOpenSelector).length) {
+                        onMouseOver.call(this, evt);
+                    }
+                }
+            }
+            else {
+                keepMode = true;
+            }
         });
-        trs.on('mouseout', 'td.cardId,td.cardName', function (evt) {
-            hide_card(evt.currentTarget, evt);
+        var onMouseOver = function (evt) {
+            if (!keepMode) {
+                display_card(evt.target, evt);
+                displayingCard = true;
+                lastOpenedHtmlEl = evt.target;
+            }
+        };
+        trs.on('mouseover', overlayOpenSelector, onMouseOver);
+        trs.on('mouseout', overlayOpenSelector, function (evt) {
+            if (!keepMode) {
+                hide_card(evt.target, evt);
+                displayingCard = false;
+            }
         });
     }
 });

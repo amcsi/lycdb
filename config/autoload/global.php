@@ -24,6 +24,7 @@ return array(
         'domain' => '',
     ),
     'viewconf' => array (
-        'forums_url_base' => 'http://forums.lycee-tcg.eu',
+        'forums_url_base' => '//forums.lycee-tcg.eu',
+        'forums_url_base_https' => 'https://forums.lycee-tcg.eu',
     )
 );

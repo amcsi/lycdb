@@ -24,6 +24,7 @@ class SearchController extends AbstractActionController
         //$page = $request->fromRoute('page', 1);
         $page = $this->getEvent()->getRouteMatch()->getParam('page', 1);
         if ($request->getQuery('search')) {
+            $options['cid'] = $request->getQuery('cid');
             $options['name'] = $request->getQuery('name');
             $options['type'] = $request->getQuery('card_type');
             $options['cost_type'] = $request->getQuery('cost_type');

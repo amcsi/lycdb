@@ -26,6 +26,31 @@ class Model {
         $wheres = array ();
         $binds = array ();
 
+        if (isset($options['cid']) && strlen($options['cid'])) {
+            $where = '0';
+            $stripped = preg_replace('@[^A-Z0-9]@', '', strtoupper($options['cid']));
+            $match = preg_match("@([A-Z]*)([0-9]*)@", $stripped, $matches);
+            if ($match) {
+                $hasLetters = strlen($matches[1]);
+                $hasNumbers = strlen($matches[2]);
+                if ($hasNumbers) {
+                    $number = sprintf("%04d", $matches[2]);
+                    if ($hasLetters) {
+                        $where = "cid = :cid";
+                        $binds['cid'] = sprintf('%s-%s', $matches[1], $number);
+                    }
+                    else {
+                        $where = "cid LIKE '%$number'";
+                    }
+                }
+                else if ($hasLetters) {
+                    $letter = $matches[1];
+                    $where = "cid LIKE '$letter%'";
+                }
+            }
+            $wheres[] = $where;
+        }
+
         if (!empty($options['name'])) {
             $expr = $amysql->expr(\AMysql_Expr::ESCAPE_LIKE, $options['name']);
             $wheres[] = 'name_jp LIKE :name OR name_en LIKE :name';

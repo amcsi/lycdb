@@ -83,7 +83,9 @@ $(function () {
                 }
             }
             else {
-                keepMode = true;
+                if ($(evt.target).closest(overlayOpenSelector).length) {
+                    keepMode = true;
+                }
             }
         });
         var onMouseOver = function (evt) {

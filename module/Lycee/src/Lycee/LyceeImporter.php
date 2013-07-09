@@ -419,19 +419,20 @@ class LyceeImporter {
      */
     public function addConversionOrAbilityToCard(Char $card, $td1Html, $td2Html) {
         $basicAbilityMap = $card->getJapaneseBasicAbilityMap();
+        $openingBracketTypes = "［\[";
         if ('コンバージョン' == $td1Html || 'コンバ−ジョン' == $td1Html) {
             $card->conversion = $td2Html;
         }
         else if (isset($basicAbilityMap[$td1Html])) {
             $this->addBasicAbilityToCard($card, $td1Html, $td2Html);
         }
-        else if (preg_match('@\].*\[@', $td1Html)) {
+        else if (preg_match("@\].*[$openingBracketTypes]@u", $td1Html)) {
             // official lycee website bug remedy
-            $split = preg_split('@\][^\[]*\[@', $td1Html);
+            $split = preg_split("@\][^$openingBracketTypes]*[$openingBracketTypes]@u", $td1Html);
             $count = count($split);
             $split[$count - 1] .= ":" . $td2Html; // haxx
             foreach ($split as $content) {
-                $abilityAndCost = explode(':', $content);
+                $abilityAndCost = preg_split('@:|：@u', $content);
                 if (!isset($abilityAndCost[1])) {
                     $abilityAndCost[1] = '';
                 }

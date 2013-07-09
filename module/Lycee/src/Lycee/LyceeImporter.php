@@ -356,6 +356,11 @@ class LyceeImporter {
             $card->setMainAbilityText($text);
         }
 
+        $fourthCells = $tableArray[3]->getElementsByTagName('td');
+
+        $isErrata = false !== strpos($this->getInnerHtml($fourthCells->item(5)), 'errata_icon');
+        $card->isErrata = $isErrata;
+
         return $card;
     }
 

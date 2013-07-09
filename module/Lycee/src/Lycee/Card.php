@@ -23,6 +23,7 @@ abstract class Card extends Lycee {
     protected $comments;
 
     public $setExtId;
+    public $isErrata;
 
     protected $_errors = array ();
     
@@ -239,7 +240,7 @@ abstract class Card extends Lycee {
         $cidPattern = "@\w+-\d+@";
         $success = preg_match($cidPattern, $cidText, $matches);
         $this->cidText = $matches[0];
-        $pattern = "@(\w+)-(\d+)([A-Z])?@";
+        $pattern = "@(\w+)-(\d+)([^\s\d]*)@";
         $success = preg_match($pattern, $cidText, $matches);
         if ($success) {
             $this->cid = intval($matches[2], 10);

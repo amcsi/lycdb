@@ -213,18 +213,16 @@ class Char extends Card {
         $basicAbilitiesJpFlipped = $this->getJapaneseBasicAbilityFlippedMap();
         $basicAbilitiesEnFlipped = $this->getEnglishBasicAbilityFlippedMap();
         foreach ($this->basicAbilities as $key => $val) {
-            $babJp = $basicAbilitiesJpFlipped[$key];
             $babEn = $basicAbilitiesEnFlipped[$key];
+            $babMarkedUp = $this->markupBasicAbilityEnglish($babEn);
+            $babJp = $babMarkedUp;
             if ($val instanceof Cost) {
                 $textPart = $val->toLycdbMarkup();
-                $babEn .= " $textPart";
-                $babJp .= " $textPart";
+                $babJp .= " | $textPart";
             }
             $basicAbilitiesJp[] = $babJp;
-            $basicAbilitiesEn[] = $babEn;
         }
         $data['basic_abilities_jp'] = join("\n", $basicAbilitiesJp);
-        $data['basic_abilities_en'] = join("\n", $basicAbilitiesEn);
         $data['is_male']            = $this->isMale ? 1 : 0;
         $data['is_female']          = $this->isFemale ? 1 : 0;
         $data['ap']                 = $this->ap;
@@ -232,6 +230,10 @@ class Char extends Card {
         $data['sp']                 = $this->sp;
         $data['position_flags']     = $this->spotFlags;
         return $data;
+    }
+
+    public function markupBasicAbilityEnglish($enBasicAbility) {
+        return "%b($enBasicAbility)";
     }
 
     public function getBasicAbilityFlags() {

@@ -19,6 +19,7 @@ class SearchController extends AbstractActionController
         $model = $sm->get('Lycee\Model');
         $options = array ();
         $options['template'] = true;
+        $options['pref_lang'] = 'en'; // prefer english
 
         $request = $this->getRequest();
         //$page = $request->fromRoute('page', 1);
@@ -39,7 +40,7 @@ class SearchController extends AbstractActionController
                 }
             }
             $options['ex'] = $request->getQuery('ex');
-            $options['ex_equality'] = $request->getQuery('ex_operator');
+           $options['ex_equality'] = $request->getQuery('ex_operator');
             $options['text'] = $request->getQuery('text');
         }
         $options['page'] = $page;

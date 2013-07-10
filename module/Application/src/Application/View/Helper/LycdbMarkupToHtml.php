@@ -17,7 +17,9 @@ class LycdbMarkupToHtml extends AbstractHelper {
 
     public function __invoke($string) {
         $options = array ();
-        $options['basePath'] = $this->getView()->basePath();
+        $view = $this->getView();
+        $options['basePath'] = $view->basePath();
+        $options['pref_lang'] = $view->layout()->prefLang;
         return $this->getLyceeModel()->lycdbMarkupToHtml($string, $options);
     }
 }

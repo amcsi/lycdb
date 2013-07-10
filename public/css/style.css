@@ -325,3 +325,6 @@ span.costText {
 td.cardName img {
     vertical-align: middle;
 }
+.basic_ability_name .basicAbility {
+    margin-right: 5px;
+}

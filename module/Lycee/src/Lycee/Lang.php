@@ -4,34 +4,34 @@ namespace Lycee;
 class Lang {
     public static function getJapaneseBasicAbilityMap() {
         static $ret = array (
-            'ダッシュ'                  => CHAR::DASH,
-            'アグレッシブ'              => CHAR::AGGRESSIVE,
-            'ステップ'                  => CHAR::STEP,
-            'サイドステップ'            => CHAR::SIDE_STEP,
-            'サイド・ステップ'          => CHAR::SIDE_STEP,
-            'サイド･ステップ'           => CHAR::SIDE_STEP,
-            'オーダーステップ'          => CHAR::ORDER_STEP,
-            'オーダー・ステップ'        => CHAR::ORDER_STEP,
-            'オーダー･ステップ'         => CHAR::ORDER_STEP,
-            'ジャンプ'                  => CHAR::JUMP,
-            'エスケープ'                => CHAR::ESCAPE,
-            'サイドアタック'            => CHAR::SIDE_ATTACK,
-            'タックストラッシュ'        => CHAR::TAX_TRASH,
-            'タックス・トラッシュ'      => CHAR::TAX_TRASH,
-            'タックス･トラッシュ'       => CHAR::TAX_TRASH,
-            'タックスウェイクアップ'    => CHAR::TAX_WAKEUP,
-            'タックス・ウェイクアップ'  => CHAR::TAX_WAKEUP,
-            'タックス･ウェイクアップ'   => CHAR::TAX_WAKEUP,
-            'サポーター'                => CHAR::SUPPORTER,
-            'タッチ'                    => CHAR::TOUCH,
-            'アタッカー'                => CHAR::ATTACKER,
-            'ディフェンダー'            => CHAR::DEFENDER,
-            'ボーナス'                  => CHAR::BONUS,
-            'ペナルティ'                => CHAR::PENALTY,
-            'デッキボーナス'            => CHAR::DECK_BONUS,
-            'デッキ・ボーナス'          => CHAR::DECK_BONUS,
-            'デッキ･ボーナス'           => CHAR::DECK_BONUS,
-            'ブースト'                  => CHAR::BOOST,
+            'ダッシュ'                  => Char::DASH,
+            'アグレッシブ'              => Char::AGGRESSIVE,
+            'ステップ'                  => Char::STEP,
+            'サイドステップ'            => Char::SIDE_STEP,
+            'サイド・ステップ'          => Char::SIDE_STEP,
+            'サイド･ステップ'           => Char::SIDE_STEP,
+            'オーダーステップ'          => Char::ORDER_STEP,
+            'オーダー・ステップ'        => Char::ORDER_STEP,
+            'オーダー･ステップ'         => Char::ORDER_STEP,
+            'ジャンプ'                  => Char::JUMP,
+            'エスケープ'                => Char::ESCAPE,
+            'サイドアタック'            => Char::SIDE_ATTACK,
+            'タックストラッシュ'        => Char::TAX_TRASH,
+            'タックス・トラッシュ'      => Char::TAX_TRASH,
+            'タックス･トラッシュ'       => Char::TAX_TRASH,
+            'タックスウェイクアップ'    => Char::TAX_WAKEUP,
+            'タックス・ウェイクアップ'  => Char::TAX_WAKEUP,
+            'タックス･ウェイクアップ'   => Char::TAX_WAKEUP,
+            'サポーター'                => Char::SUPPORTER,
+            'タッチ'                    => Char::TOUCH,
+            'アタッカー'                => Char::ATTACKER,
+            'ディフェンダー'            => Char::DEFENDER,
+            'ボーナス'                  => Char::BONUS,
+            'ペナルティ'                => Char::PENALTY,
+            'デッキボーナス'            => Char::DECK_BONUS,
+            'デッキ・ボーナス'          => Char::DECK_BONUS,
+            'デッキ･ボーナス'           => Char::DECK_BONUS,
+            'ブースト'                  => Char::BOOST,
         );
         return $ret;
     }
@@ -46,25 +46,64 @@ class Lang {
 
     public static function getEnglishBasicAbilityMap() {
         static $ret = array (
-            'Dash'                  => CHAR::DASH,
-            'Aggressive'              => CHAR::AGGRESSIVE,
-            'Step'                  => CHAR::STEP,
-            'Side Step'            => CHAR::SIDE_STEP,
-            'Order Step'          => CHAR::ORDER_STEP,
-            'Jump'                  => CHAR::JUMP,
-            'Escape'                => CHAR::ESCAPE,
-            'Side Attack'            => CHAR::SIDE_ATTACK,
-            'Tax Trash'      => CHAR::TAX_TRASH,
-            'Tax Wakeup'  => CHAR::TAX_WAKEUP,
-            'Supporter'                => CHAR::SUPPORTER,
-            'Touch'                    => CHAR::TOUCH,
-            'Attacker'                => CHAR::ATTACKER,
-            'Defender'            => CHAR::DEFENDER,
-            'Bonus'                  => CHAR::BONUS,
-            'Penalty'                => CHAR::PENALTY,
-            'Deck Bonus'          => CHAR::DECK_BONUS,
+            'Dash'                  => Char::DASH,
+            'Aggressive'              => Char::AGGRESSIVE,
+            'Step'                  => Char::STEP,
+            'Side Step'            => Char::SIDE_STEP,
+            'Order Step'          => Char::ORDER_STEP,
+            'Jump'                  => Char::JUMP,
+            'Escape'                => Char::ESCAPE,
+            'Side Attack'            => Char::SIDE_ATTACK,
+            'Tax Trash'      => Char::TAX_TRASH,
+            'Tax Wakeup'  => Char::TAX_WAKEUP,
+            'Supporter'                => Char::SUPPORTER,
+            'Touch'                    => Char::TOUCH,
+            'Attacker'                => Char::ATTACKER,
+            'Defender'            => Char::DEFENDER,
+            'Bonus'                  => Char::BONUS,
+            'Penalty'                => Char::PENALTY,
+            'Deck Bonus'          => Char::DECK_BONUS,
         );
         return $ret;
     }
-}
+    
+    public static function en2JpMap($name = null) {
+        static $map;
+        if (!$map) {
+            $map = array ();
+            $en2CodeMap = self::getEnglishBasicAbilityMap();
+            $code2JpMap = self::getJapaneseBasicAbilityFlippedMap();
+            foreach ($en2CodeMap as $en => $code) {
+                $map[$en] = $code2JpMap[$code];
+            }
+        }
+        if ($name) {
+            return $map[$name];
+        }
+        return $map;
+    }
 
+    /*
+    public static function normalizeJapaneseBasicAbilityName($name = null) {
+        static $map;
+        if (!$map) {
+            $map = array ();
+            $jbam = self::getJapaneseBasicAbilityMap();
+            $ebamFlipped = array_flip(self::getEnglishBasicAbilityMap);
+            foreach ($jbam as $japaneseText => $code) {
+                $map[$japaneseText] = $ebamFlipped[$code];
+            }
+        }
+        if ($name) {
+            if (isset($map[$name])) {
+                $enName = $map[$name];
+                return Char::enBasicAbilityToMarkup($enName);
+            }
+            else {
+                return false;
+            }
+        }
+        return $map;
+    }
+     */
+}

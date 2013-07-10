@@ -63,6 +63,7 @@ class Module
         $this->config = $config;
         $viewModel->google_analytics = $config['google_analytics'];
         $viewModel->viewconf = $config['viewconf'];
+        $viewModel->prefLang = 'en'; // prefer english by default
 
         $this->setupPhpBB();
         $phpbbUser = $this->phpbbUser;

@@ -216,10 +216,12 @@ class Model {
                 $row['type_text'] = $tt;
                 $row['default_image_external'] = str_replace('-', '_', strtolower($row['cid'])) . '_l.jpg';
                 $row['sets_string'] = 'Coming soon...';
-                $basicAbilitiesJp = explode("\n", $row['basic_abilities_jp']);
+                $basicAbilitiesJp = $row['basic_abilities_jp'] ?
+                    explode("\n", $row['basic_abilities_jp']) :
+                    array ();
                 $displayBasicAbilitiesJp = array ();
                 foreach ($basicAbilitiesJp as $bab) {
-                    $split = explode (' ', $bab, 2);
+                    $split = explode (' | ', $bab, 2);
                     $babName = $split[0];
                     $displayBab = sprintf("<span class=\"basicAbility\">%s</span>", htmlspecialchars($babName));
                     if (isset($split[1])) {
@@ -254,7 +256,21 @@ class Model {
     }
     
     public function lycdbMarkupToHtml($string, $options = array ()) {
+        static $prefBabCbs = array ();
         $basePath = isset($options['basePath']) ? $options['basePath'] : '';
+        $prefEn = !empty($options['pref_lang']) && 'en' == $options['pref_lang'];
+        $babCbKey = $prefEn ? 1 : 0;
+        if (!isset($prefBabCbs[$babCbKey])) {
+            $prefBabCbs[$babCbKey] = function ($matches) use ($prefEn) {
+                if ($prefEn) {
+                    return $matches[1];
+                }
+                else {
+                    return Lang::en2JpMap($matches[1]);
+                }
+            };
+        }
+        $babCb = $prefBabCbs[$babCbKey];
         $imgBase = $basePath . '/img';
         $string = str_replace('[snow]', $this->getImgTag("$imgBase/snow.gif", '[snow]'), $string);
         $string = str_replace('[moon]', $this->getImgTag("$imgBase/moon.gif", '[moon]'), $string);
@@ -269,6 +285,7 @@ class Model {
         $string = preg_replace("@\[target\](.*?)\[/target\]@", '<span class="target">\1</span>', $string);
         $string = preg_replace("@\[cost\](.*?)\[/cost\]@", '<span class="cost">\1</span>', $string);
         $string = preg_replace("@\[color=(\w+)\](.*?)\[/color\]@", '<span style="color: \1;">\2</span>', $string);
+        $string = preg_replace_callback("@%b\(([^\)]*)\)@", $babCb, $string);
         $string = nl2br($string);
         return $string;
     }

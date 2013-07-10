@@ -28,6 +28,7 @@ class LyceeImporter {
     protected $_cache;
     protected $_amysql;
     protected $_serviceManager;
+    protected $_currentCards;
 
     public $setsTableName = 'lycdb_sets';
     public $cardsTableName = 'lycdb_cards';
@@ -58,6 +59,12 @@ class LyceeImporter {
     public function import() {
         $sets = $this->getSets();
         $amysql = $this->getAMysql();
+
+        $stmt = $amysql->prepare("SELECT * FROM $this->cardsTableName");
+        $stmt->execute();
+        $currentCards = $stmt->fetchAllAssoc('cid');
+        $this->_currentCards = $currentCards;
+
         $setDatas = array ();
         foreach ($sets as $set) {
             $setData = array ();
@@ -135,9 +142,18 @@ class LyceeImporter {
             'conversion_jp', 'basic_ability_flags', 'basic_abilities_jp', 'is_male', 'is_female', 'import_errors',
             'ap', 'dp', 'sp', 'position_flags',
         );
+        $hashColumns = Model::getHashColumns();
+        $langHashColumns = Model::getLangHashColumns();
+
+        $changes = array ();
+        
         $cardCount = count($cards);
         $alternateCount = 0;
+
+        $insertDatas = array ();
+
         foreach ($cards as $card) {
+            $cid = $card->getCidText();
             if ($card->alternate) {
                 $alternateCount++;
                 continue;
@@ -147,6 +163,10 @@ class LyceeImporter {
             if ($data['locked']) {
                 continue;
             }
+
+            $totallyNewCard = !isset($this->_currentCards[$cid]);
+            $changed = false;
+
             foreach ($neededData as $key) {
                 if (!array_key_exists($key, $data)) {
                     trigger_error("Missing key: $key. Aborting set: $arr[extId]", E_USER_WARNING);
@@ -154,10 +174,21 @@ class LyceeImporter {
                 }
                 else {
                     $dataToUse[$key] = $data[$key];
+                    if (!$totallyNewCard && $data[$key] != $this->_currentCards[$cid][$key]) {
+                        $changed = true;
+                    }
                 }
             }
-            $dataToUse['insert_date'] = $amysql->expr('CURRENT_TIMESTAMP');
-            $datas[] = $dataToUse;
+            if ($changed) {
+                $changes[$cid] = true;
+            }
+            if ($totallyNewCard) {
+                $dataToUse['insert_date'] = $amysql->expr('CURRENT_TIMESTAMP');
+                $insertDatas[] = $dataToUse;
+            }
+            else if ($changed) {
+                $datas[] = $dataToUse;
+            }
         }
 
         if (!$cards) {
@@ -168,12 +199,14 @@ class LyceeImporter {
         $insertCount = 0;
         $updatedCount = 0;
 
-        if ($datas) {
+        if ($datas || $insertDatas) {
             try {
-                $stmt = $amysql->newStatement();
-                $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $datas);
-                $stmt->execute();
-                $insertCount = $affectedRows = $stmt->affectedRows;
+                if ($insertDatas) {
+                    $stmt = $amysql->newStatement();
+                    $stmt->insertReplace('INSERT IGNORE', $this->cardsTableName, $insertDatas);
+                    $stmt->execute();
+                    $insertCount = $affectedRows = $stmt->affectedRows;
+                }
             }
             catch (\Exception $e) {
                 trigger_error("Couldn't update some rows. $e");

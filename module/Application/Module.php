@@ -87,6 +87,7 @@ class Module
         $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../lycdb_forums/phpBB/';
         $phpEx = substr(strrchr(__FILE__, '.'), 1);
         include($phpbb_root_path . 'common.' . $phpEx);
+        restore_error_handler();
 
         // Start session management
         $user->session_begin();

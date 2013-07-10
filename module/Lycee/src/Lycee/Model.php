@@ -293,5 +293,25 @@ class Model {
     public function getImgTag($src, $alt) {
         return "<img src=\"$src\" alt=\"$alt\">";
     }
+
+    public static function getHashColumns() {
+        static $ret;
+        if (!$ret) {
+            $ret = array_merge(self::getLangHashColumns(), array (
+                'ex', 'is_snow', 'is_moon', 'is_lightning', 'is_flower', 'is_sun',
+                'cost_snow', 'cost_moon', 'cost_lightning', 'cost_flower', 'cost_sun', 'cost_star',
+                'type', 'basic_ability_flags', 'is_male', 'is_female', 'ap', 'dp', 'sp', 'position_flags',
+            ));
+        }
+        return $ret;
+    }
+
+    public static function getLangHashColumns() {
+        static $ret = array (
+            'name_jp', 'ability_desc_jp', 'comments_jp', 'ability_cost_jp', 'ability_name_jp', 'conversion_jp',
+            'basic_abilities_jp', 
+        );
+        return $ret;
+    }
 }
 ?>

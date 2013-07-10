@@ -68,6 +68,11 @@
                     <th class="query">Query</th>
                     <th class="time">Time</th>
                 </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>&nbsp;</td>
+                    <td><?= $this->amysqlTotalTime ?></td>
+                </tr>
                 <?php foreach ($this->amysqlQueriesData as $index => $row): ?>
                 <tr>
                     <td>#<?= $index ?></td>

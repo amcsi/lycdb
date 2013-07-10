@@ -127,8 +127,14 @@ class Module
     public function getViewHelperConfig() {
         return array (
             'invokables' => array (
-                'lycdbMarkupToHtml' => 'Application\View\Helper\LycdbMarkupToHtml',
                 'thumbnail' => 'Application\View\Helper\Thumbnail',
+            ),
+            'factories' => array(
+                'lycdbMarkupToHtml' => function ($hpm) {
+                    $sm = $hpm->getServiceLocator();
+                    $instance = new View\Helper\LycdbMarkupToHtml($sm);
+                    return $instance;
+                },
             )
         );
     }

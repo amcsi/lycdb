@@ -169,68 +169,15 @@ class Char extends Card {
     }
 
     public function getJapaneseBasicAbilityMap() {
-        static $ret = array (
-            'ダッシュ'                  => self::DASH,
-            'アグレッシブ'              => self::AGGRESSIVE,
-            'ステップ'                  => self::STEP,
-            'サイドステップ'            => self::SIDE_STEP,
-            'サイド・ステップ'          => self::SIDE_STEP,
-            'サイド･ステップ'           => self::SIDE_STEP,
-            'オーダーステップ'          => self::ORDER_STEP,
-            'オーダー・ステップ'        => self::ORDER_STEP,
-            'オーダー･ステップ'         => self::ORDER_STEP,
-            'ジャンプ'                  => self::JUMP,
-            'エスケープ'                => self::ESCAPE,
-            'サイドアタック'            => self::SIDE_ATTACK,
-            'タックストラッシュ'        => self::TAX_TRASH,
-            'タックス・トラッシュ'      => self::TAX_TRASH,
-            'タックス･トラッシュ'       => self::TAX_TRASH,
-            'タックスウェイクアップ'    => self::TAX_WAKEUP,
-            'タックス・ウェイクアップ'  => self::TAX_WAKEUP,
-            'タックス･ウェイクアップ'   => self::TAX_WAKEUP,
-            'サポーター'                => self::SUPPORTER,
-            'タッチ'                    => self::TOUCH,
-            'アタッカー'                => self::ATTACKER,
-            'ディフェンダー'            => self::DEFENDER,
-            'ボーナス'                  => self::BONUS,
-            'ペナルティ'                => self::PENALTY,
-            'デッキボーナス'            => self::DECK_BONUS,
-            'デッキ・ボーナス'          => self::DECK_BONUS,
-            'デッキ･ボーナス'           => self::DECK_BONUS,
-            'ブースト'                  => self::BOOST,
-        );
-        return $ret;
+        return Lang::getJapaneseBasicAbilityMap();
     }
     
     public function getJapaneseBasicAbilityFlippedMap() {
-        static $ret;
-        if (!$ret) {
-            $ret = array_flip($this->getJapaneseBasicAbilityMap());
-        }
-        return $ret;
+        return Lang::getJapaneseBasicAbilityFlippedMap();
     }
 
     public function getEnglishBasicAbilityMap() {
-        static $ret = array (
-            'Dash'                  => self::DASH,
-            'Aggressive'              => self::AGGRESSIVE,
-            'Step'                  => self::STEP,
-            'Side Step'            => self::SIDE_STEP,
-            'Order Step'          => self::ORDER_STEP,
-            'Jump'                  => self::JUMP,
-            'Escape'                => self::ESCAPE,
-            'Side Attack'            => self::SIDE_ATTACK,
-            'Tax Trash'      => self::TAX_TRASH,
-            'Tax Wakeup'  => self::TAX_WAKEUP,
-            'Supporter'                => self::SUPPORTER,
-            'Touch'                    => self::TOUCH,
-            'Attacker'                => self::ATTACKER,
-            'Defender'            => self::DEFENDER,
-            'Bonus'                  => self::BONUS,
-            'Penalty'                => self::PENALTY,
-            'Deck Bonus'          => self::DECK_BONUS,
-        );
-        return $ret;
+        return Lang::getEnglishBasicAbilityMap();
     }
     
     public function getEnglishBasicAbilityFlippedMap() {

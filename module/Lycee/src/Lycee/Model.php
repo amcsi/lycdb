@@ -309,17 +309,21 @@ class Model {
     }
 
     public static function amendWithHashData(&$data) {
-        $stringForCardHash = '';
-        $stringForLangHash = '';
+        $stringForCardHash = str_repeat('1', 20); // unused 1's
+        $stringForLangHash = str_repeat('1', 10); // unused 1's
 
         $langHashColumns = Model::getLangHashColumns();
         $cardHashColumns = Model::getHashColumns();
 
         foreach ($langHashColumns as $column) {
-            $stringForLangHash .= '¤' . $data[$column];
+            $stringForLangHash .= $data[$column] .
+                // unused 0's
+                str_repeat('0', 20);
         }
         foreach ($cardHashColumns as $column) {
-            $stringForCardHash .= '¤' . $data[$column];
+            $stringForCardHash .= $data[$column] .
+                // unused 0's
+                str_repeat('0', 10);
         }
         $data['lang_hash'] = crc32($stringForLangHash);
         $data['card_hash'] = crc32($stringForCardHash);

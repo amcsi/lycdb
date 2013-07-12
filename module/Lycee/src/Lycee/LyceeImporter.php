@@ -125,11 +125,13 @@ class LyceeImporter {
 
         foreach ($this->_raritiesAndSets as $cid => $editions) {
             foreach ($editions as $val) {
+                $setName = $val['set'];
+                $setExtId = isset($map[$setName]) ? $map[$setName] : 0;
                 $data = array (
                     'cid' => $cid,
                     'extended_cid' => $val['extendedCid'],
                     'rarity' => $val['rarity'],
-                    'set_ext_id' => $map[$val['set']],
+                    'set_ext_id' => $setExtId,
                     'set_name' => $val['set'],
                 );
                 $datas[] = $data;

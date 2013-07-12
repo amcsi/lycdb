@@ -12,6 +12,7 @@ abstract class Card extends Lycee {
     public $alternate = '';
 
     protected $set;
+    public $setName;
     /**
      * @var array
      * @access protected
@@ -235,6 +236,10 @@ abstract class Card extends Lycee {
         return $this->cidText;
     }
 
+    public function isLegal() {
+        return $this->rarity !== 'L';
+    }
+
     public function setCidText($cidText) {
         $this->fullCidText = $cidText;
         $cidPattern = "@\w+-\d+@";
@@ -302,5 +307,9 @@ abstract class Card extends Lycee {
         $data['locked']            = 0;
         Model::amendWithHashData($data);
         return $data;
+    }
+
+    public function getJapaneseSetName() {
+        return $this->setName;
     }
 }

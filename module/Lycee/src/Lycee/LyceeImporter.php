@@ -29,9 +29,12 @@ class LyceeImporter {
     protected $_amysql;
     protected $_serviceManager;
     protected $_currentCards;
+    protected $_raritiesAndSets = array ();
+    protected $_sets;
 
     public $setsTableName = 'lycdb_sets';
     public $cardsTableName = 'lycdb_cards';
+    public $cardsConnectSetsTableName = 'lycdb_cards_sets_connect';
 
     public function __construct() {
     }
@@ -73,6 +76,7 @@ class LyceeImporter {
             $setDatas[] = $setData;
         }
         try {
+            $this->_sets = $setDatas;
             $stmt = $amysql->newStatement();
             $stmt->insertReplaceOnDuplicateKeyUpdate('INSERT', $this->setsTableName, $setDatas);
             $stmt->execute();
@@ -109,6 +113,35 @@ class LyceeImporter {
         printf("Imported all cards.<br>\nFound: %d<br>\nalternate: %d<br>\ninserted: %d<br>\nupdated %s<br>\n<br>\n",
             $stats['cardCount'], $stats['alternateCount'], $stats['insertedCount'], $stats['updatedCount']
         );
+
+        $datas = array ();
+        $tableName = $this->cardsConnectSetsTableName;
+
+        $map = array ();
+        foreach ($this->_sets as $set) {
+            $name = $set['name_jp'];
+            $map[$name] = $set['ext_id'];
+        }
+
+        foreach ($this->_raritiesAndSets as $cid => $editions) {
+            foreach ($editions as $val) {
+                $data = array (
+                    'cid' => $cid,
+                    'extended_cid' => $val['extendedCid'],
+                    'rarity' => $val['rarity'],
+                    'set_ext_id' => $map[$val['set']],
+                    'set_name' => $val['set'],
+                );
+                $datas[] = $data;
+            }
+        }
+;
+        if ($datas) {
+            $amysql = $this->getAMysql();
+            $stmt = $amysql->newStatement();
+            $stmt->insertReplace('INSERT IGNORE', $tableName, $datas);
+            $stmt->execute();
+        }
     }
 
     public function importSetByArray($arr) {
@@ -225,6 +258,16 @@ class LyceeImporter {
         foreach ($cards as $card) {
             $neededData = $baseNeededData;
             $cid = $card->getCidText();
+            if (!isset($this->_raritiesAndSets[$cid])) {
+                $this->_raritiesAndSets[$cid] = array ();
+            }
+            $ras = array (
+                'extendedCid' => $card->fullCidText,
+                'rarity' => $card->rarity,
+                'set' => $card->getJapaneseSetName()
+            );
+            $this->_raritiesAndSets[$cid][] = $ras;
+
             if ($card->alternate) {
                 $alternateCount++;
                 continue;
@@ -349,7 +392,6 @@ class LyceeImporter {
         else {
             $card->addError("Couldn't find card's ex");
         }
-
 
         /**
          * Card cost, position, ap, dp, sp, gender, rarity
@@ -480,6 +522,8 @@ class LyceeImporter {
 
         $fourthCells = $tableArray[3]->getElementsByTagName('td');
 
+        $setName = trim($fourthCells->item(3)->textContent);
+        $card->setName = $setName;
         $isErrata = false !== strpos($this->getInnerHtml($fourthCells->item(5)), 'errata_icon');
         $card->isErrata = $isErrata;
 

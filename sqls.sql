@@ -111,3 +111,21 @@ ADD  `en_lang_hash` INT NULL DEFAULT NULL AFTER  `import_card_hash` ;
 -- ------------------------
 
 ALTER TABLE  `lycdb_cards` ADD  `lock_card_hash` INT NULL DEFAULT NULL AFTER  `import_card_hash` ;
+
+-- ------------------------
+
+ALTER TABLE `lycdb_cards_sets_connect`
+  DROP `id`,
+  DROP `card_ext_id`;
+
+ALTER TABLE  `lycdb_cards_sets_connect` ADD  `cid` VARCHAR( 10 ) NOT NULL FIRST ,
+ADD  `extended_cid` VARCHAR( 10 ) NOT NULL AFTER  `cid` ,
+ADD  `rarity` VARCHAR( 10 ) NOT NULL AFTER  `extended_cid` ;
+
+ALTER TABLE  `lycdb_cards_sets_connect` ADD  `set_name` VARCHAR( 200 ) NOT NULL AFTER  `set_ext_id` ;
+
+ALTER TABLE  `lycdb_cards_sets_connect` ADD UNIQUE (
+`extended_cid`
+);
+
+ALTER TABLE lycdb_cards_sets_connect DROP INDEX set_ext_id;

@@ -209,7 +209,7 @@
 We are already aware of this error and will fix it sometime soon so please don't report it to us."><img src="<?= $this->basePath() ?>/img/exclamation-red-frame.png" alt="warning"></span>
                     <?php endif ?></td>
                     <td class="sets">
-                        <?= nl2br($this->escapeHtml($card['sets_string'])) ?>
+                        <?= nl2br($this->escapeHtml($card['sets_string_short'])) ?>
                     </td>
                     <td class="cost">
                         <?= $this->lycdbMarkupToHtml($card['cost_markup']) ?>

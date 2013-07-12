@@ -21,6 +21,7 @@ class Model {
 
     public $setsTableName = 'lycdb_sets';
     public $cardsTableName = 'lycdb_cards';
+    public $cscTableName = 'lycdb_cards_sets_connect';
 
     public $foundRows;
     public $pageCount;
@@ -178,10 +179,22 @@ class Model {
         $this->pageCount = $totalPages;
 
         if (!empty($options['template'])) {
+            $this->amendWithSetData($result);
             $positionImgs = array (
             );
             $elements = array ('snow', 'moon', 'flower', 'lightning', 'sun', 'star');
             foreach ($result as &$row) {
+                $setStringRows = array ();
+                foreach ($row['setInfo'] as $val) {
+                    $setStringRows[] = sprintf('%s (%s)', $val['set_name'], $val['rarity']);
+                }
+                $row['sets_string'] = join("\n", $setStringRows);
+                if (2 < $count = count($setStringRows)) {
+                    $row['sets_string_short'] = $setStringRows[0] . "\n" . '(' . ($count - 1) . " more ...)";
+                }
+                else {
+                    $row['sets_string_short'] = $row['sets_string'];
+                }
                 $displayCost = '';
                 $displayElements = '';
                 foreach ($elements as $element) {
@@ -229,7 +242,6 @@ class Model {
                 }
                 $row['type_text'] = $tt;
                 $row['default_image_external'] = str_replace('-', '_', strtolower($row['cid'])) . '_l.jpg';
-                $row['sets_string'] = 'Coming soon...';
                 $basicAbilitiesJp = $row['basic_abilities_jp'] ?
                     explode("\n", $row['basic_abilities_jp']) :
                     array ();
@@ -244,9 +256,52 @@ class Model {
                     $displayBasicAbilitiesJp[] = $displayBab;
                 }
                 $row['display_basic_abilities_jp_markup'] = $displayBasicAbilitiesJp;
+
             }
         }
         return $result;
+    }
+
+    public function amendWithSetData(&$data) {
+        if (!$data) {
+            return;
+        }
+        if (is_array(reset($data))) {
+            $rows =& $data;
+        }
+        else {
+            $rows = array ();
+            $rows[] =& $data;
+        }
+        $cids = array ();
+        foreach ($rows as $row) {
+            $cids[] = $row['cid'];
+        }
+        $cidSetMap = $this->getSetsOfCids($cids);
+        foreach ($rows as &$row) {
+            $cid = $row['cid'];
+            $row['setInfo'] = $cidSetMap[$cid];
+        }
+    }
+
+    public function getSetsOfCids($cids) {
+        if (!$cids) {
+            return array ();
+        }
+        $tableName = $this->cscTableName;
+        $stmt = $this->amysql->prepare("SELECT * FROM $tableName WHERE ?");
+        $expr = $this->amysql->expr(\AMysql_Expr::COLUMN_IN, 'cid', $cids);
+        $stmt->execute($expr);
+        $rows = $stmt->fetchAllAssoc();
+        $ret = array ();
+        foreach ($rows as $row) {
+            $cid = $row['cid'];
+            if (!isset($ret[$cid])) {
+                $ret[$cid] = array ();
+            }
+            $ret[$cid][] = $row;
+        }
+        return $ret;
     }
 
     public function setServiceManager(\Zend\ServiceManager\ServiceManager $serviceManager) {

@@ -101,9 +101,15 @@ class LyceeImporter {
     }
 
     public function importSetByArray($arr) {
-        $amysql = $this->getAMysql();
         printf("Importing set %s ...<br>\n", $arr['name']);
-        ob_flush();
+        $stats = $this->importCardsByArray($arr);
+        printf("Set: %s<br>\ncards found: %d<br>\nalternate: %d<br>\ninserted: %d<br>\nupdated %s<br>\n<br>\n",
+            $arr['name'], $stats['cardCount'], $stats['alternateCount'], $stats['insertedCount'], $stats['updatedCount']
+        );
+    }
+
+    public function importCardsByArray($arr) {
+        $amysql = $this->getAMysql();
         $qs = $arr['qs'];
         $qs['page_out'] = 500;
         $qs['page_list'] = 2;
@@ -190,7 +196,8 @@ class LyceeImporter {
             if ($changed || $totallyNewCard) {
                 foreach ($neededData as $key) {
                     if (!array_key_exists($key, $data)) {
-                        trigger_error("Missing key: $key. Aborting set: $arr[extId]", E_USER_WARNING);
+                        $setId = isset($arr['extId']) ? $arr['extId'] : '[not a set]';
+                        trigger_error("Missing key: $key. Aborting cards. Set id: $setId", E_USER_WARNING);
                         return;
                     }
                     else {
@@ -205,6 +212,7 @@ class LyceeImporter {
                     $datas[] = $dataToUse;
                 }
             }
+            ob_flush();
         }
 
         if (!$cards) {
@@ -242,9 +250,14 @@ class LyceeImporter {
             }
         }
 
-        printf("Set: %s<br>\ncards found: %d<br>\nalternate: %d<br>\ninserted: %d<br>\nupdated %s<br>\n<br>\n",
-            $arr['name'], $cardCount, $alternateCount, $insertCount, $updatedCount
+        $stats = array (
+            'cardCount' => $cardCount,
+            'alternateCount' => $alternateCount,
+            'insertedCount' => $insertCount,
+            'updatedCount' => $updatedCount
         );
+
+        return $stats;
     }
 
     public function getCardByTablesList2(array $tableArray) {

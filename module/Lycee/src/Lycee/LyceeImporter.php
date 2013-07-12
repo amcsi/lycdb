@@ -140,7 +140,7 @@ class LyceeImporter {
             'cost_snow', 'cost_moon', 'cost_lightning', 'cost_flower', 'cost_sun', 'cost_star',
             'ability_desc_jp', 'comments_jp', 'import_errors', 'type', 'ability_cost_jp', 'ability_name_jp',
             'conversion_jp', 'basic_ability_flags', 'basic_abilities_jp', 'is_male', 'is_female', 'import_errors',
-            'ap', 'dp', 'sp', 'position_flags',
+            'ap', 'dp', 'sp', 'position_flags', 'card_hash', 'lang_hash',
         );
         $hashColumns = Model::getHashColumns();
         $langHashColumns = Model::getLangHashColumns();
@@ -166,28 +166,33 @@ class LyceeImporter {
 
             $totallyNewCard = !isset($this->_currentCards[$cid]);
             $changed = false;
+            if (!$totallyNewCard) {
+                $changed = $data['card_hash'] != $this->_currentCards[$cid]['card_hash'];
+            }
 
-            foreach ($neededData as $key) {
-                if (!array_key_exists($key, $data)) {
-                    trigger_error("Missing key: $key. Aborting set: $arr[extId]", E_USER_WARNING);
-                    return;
-                }
-                else {
-                    $dataToUse[$key] = $data[$key];
-                    if (!$totallyNewCard && $data[$key] != $this->_currentCards[$cid][$key]) {
-                        $changed = true;
+            if ($changed || $totallyNewCard) {
+                foreach ($neededData as $key) {
+                    if (!array_key_exists($key, $data)) {
+                        trigger_error("Missing key: $key. Aborting set: $arr[extId]", E_USER_WARNING);
+                        return;
+                    }
+                    else {
+                        $dataToUse[$key] = $data[$key];
+                        if (!$totallyNewCard && $data[$key] != $this->_currentCards[$cid][$key]) {
+                            $changed = true;
+                        }
                     }
                 }
-            }
-            if ($changed) {
-                $changes[$cid] = true;
-            }
-            if ($totallyNewCard) {
-                $dataToUse['insert_date'] = $amysql->expr('CURRENT_TIMESTAMP');
-                $insertDatas[] = $dataToUse;
-            }
-            else if ($changed) {
-                $datas[] = $dataToUse;
+                if ($changed) {
+                    $changes[$cid] = true;
+                }
+                if ($totallyNewCard) {
+                    $dataToUse['insert_date'] = $amysql->expr('CURRENT_TIMESTAMP');
+                    $insertDatas[] = $dataToUse;
+                }
+                else if ($changed) {
+                    $datas[] = $dataToUse;
+                }
             }
         }
 

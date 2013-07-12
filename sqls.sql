@@ -101,3 +101,9 @@ ADD  `dp` TINYINT NOT NULL DEFAULT  '0' AFTER  `ap` ,
 ADD  `sp` TINYINT NOT NULL DEFAULT  '0' AFTER  `dp` ,
 ADD  `position_flags` INT NOT NULL DEFAULT  '0' AFTER  `sp` ;
 
+-- ------------------------
+
+ALTER TABLE  `lycdb_cards` ADD  `card_hash` INT NULL DEFAULT NULL AFTER  `import_errors` ,
+ADD  `lang_hash` INT NULL DEFAULT NULL AFTER  `card_hash` ,
+ADD  `import_card_hash` INT NULL DEFAULT NULL AFTER  `lang_hash` ,
+ADD  `en_lang_hash` INT NULL DEFAULT NULL AFTER  `import_card_hash` ;

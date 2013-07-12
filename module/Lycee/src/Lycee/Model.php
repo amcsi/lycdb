@@ -294,6 +294,23 @@ class Model {
         return "<img src=\"$src\" alt=\"$alt\">";
     }
 
+    public static function amendWithHashData(&$data) {
+        $stringForCardHash = '';
+        $stringForLangHash = '';
+
+        $langHashColumns = Model::getLangHashColumns();
+        $cardHashColumns = Model::getHashColumns();
+
+        foreach ($langHashColumns as $column) {
+            $stringForLangHash .= '¤' . $data[$column];
+        }
+        foreach ($cardHashColumns as $column) {
+            $stringForCardHash .= '¤' . $data[$column];
+        }
+        $data['lang_hash'] = crc32($stringForLangHash);
+        $data['card_hash'] = crc32($stringForCardHash);
+    }
+
     public static function getHashColumns() {
         static $ret;
         if (!$ret) {

@@ -300,6 +300,7 @@ abstract class Card extends Lycee {
         $data['is_male']            = 0;
         $data['is_female']            = 0;
         $data['locked']            = 0;
+        Model::amendWithHashData($data);
         return $data;
     }
 }

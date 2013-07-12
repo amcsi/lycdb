@@ -107,3 +107,7 @@ ALTER TABLE  `lycdb_cards` ADD  `card_hash` INT NULL DEFAULT NULL AFTER  `import
 ADD  `lang_hash` INT NULL DEFAULT NULL AFTER  `card_hash` ,
 ADD  `import_card_hash` INT NULL DEFAULT NULL AFTER  `lang_hash` ,
 ADD  `en_lang_hash` INT NULL DEFAULT NULL AFTER  `import_card_hash` ;
+
+-- ------------------------
+
+ALTER TABLE  `lycdb_cards` ADD  `lock_card_hash` INT NULL DEFAULT NULL AFTER  `import_card_hash` ;

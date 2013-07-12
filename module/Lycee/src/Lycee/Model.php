@@ -1,4 +1,18 @@
 <?php
+/**
+ * card_hash            - The crc32 hash of pre-given columns that represent the card.
+ *                          For cards in the database, it is of the values in the database. For imported data (that may
+ *                          have yet to be updated into the database), it is the hash of the imported data.
+ * lang_hash            - The crc32 hash of pre-given columns that represent parts of the card that have to do with language.
+ *                          For cards in the database, it is of the values in the database. For imported data (that may
+ *                          have yet to be updated into the database), it is the hash of the imported data.
+ * import_card_hash     - Like card_hash, but always the hash of the imported data.
+ * lock_card_hash       - The value of import_card_hash as it was when locking was performed. If in the DB, import_card_hash
+ *                          becomes different than lock_card_hash while the card is locked, then you know that the card
+ *                          has really changed.
+ * en_lang_hash         - Like lang_hash, but is the hash of the lang_hash this english translation is based on.
+ * 
+ **/
 namespace Lycee;
 
 class Model {

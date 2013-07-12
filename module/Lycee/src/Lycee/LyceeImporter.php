@@ -135,17 +135,17 @@ class LyceeImporter {
             }
         }
         $datas = array ();
-        $neededData = array (
+        $baseNeededData = array (
             'cid', 'name_jp', 'ex', 'is_snow', 'is_moon', 'is_lightning', 'is_flower', 'is_sun',
             'cost_snow', 'cost_moon', 'cost_lightning', 'cost_flower', 'cost_sun', 'cost_star',
             'ability_desc_jp', 'comments_jp', 'import_errors', 'type', 'ability_cost_jp', 'ability_name_jp',
             'conversion_jp', 'basic_ability_flags', 'basic_abilities_jp', 'is_male', 'is_female', 'import_errors',
-            'ap', 'dp', 'sp', 'position_flags', 'card_hash', 'lang_hash',
+            'ap', 'dp', 'sp', 'position_flags', 'card_hash', 'lang_hash', 'import_card_hash',
         );
         $hashColumns = Model::getHashColumns();
         $langHashColumns = Model::getLangHashColumns();
 
-        $changes = array ();
+        $changes = array (); // data to go into updates. Could just be a change of a hash.
         
         $cardCount = count($cards);
         $alternateCount = 0;
@@ -153,21 +153,34 @@ class LyceeImporter {
         $insertDatas = array ();
 
         foreach ($cards as $card) {
+            $neededData = $baseNeededData;
             $cid = $card->getCidText();
             if ($card->alternate) {
                 $alternateCount++;
                 continue;
             }
             $data = $card->toDbData();
+            $data['import_card_hash'] = $data['card_hash'];
+
             $dataToUse = array ();
-            if ($data['locked']) {
-                continue;
-            }
 
             $totallyNewCard = !isset($this->_currentCards[$cid]);
             $changed = false;
             if (!$totallyNewCard) {
-                $changed = $data['card_hash'] != $this->_currentCards[$cid]['card_hash'];
+                $cCard = $this->_currentCards[$cid];
+                // treat the card as changed if the card_hash's do not match
+                $changed = $data['card_hash'] != $cCard['card_hash'] || !$cCard['import_card_hash'];
+                if ($cCard['locked']) {
+                    // except if the card is locked.
+                    $changed = false;
+                    if ($cCard['import_card_hash'] != $data['card_hash']) {
+                        // but if the locked card's import_card_hash would differ from the newly imported card data's
+                        // card_hash, change the card, but only the import_card_hash.
+                        $changed = true;
+                        $neededData = array ('import_card_hash');
+                    }
+                }
+                $changes[$cid] = $changed;
             }
 
             if ($changed || $totallyNewCard) {
@@ -178,13 +191,7 @@ class LyceeImporter {
                     }
                     else {
                         $dataToUse[$key] = $data[$key];
-                        if (!$totallyNewCard && $data[$key] != $this->_currentCards[$cid][$key]) {
-                            $changed = true;
-                        }
                     }
-                }
-                if ($changed) {
-                    $changes[$cid] = true;
                 }
                 if ($totallyNewCard) {
                     $dataToUse['insert_date'] = $amysql->expr('CURRENT_TIMESTAMP');

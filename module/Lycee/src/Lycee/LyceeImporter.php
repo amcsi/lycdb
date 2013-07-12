@@ -81,6 +81,11 @@ class LyceeImporter {
             trigger_error($e);
         }
         $met = ini_get('max_execution_time');
+        $this->importSetsByArrayOfSets($sets);
+        echo "Done importing.";
+    }
+
+    public function importSetsByArrayOfSets($sets) {
         foreach ($sets as $set) {
             try {
                 set_time_limit($met);
@@ -93,7 +98,6 @@ class LyceeImporter {
                 trigger_error($e);
             }
         }
-        echo "Done importing.";
     }
 
     public function importSetByArray($arr) {

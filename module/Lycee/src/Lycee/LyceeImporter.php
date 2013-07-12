@@ -81,7 +81,7 @@ class LyceeImporter {
             trigger_error($e);
         }
         $met = ini_get('max_execution_time');
-        $this->importSetsByArrayOfSets($sets);
+        $this->importAllCards();
         echo "Done importing.";
     }
 
@@ -100,6 +100,17 @@ class LyceeImporter {
         }
     }
 
+    public function importAllCards() {
+        $arr = array ();
+        $arr['page_out'] = 50000;
+        $arr['path'] = 'index.cgi';
+        $arr['qs'] = array ();
+        $stats = $this->importCardsByArray($arr);
+        printf("Imported all cards.<br>\nFound: %d<br>\nalternate: %d<br>\ninserted: %d<br>\nupdated %s<br>\n<br>\n",
+            $stats['cardCount'], $stats['alternateCount'], $stats['insertedCount'], $stats['updatedCount']
+        );
+    }
+
     public function importSetByArray($arr) {
         printf("Importing set %s ...<br>\n", $arr['name']);
         $stats = $this->importCardsByArray($arr);
@@ -113,17 +124,24 @@ class LyceeImporter {
         $qs = $arr['qs'];
         $qs['page_out'] = 500;
         $qs['page_list'] = 2;
+        $qs['page_sort'] = 2;
+        if (isset($arr['page_out'])) {
+            $qs['page_out'] = $arr['page_out'];
+        }
         $options = array ();
         $options['lifetime'] = 60 * 60 * 24 * 265 * 5; // 5 years.
         $options['cache_tags'] = array ($this->websiteVersionTag);
         if ($arr['listsCards']) {
             $options['alternate_cache'] = 2;
         }
-        $html = $this->request($arr['path'], $qs, $options);
-
-        $domQuery = new \Zend\Dom\Query($html);
-        $selector = '#card_list_main div.m_15 > *';
-        $selectEls = $domQuery->execute($selector);
+        set_time_limit(500);
+        if (!isset($arr['name']) && file_exists('./data/cache/lycee/all_cards.html')) {
+            $html = fopen('./data/cache/lycee/all_cards.html', 'r');
+        }
+        else {
+            set_time_limit(200);
+            $html = $this->request($arr['path'], $qs, $options);
+        }
 
         $tableArray = array ();
 
@@ -132,16 +150,58 @@ class LyceeImporter {
         /**
          * Cards in the HTML are usually 4 tables separated by a br. 2 brs mark the end. 
          */
-        foreach ($selectEls as $selectEl) {
-            if ('table' == $selectEl->tagName) {
-                $tableArray[] = $selectEl;
-            }
-            else if ('br' == $selectEl->tagName) {
-                if ($tableArray) {
+        if (is_resource($html)) {
+            $buffer = array ();
+
+            $started = false;
+
+            $cardStart = '<table width="0" border="0" cellspacing="0" cellpadding="0" class="m_17">';
+            $cardEnd = '</table><br />';
+            while (false !== ($line = fgets($html))) {
+                if (false !== strpos($line, $cardStart)) {
+                    $started = true;
+                }
+                if ($started) {
+                    $buffer[] = $line;
+                }
+                if ($started && false !== strpos($line, $cardEnd)) {
+                    $started = false;
+                    $cardHtml = join('', $buffer);
+                    $buffer = array ();
+                    $cardHtml = "<?xml encoding=\"utf-8\">\n<!doctype html>\n<html><head><meta charset='utf-8'></head><body>\n" .
+                        '<div id="root">' . mb_convert_encoding($cardHtml, 'utf-8', array ('EUC_JP')) . '</div></body></html>';
+                    $doc = new \DomDocument('1.0', 'utf-8');
+                    @$doc->loadHtml($cardHtml);
+                    $root = $doc->getElementById('root');
+                    $children = $root->childNodes;
+                    $tableArray = array ();
+                    foreach ($children as $child) {
+                        if ('table' == $child->tagName) {
+                            $tableArray[] = $child;
+                        }
+                    }
+
                     $card = $this->getCardByTablesList2($tableArray);
                     $cards[] = $card;
                 }
-                $tableArray = array ();
+            }
+        }
+        else {
+            $domQuery = new \Zend\Dom\Query($html);
+            $selector = '#card_list_main div.m_15 > *';
+            $selectEls = $domQuery->execute($selector);
+
+            foreach ($selectEls as $selectEl) {
+                if ('table' == $selectEl->tagName) {
+                    $tableArray[] = $selectEl;
+                }
+                else if ('br' == $selectEl->tagName) {
+                    if ($tableArray) {
+                        $card = $this->getCardByTablesList2($tableArray);
+                        $cards[] = $card;
+                    }
+                    $tableArray = array ();
+                }
             }
         }
         $datas = array ();
@@ -677,11 +737,16 @@ class LyceeImporter {
             $convertToUtf8 = $options['convertToUtf8'];
         }
         if ($convertToUtf8) {
-            $result = mb_convert_encoding($result, 'utf-8', array ('EUC_JP'));
-            $result = str_replace('charset=EUC-JP', 'charset=UTF-8', $result);
+            $this->convertHtmlDocToUtf8($result);
         }
         return $result;
         
+    }
+
+    public function convertHtmlDocToUtf8($result) {
+        $result = mb_convert_encoding($result, 'utf-8', array ('EUC_JP'));
+        $result = str_replace('charset=EUC-JP', 'charset=UTF-8', $result);
+        return $result;
     }
 
     protected function _requestFullUrl($url, $params = array (), $options = array ()) {

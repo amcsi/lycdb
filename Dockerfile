@@ -11,7 +11,9 @@ RUN apt-get update && apt-get install -y \
 COPY bin/docker-php-pecl-install /usr/local/bin/
 
 # PHP extensions
-RUN docker-php-ext-install zip
+RUN docker-php-ext-install \
+  mysqli \
+  zip
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version

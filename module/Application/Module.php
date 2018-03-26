@@ -64,36 +64,6 @@ class Module
         $viewModel->google_analytics = $config['google_analytics'];
         $viewModel->viewconf = $config['viewconf'];
         $viewModel->prefLang = 'en'; // prefer english by default
-
-        $this->setupPhpBB();
-        $phpbbUser = $this->phpbbUser;
-        $user = array ();
-        $userLoggedIn = $phpbbUser->data['user_id'] != ANONYMOUS;
-        $user['isLoggedIn'] = $userLoggedIn;
-        if ($userLoggedIn) {
-            $user['usernameClean'] = $phpbbUser->data['username_clean'];
-            $user['sessionId'] = $phpbbUser->data['session_id'];
-        }
-        $viewModel->user = $user;
-    }
-
-    public function setupPhpBB() {
-        // ugly, but needed for phpBB integration to work.
-        global $phpbb_root_path, $phpEx, $user, $db, $config, $cache, $template;
-
-        if (!defined('IN_PHPBB')) {
-            define('IN_PHPBB', true);
-        }
-        $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../lycdb_forums/phpBB/';
-        $phpEx = substr(strrchr(__FILE__, '.'), 1);
-        include($phpbb_root_path . 'common.' . $phpEx);
-        restore_error_handler();
-
-        // Start session management
-        $user->session_begin();
-        $auth->acl($user->data);
-        $user->setup();
-        $this->phpbbUser = $user;
     }
 
     public function onBootstrap(MvcEvent $e)

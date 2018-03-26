@@ -13,9 +13,9 @@
 
 return array(
     'amysql' => array (
-        'host' => 'localhost',
+        'host' => getenv('MYSQL_HOST') ?: 'localhost',
         'user' => 'lycdb',
-        'password' => '',
+        'password' => getenv('MYSQL_PASS') ?: '',
         'db'        => 'lycdb',
         'profile'   => false,
     ),
@@ -24,7 +24,7 @@ return array(
         'domain' => '',
     ),
     'viewconf' => array (
-        'forums_url_base' => '//forums.lycee-tcg.eu',
-        'forums_url_base_https' => 'https://forums.lycee-tcg.eu',
+        'forums_url_base' => getenv('FORUMS_URL_BASE') ?: '//forums.lycee-tcg.eu',
+        'forums_url_base_https' => getenv('FORUMS_URL_BASE_HTTPS') ?: 'https://forums.lycee-tcg.eu',
     )
 );

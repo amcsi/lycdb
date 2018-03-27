@@ -20,8 +20,8 @@ return array(
         'profile'   => false,
     ),
     'google_analytics' => array (
-        'code' => '',
-        'domain' => '',
+        'code' => getenv('GA_TRACKING_ID') ?: '',
+        'domain' => 'lycee-tcg.eu',
     ),
     'viewconf' => array (
         'forums_url_base' => getenv('FORUMS_URL_BASE') ?: '//forums.lycee-tcg.eu',

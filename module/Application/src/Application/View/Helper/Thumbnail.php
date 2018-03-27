@@ -6,10 +6,6 @@ use \Zebra_Image;
 
 class Thumbnail extends AbstractHelper {
 
-    public function __construct() {
-        require 'vendor/zebra/zebra/src/Zebra/Image.php';
-    }
-
     public function __invoke($params) {
         return $this->thumbnail($params);
     }
